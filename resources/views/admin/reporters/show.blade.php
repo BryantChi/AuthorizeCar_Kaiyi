@@ -5,12 +5,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>法規項目</h1>
+                    <h1>Reporter Details</h1>
                 </div>
                 <div class="col-sm-6">
                     <a class="btn btn-default float-right"
-                       href="{{ route('admin.regulations.index') }}">
-                        返回
+                       href="{{ route('admin.reporters.index') }}">
+                        Back
                     </a>
                 </div>
             </div>
@@ -21,7 +21,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    @include('admin.regulations.show_fields')
+                    @include('admin.reporters.show_fields')
                 </div>
             </div>
         </div>

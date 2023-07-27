@@ -42,6 +42,7 @@ Route::prefix('admin')->group(function () {
     Route::middleware(['auth'])->group(function() {
         Route::resource('authorizeStatuses', App\Http\Controllers\Admin\AuthorizeStatusController::class, ["as" => 'admin']);
         Route::resource('regulations', App\Http\Controllers\Admin\RegulationsController::class, ["as" => 'admin']);
+        Route::resource('reporters', App\Http\Controllers\Admin\ReporterController::class, ["as" => 'admin']);
     });
 });
 

@@ -2,7 +2,7 @@
     <table class="table table-hover" id="authorizeStatuses-table">
         <thead>
             <tr>
-                <th>Status Name</th>
+                <th>狀態名稱</th>
                 <th colspan="3">Action</th>
             </tr>
         </thead>

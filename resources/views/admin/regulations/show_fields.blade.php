@@ -6,13 +6,13 @@
 
 <!-- Regulations Num Field -->
 <div class="col-sm-12">
-    {!! Form::label('regulations_num', 'Regulations Num:') !!}
+    {!! Form::label('regulations_num', '法規編號:') !!}
     <p>{{ $regulations->regulations_num }}</p>
 </div>
 
 <!-- Regulations Name Field -->
 <div class="col-sm-12">
-    {!! Form::label('regulations_name', 'Regulations Name:') !!}
+    {!! Form::label('regulations_name', '法規名稱:') !!}
     <p>{{ $regulations->regulations_name }}</p>
 </div>
 

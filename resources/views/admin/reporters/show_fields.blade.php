@@ -1,24 +1,24 @@
 <!-- Id Field -->
 <div class="col-sm-12">
     {!! Form::label('id', 'Id:') !!}
-    <p>{{ $authorizeStatus->id }}</p>
+    <p>{{ $reporter->id }}</p>
 </div>
 
-<!-- Status Name Field -->
+<!-- Reporter Name Field -->
 <div class="col-sm-12">
-    {!! Form::label('status_name', '狀態名稱:') !!}
-    <p>{{ $authorizeStatus->status_name }}</p>
+    {!! Form::label('reporter_name', '報告原有人名稱:') !!}
+    <p>{{ $reporter->reporter_name }}</p>
 </div>
 
 <!-- Created At Field -->
 <div class="col-sm-12">
     {!! Form::label('created_at', 'Created At:') !!}
-    <p>{{ $authorizeStatus->created_at }}</p>
+    <p>{{ $reporter->created_at }}</p>
 </div>
 
 <!-- Updated At Field -->
 <div class="col-sm-12">
     {!! Form::label('updated_at', 'Updated At:') !!}
-    <p>{{ $authorizeStatus->updated_at }}</p>
+    <p>{{ $reporter->updated_at }}</p>
 </div>
 
