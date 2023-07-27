@@ -1,0 +1,34 @@
+<div class="table-responsive">
+    <table class="table" id="regulations-table">
+        <thead>
+        <tr>
+            <th>Regulations Num</th>
+        <th>Regulations Name</th>
+            <th colspan="3">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach($regulations as $regulations)
+            <tr>
+                <td>{{ $regulations->regulations_num }}</td>
+            <td>{{ $regulations->regulations_name }}</td>
+                <td width="120">
+                    {!! Form::open(['route' => ['admin.regulations.destroy', $regulations->id], 'method' => 'delete']) !!}
+                    <div class='btn-group'>
+                        <a href="{{ route('admin.regulations.show', [$regulations->id]) }}"
+                           class='btn btn-default btn-xs'>
+                            <i class="far fa-eye"></i>
+                        </a>
+                        <a href="{{ route('admin.regulations.edit', [$regulations->id]) }}"
+                           class='btn btn-default btn-xs'>
+                            <i class="far fa-edit"></i>
+                        </a>
+                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
+                    </div>
+                    {!! Form::close() !!}
+                </td>
+            </tr>
+        @endforeach
+        </tbody>
+    </table>
+</div>
