@@ -3,7 +3,7 @@
     {!! Form::label('car_brand_id', '廠牌:') !!}
     {!! Form::text('car_brand_id', null, ['class' => 'form-control']) !!}
 </div> --}}
-<div class="form-group position-relative">
+<div class="form-group position-relative col-sm-6">
     <label class="font-weight-bold" for="car_brand_id">廠牌</label>
     <select class="form-control custom-select bg-white @error('car_brand_id') is-invalid @enderror"
         name="car_brand_id">
