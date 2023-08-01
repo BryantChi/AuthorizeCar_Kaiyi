@@ -2,7 +2,8 @@
 
 namespace App\Models\Admin;
 
-use Eloquent as Model;
+// use Eloquent as Model;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
@@ -20,7 +21,7 @@ class Regulations extends Model
 
 
     public $table = 'regulations_infos';
-    
+
 
     protected $dates = ['deleted_at'];
 
@@ -48,8 +49,8 @@ class Regulations extends Model
      * @var array
      */
     public static $rules = [
-        
+
     ];
 
-    
+
 }

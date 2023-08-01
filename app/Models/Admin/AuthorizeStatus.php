@@ -2,8 +2,8 @@
 
 namespace App\Models\Admin;
 
-use Eloquent as Model;
-
+// use Eloquent as Model;
+use Illuminate\Database\Eloquent\Model;
 
 
 /**
@@ -18,7 +18,7 @@ class AuthorizeStatus extends Model
 
 
     public $table = 'authorize_status';
-    
+
 
 
 
@@ -42,8 +42,8 @@ class AuthorizeStatus extends Model
      * @var array
      */
     public static $rules = [
-        
+
     ];
 
-    
+
 }

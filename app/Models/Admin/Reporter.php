@@ -2,7 +2,8 @@
 
 namespace App\Models\Admin;
 
-use Eloquent as Model;
+// use Eloquent as Model;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
@@ -19,7 +20,7 @@ class Reporter extends Model
 
 
     public $table = 'reporter_infos';
-    
+
 
     protected $dates = ['deleted_at'];
 
@@ -45,8 +46,8 @@ class Reporter extends Model
      * @var array
      */
     public static $rules = [
-        
+
     ];
 
-    
+
 }

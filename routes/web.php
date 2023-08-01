@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DetectionReportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,12 +38,20 @@ Route::post(
     '\InfyOm\GeneratorBuilder\Controllers\GeneratorBuilderController@generateFromFile'
 )->name('io_generator_builder_generate_from_file');
 
+// 強制禁止Register
+// Route::any('register', function() {
+//     return redirect('/');
+// });
 
 Route::prefix('admin')->group(function () {
     Route::middleware(['auth'])->group(function() {
         Route::resource('authorizeStatuses', App\Http\Controllers\Admin\AuthorizeStatusController::class, ["as" => 'admin']);
         Route::resource('regulations', App\Http\Controllers\Admin\RegulationsController::class, ["as" => 'admin']);
         Route::resource('reporters', App\Http\Controllers\Admin\ReporterController::class, ["as" => 'admin']);
+
+        Route::any('detectionReports', [DetectionReportController::class, 'index'])->name('admin.detectionReports.index');
+        Route::any('detectionReports/create', [DetectionReportController::class, 'create'])->name('admin.detectionReports.create');
+        Route::any('detectionReports/store', [DetectionReportController::class, 'store'])->name('admin.detectionReports.store');
     });
 });
 

@@ -1,4 +1,11 @@
 <li class="nav-item">
+    <a href="{{ route('admin.detectionReports.index') }}" class="nav-link {{ Request::is('admin/detectionReports*') ? 'active' : '' }}">
+        <p>檢測報告明細表</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
     <a href="{{ route('admin.reporters.index') }}" class="nav-link {{ Request::is('admin/reporters*') ? 'active' : '' }}">
         <p>報告原有人管理</p>
     </a>
