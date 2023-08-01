@@ -29,3 +29,11 @@
 
 
 
+<li class="nav-item">
+    <a href="{{ route('admin.carBrands.index') }}"
+       class="nav-link {{ Request::is('admin/carBrands*') ? 'active' : '' }}">
+        <p>廠牌管理</p>
+    </a>
+</li>
+
+
