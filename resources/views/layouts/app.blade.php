@@ -161,5 +161,7 @@
 @stack('third_party_scripts')
 
 @stack('page_scripts')
+
+@stack('menu_scripts')
 </body>
 </html>

@@ -5,6 +5,7 @@ namespace App\Models\Admin;
 // use Eloquent as Model;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
 /**
@@ -49,5 +50,9 @@ class CarBrand extends Model
 
     ];
 
+    public function carModels(): HasMany
+    {
+        return $this->hasMany(\App\Models\Admin\CarModel::class);
+    }
 
 }
