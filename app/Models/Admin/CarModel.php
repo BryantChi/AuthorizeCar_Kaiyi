@@ -57,7 +57,7 @@ class CarModel extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      **/
-    public function id(): BelongsTo
+    public function brand()
     {
         return $this->belongsTo(\App\Models\Admin\CarBrand::class, 'id', 'car_brand_id');
     }

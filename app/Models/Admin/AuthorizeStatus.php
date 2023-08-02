@@ -4,6 +4,7 @@ namespace App\Models\Admin;
 
 // use Eloquent as Model;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 /**
@@ -15,12 +16,12 @@ use Illuminate\Database\Eloquent\Model;
  */
 class AuthorizeStatus extends Model
 {
-
+    use SoftDeletes;
 
     public $table = 'authorize_status';
 
 
-
+    protected $dates = ['deleted_at'];
 
     public $fillable = [
         'status_name'

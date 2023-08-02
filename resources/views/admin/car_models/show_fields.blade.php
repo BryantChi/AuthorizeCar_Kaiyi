@@ -7,7 +7,8 @@
 <!-- Car Brand Id Field -->
 <div class="col-sm-12">
     {!! Form::label('car_brand_id', '廠牌:') !!}
-    <p>{{ $carModel->car_brand_id }}</p>
+    {{-- <p>{{ $carModel->car_brand_id }}</p> --}}
+    <p>{{ DB::table('car_brand')->where('id', $carModel->car_brand_id)->value('brand_name') }}</p>
 </div>
 
 <!-- Model Name Field -->

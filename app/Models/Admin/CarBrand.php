@@ -50,9 +50,16 @@ class CarBrand extends Model
 
     ];
 
-    public function carModels(): HasMany
+    public function carModels()
     {
         return $this->hasMany(\App\Models\Admin\CarModel::class);
     }
 
+    // 關聯刪除
+    // protected static function booted()
+    // {
+    //     static::deleting(function ($carBrand) {
+    //         $carBrand->brand()->delete();
+    //     });
+    // }
 }

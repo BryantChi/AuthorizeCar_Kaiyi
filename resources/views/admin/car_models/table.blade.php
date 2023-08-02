@@ -1,4 +1,4 @@
-<div class="table-responsive">
+<div class="table-responsive" style="overflow: scroll;">
     <table class="table" id="carModels-table">
         <thead>
         <tr>
@@ -10,20 +10,20 @@
         <tbody>
         @foreach($carModels as $carModel)
             <tr>
-                <td>{{ $carModel->car_brand_id }}</td>
-            <td>{{ $carModel->model_name }}</td>
+                <td>{{ DB::table('car_brand')->where('id', $carModel->car_brand_id)->value('brand_name') }}</td>
+                <td>{{ $carModel->model_name }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['admin.carModels.destroy', $carModel->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
                         <a href="{{ route('admin.carModels.show', [$carModel->id]) }}"
-                           class='btn btn-default btn-xs'>
+                           class='btn btn-default btn-sm'>
                             <i class="far fa-eye"></i>
                         </a>
                         <a href="{{ route('admin.carModels.edit', [$carModel->id]) }}"
-                           class='btn btn-default btn-xs'>
+                           class='btn btn-default btn-sm'>
                             <i class="far fa-edit"></i>
                         </a>
-                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
+                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'button', 'class' => 'btn btn-danger btn-sm', 'onclick' => "return check(this)"]) !!}
                     </div>
                     {!! Form::close() !!}
                 </td>

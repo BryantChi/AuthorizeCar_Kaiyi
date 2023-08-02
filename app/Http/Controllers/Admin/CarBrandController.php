@@ -9,6 +9,7 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+use App\Models\Admin\CarModel;
 
 class CarBrandController extends AppBaseController
 {
@@ -143,6 +144,15 @@ class CarBrandController extends AppBaseController
 
         if (empty($carBrand)) {
             Flash::error('Car Brand not found');
+
+            return redirect(route('admin.carBrands.index'));
+        }
+
+        // $carModel = CarModel::where('car_brand_id', $carBrand->id)->get();
+        $carModel = $carBrand->carModels;
+
+        if (count($carModel) > 0) {
+            Flash::error('資料關聯使用中，受保護無法移除。');
 
             return redirect(route('admin.carBrands.index'));
         }

@@ -95,6 +95,7 @@ class CarModelController extends AppBaseController
     public function edit($id)
     {
         $carModel = $this->carModelRepository->find($id);
+        $brand = CarBrand::all();
 
         if (empty($carModel)) {
             Flash::error('Car Model not found');
@@ -102,7 +103,7 @@ class CarModelController extends AppBaseController
             return redirect(route('admin.carModels.index'));
         }
 
-        return view('admin.car_models.edit')->with('carModel', $carModel);
+        return view('admin.car_models.edit', ['carModel' => $carModel, 'brand' => $brand]);
     }
 
     /**

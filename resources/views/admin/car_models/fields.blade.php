@@ -9,7 +9,7 @@
         name="car_brand_id">
         <option value="">請選擇</option>
         @foreach ($brand as $item)
-            <option value="{{ $item->id }}">{{ $item->brand_name }}</option>
+            <option {{ $carModel->car_brand_id ?? '' == $item->id ? 'selected' : '' }} value="{{ $item->id }}">{{ $item->brand_name }}</option>
         @endforeach
     </select>
 </div>
