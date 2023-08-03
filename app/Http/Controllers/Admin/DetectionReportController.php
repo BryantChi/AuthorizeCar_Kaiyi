@@ -7,6 +7,8 @@ use App\Http\Requests\Admin\StoreDetectionReportRequest;
 use App\Http\Requests\Admin\UpdateDetectionReportRequest;
 use App\Models\Admin\DetectionReport;
 use App\Models\Admin\AuthorizeStatus as AuthStatus;
+use App\Models\Admin\CarBrand;
+use App\Models\Admin\CarModel;
 use App\Models\Admin\Regulations;
 use App\Models\Admin\Reporter;
 use Illuminate\Http\Request;
@@ -43,7 +45,9 @@ class DetectionReportController extends Controller
 
         $regulations = Regulations::all();
 
-        return view('admin.detection_report.create', ['authStatus' => $auth_status, 'reporter' => $reporter, 'regulations' => $regulations]);
+        $carBrand = CarBrand::all();
+
+        return view('admin.detection_report.create', ['authStatus' => $auth_status, 'reporter' => $reporter, 'regulations' => $regulations, 'brand' => $carBrand]);
     }
 
     /**
@@ -58,13 +62,15 @@ class DetectionReportController extends Controller
 
         // $validated = $request->validated();
 
-        $detectionReport = DetectionReport::create($request->all());
+        // $detectionReport = DetectionReport::create($request->all());
 
-        dd($detectionReport);
+        Flash::error('功能開發中!!!');
 
-        Flash::success('DetectionReport saved successfully.');
+        return redirect(route('admin.detectionReports.create'));
 
-        return redirect(route('admin.detectionReports.index'));
+        // Flash::success('DetectionReport saved successfully.');
+
+        // return redirect(route('admin.detectionReports.index'));
 
     }
 

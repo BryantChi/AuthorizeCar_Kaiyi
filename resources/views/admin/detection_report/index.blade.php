@@ -20,6 +20,7 @@
 </section>
 
 <div class="container-fluid">
+    @include('flash::message')
     <div class="card mx-3">
         <div class="card-body">
             @include('admin.detection_report.table')

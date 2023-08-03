@@ -164,6 +164,8 @@
 
 @stack('menu_scripts')
 
+@stack('scripts')
+
 
 <script>
     function check(e) {

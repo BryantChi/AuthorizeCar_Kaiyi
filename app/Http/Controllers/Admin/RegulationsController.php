@@ -9,6 +9,7 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+use Illuminate\Support\Facades\Validator;
 
 class RegulationsController extends AppBaseController
 {
@@ -54,6 +55,20 @@ class RegulationsController extends AppBaseController
      */
     public function store(CreateRegulationsRequest $request)
     {
+        $validator = Validator::make($request->all(), [
+            'regulations_num' => 'required|unique:regulations_infos,regulations_num',
+        ], [
+            'regulations_num.required' => '請填寫編號',
+            'regulations_num.unique' => '法規編號不可重複',
+        ]);
+
+
+        if ($validator->fails()) {
+            return redirect(route('admin.regulations.create'))
+                ->withErrors($validator)
+                ->withInput();
+        }
+
         $input = $request->all();
 
         $regulations = $this->regulationsRepository->create($input);

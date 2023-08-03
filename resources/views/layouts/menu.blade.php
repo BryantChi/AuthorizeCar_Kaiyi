@@ -1,4 +1,12 @@
 <li class="nav-item">
+    <a href="{{ route('admin.detectionReports.create') }}"
+        class="nav-link">
+        <p>新增資料</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
     <a href="{{ route('admin.detectionReports.index') }}"
         class="nav-link {{ Request::is('admin/detectionReports*') ? 'active' : '' }}">
         <p>檢測報告明細表</p>

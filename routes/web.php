@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CarModelController;
 use App\Http\Controllers\Admin\DetectionReportController;
 use Illuminate\Support\Facades\Route;
 
@@ -57,5 +58,5 @@ Route::prefix('admin')->group(function () {
     });
 });
 
-
+Route::any('get-models-by-brand', [CarModelController::class, 'getModelsByBrand'])->name('getModelsByBrand');
 

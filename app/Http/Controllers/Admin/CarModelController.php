@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Flash;
 use Response;
 use App\Models\Admin\CarBrand;
+use App\Models\Admin\CarModel;
 
 class CarModelController extends AppBaseController
 {
@@ -155,5 +156,13 @@ class CarModelController extends AppBaseController
         Flash::success('Car Model deleted successfully.');
 
         return redirect(route('admin.carModels.index'));
+    }
+
+    public function getModelsByBrand(Request $request)
+    {
+        $brand_id = $request->input('brand_id');
+        $models = CarModel::where('car_brand_id', $brand_id)->get();
+
+        return response()->json($models);
     }
 }

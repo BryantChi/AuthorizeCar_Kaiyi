@@ -13,6 +13,8 @@
 
     <div class="content px-3">
 
+        @include('flash::message')
+
         @include('adminlte-templates::common.errors')
 
         <div class="card">
@@ -35,7 +37,7 @@
                     </div>
 
                 </div>
-
+                @csrf
                 <div class="card-footer d-flex justify-content-end">
                     {!! Form::submit('儲存', ['class' => 'btn btn-primary mr-2']) !!}
                     <a href="{{ route('admin.detectionReports.index') }}" class="btn btn-default">取消</a>
