@@ -40,9 +40,9 @@ Route::post(
 )->name('io_generator_builder_generate_from_file');
 
 // 強制禁止Register
-Route::any('register', function() {
-    return redirect('/');
-});
+// Route::any('register', function() {
+//     return redirect('/');
+// });
 
 Route::prefix('admin')->group(function () {
     Route::middleware(['auth'])->group(function() {
