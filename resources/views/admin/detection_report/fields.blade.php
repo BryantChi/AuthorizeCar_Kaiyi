@@ -15,7 +15,7 @@
     <div class="form-group">
         <label class="font-weight-bold" for="reports_reporter">報告原有人</label>
         <select class="form-control custom-select bg-white @error('reports_reporter') is-invalid @enderror"
-            name="reports_reporter">
+            name="reports_reporter" id="reports_reporter">
             <option value="">請選擇</option>
             @foreach ($reporter as $item)
                 <option value="{{ $item->id }}">{{ $item->reporter_name }}</option>
@@ -34,7 +34,7 @@
     </div>
     <div class="form-group">
         <label class="font-weight-bold" for="reports_car_model">型號</label>
-        <select class="form-control custom-select bg-white @error('reports_car_model') is-invalid @enderror"
+        <select class="form-control custom-select2 bg-white2 @error('reports_car_model') is-invalid @enderror"
             name="reports_car_model" id="reports_car_model">
             <option value="">請選擇</option>
         </select>
@@ -46,7 +46,7 @@
     <div class="form-group">
         <label class="font-weight-bold" for="reports_regulations">法規項目</label>
         <select class="form-control custom-select bg-white @error('reports_regulations') is-invalid @enderror"
-            name="reports_regulations">
+            name="reports_regulations" id="reports_regulations">
             <option value="">請選擇</option>
             @foreach ($regulations as $item)
                 <option value="{{ $item->regulations_num }}">{{ $item->regulations_name }}</option>
@@ -75,7 +75,7 @@
     <div class="form-group position-relative">
         <label class="font-weight-bold" for="reports_f_e">F/E</label>
         <select class="form-control custom-select bg-white @error('reports_f_e') is-invalid @enderror"
-            name="reports_f_e">
+            name="reports_f_e" id="reports_f_e">
             <option value="F">F</option>
             <option value="E">E</option>
         </select>
@@ -91,7 +91,7 @@
     <div class="form-group">
         <label class="font-weight-bold" for="reports_authorize_status">授權狀態</label>
         <select class="form-control custom-select bg-white @error('reports_authorize_status') is-invalid @enderror"
-            name="reports_authorize_status">
+            name="reports_authorize_status" id="reports_authorize_status">
             <option value="">請選擇</option>
             @foreach ($authStatus as $item)
                 <option value="{{ $item->id }}">{{ $item->status_name }}</option>
@@ -101,6 +101,56 @@
 </div>
 @push('scripts')
     <script>
+        $('#reports_authorize_status').select2({
+            language: 'zh-TW',
+            width: '100%',
+            maximumInputLength: 10,
+            minimumInputLength: 0,
+            tags: false,
+            placeholder: '請選擇',
+            allowClear: true
+        });
+        $('#reports_f_e').select2({
+            language: 'zh-TW',
+            width: '100%',
+            maximumInputLength: 10,
+            minimumInputLength: 0,
+            tags: false,
+            placeholder: '請選擇',
+            allowClear: true
+        });
+        $('#reports_reporter').select2({
+            language: 'zh-TW',
+            width: '100%',
+            maximumInputLength: 10,
+            minimumInputLength: 0,
+            tags: false,
+            placeholder: '請選擇',
+            allowClear: true
+        });
+        $('#reports_regulations').select2({
+            language: 'zh-TW',
+            width: '100%',
+            maximumInputLength: 10,
+            minimumInputLength: 0,
+            tags: false,
+            placeholder: '請選擇',
+            allowClear: true
+        });
+        $('#reports_car_brand').select2({
+            language: 'zh-TW',
+            width: '100%',
+            maximumInputLength: 10,
+            minimumInputLength: 0,
+            tags: false,
+            placeholder: '請選擇',
+            allowClear: true
+        });
+        $('#reports_car_model').empty().select2({
+            data: [],
+            placeholder: '請先選擇廠牌',
+            allowClear: true
+        });
         $('#reports_car_brand').on('change', function() {
             var brand_id = $(this).val();
             if (brand_id) {
@@ -113,17 +163,28 @@
                     },
                     dataType: 'json',
                     success: function(data) {
-                        $('#reports_car_model').empty();
-                        $('#reports_car_model').append('<option value="">請選擇</option>');
-                        $.each(data, function(key, value) {
-                            $('#reports_car_model').append('<option value="' + value.id + '">' + value
-                                .model_name + '</option>');
+                        $('#reports_car_model').empty().select2({
+                            data: data.map(item => ({
+                                id: item.id,
+                                text: item.model_name
+                            })),
+                            placeholder: '請先選擇廠牌',
+                            allowClear: true
                         });
+                        // $('#reports_car_model').append('<option value="">請選擇</option>');
+                        // $.each(data, function(key, value) {
+                        //     $('#reports_car_model').append('<option value="' + value.id + '">' + value
+                        //         .model_name + '</option>');
+                        // });
                     }
                 });
             } else {
-                $('#reports_car_model').empty();
-                $('#reports_car_model').append('<option value="">請選擇</option>');
+                $('#reports_car_model').empty().select2({
+                    data: [],
+                    placeholder: '請先選擇廠牌',
+                    allowClear: true
+                });
+                // $('#reports_car_model').append('<option value="">請選擇</option>');
             }
         });
     </script>

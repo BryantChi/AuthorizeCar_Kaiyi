@@ -16,16 +16,16 @@
                         {!! Form::open(['route' => ['admin.regulations.destroy', $regulations->id], 'method' => 'delete']) !!}
                         <div class='btn-group'>
                             <a href="{{ route('admin.regulations.show', [$regulations->id]) }}"
-                                class='btn btn-default btn-xs'>
+                                class='btn btn-default btn-sm'>
                                 <i class="far fa-eye"></i>
                             </a>
                             <a href="{{ route('admin.regulations.edit', [$regulations->id]) }}"
-                                class='btn btn-default btn-xs'>
+                                class='btn btn-default btn-sm'>
                                 <i class="far fa-edit"></i>
                             </a>
                             {!! Form::button('<i class="far fa-trash-alt"></i>', [
                                 'type' => 'submit',
-                                'class' => 'btn btn-danger btn-xs',
+                                'class' => 'btn btn-danger btn-sm',
                                 'onclick' => "return confirm('Are you sure?')",
                             ]) !!}
                         </div>

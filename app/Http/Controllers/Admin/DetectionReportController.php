@@ -62,6 +62,8 @@ class DetectionReportController extends Controller
 
         // $validated = $request->validated();
 
+        // dd($validated);
+
         // $detectionReport = DetectionReport::create($request->all());
 
         Flash::error('功能開發中!!!');
