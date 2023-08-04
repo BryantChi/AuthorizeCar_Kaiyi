@@ -101,51 +101,6 @@
 </div>
 @push('scripts')
     <script>
-        $('#reports_authorize_status').select2({
-            language: 'zh-TW',
-            width: '100%',
-            maximumInputLength: 10,
-            minimumInputLength: 0,
-            tags: false,
-            placeholder: '請選擇',
-            allowClear: true
-        });
-        $('#reports_f_e').select2({
-            language: 'zh-TW',
-            width: '100%',
-            maximumInputLength: 10,
-            minimumInputLength: 0,
-            tags: false,
-            placeholder: '請選擇',
-            allowClear: true
-        });
-        $('#reports_reporter').select2({
-            language: 'zh-TW',
-            width: '100%',
-            maximumInputLength: 10,
-            minimumInputLength: 0,
-            tags: false,
-            placeholder: '請選擇',
-            allowClear: true
-        });
-        $('#reports_regulations').select2({
-            language: 'zh-TW',
-            width: '100%',
-            maximumInputLength: 10,
-            minimumInputLength: 0,
-            tags: false,
-            placeholder: '請選擇',
-            allowClear: true
-        });
-        $('#reports_car_brand').select2({
-            language: 'zh-TW',
-            width: '100%',
-            maximumInputLength: 10,
-            minimumInputLength: 0,
-            tags: false,
-            placeholder: '請選擇',
-            allowClear: true
-        });
         $('#reports_car_model').empty().select2({
             data: [],
             placeholder: '請先選擇廠牌',
@@ -163,28 +118,30 @@
                     },
                     dataType: 'json',
                     success: function(data) {
-                        $('#reports_car_model').empty().select2({
-                            data: data.map(item => ({
-                                id: item.id,
-                                text: item.model_name
-                            })),
-                            placeholder: '請先選擇廠牌',
-                            allowClear: true
-                        });
-                        // $('#reports_car_model').append('<option value="">請選擇</option>');
-                        // $.each(data, function(key, value) {
-                        //     $('#reports_car_model').append('<option value="' + value.id + '">' + value
-                        //         .model_name + '</option>');
+                        // $('#reports_car_model').empty().select2({
+                        //     data: data.map(item => ({
+                        //         id: item.id,
+                        //         text: item.model_name
+                        //     })),
+                        //     placeholder: '請先選擇廠牌',
+                        //     allowClear: true
                         // });
+                        $('#reports_car_model').empty();
+                        $('#reports_car_model').append('<option value="">請先選擇廠牌</option>');
+                        $.each(data, function(key, value) {
+                            $('#reports_car_model').append('<option value="' + value.id + '">' + value
+                                .model_name + '</option>');
+                        });
                     }
                 });
             } else {
-                $('#reports_car_model').empty().select2({
-                    data: [],
-                    placeholder: '請先選擇廠牌',
-                    allowClear: true
-                });
-                // $('#reports_car_model').append('<option value="">請選擇</option>');
+                // $('#reports_car_model').empty().select2({
+                //     data: [],
+                //     placeholder: '請先選擇廠牌',
+                //     allowClear: true
+                // });
+                $('#reports_car_model').empty();
+                $('#reports_car_model').append('<option value="">請先選擇廠牌</option>');
             }
         });
     </script>
