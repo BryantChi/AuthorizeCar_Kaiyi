@@ -19,6 +19,19 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
+Route::any('/clear-cache', function () {
+    \Artisan::call('optimize:clear');
+    \Artisan::call('cache:clear');
+    \Artisan::call('route:clear');
+    \Artisan::call('config:clear');
+    \Artisan::call('config:cache');
+    \Artisan::call('view:clear');
+    // return "All Cache is cleared";
+    // $pageInfo = PageSettingInfo::getHomeBanner('/index');
+    // return view('index', ['pageInfo' => $pageInfo]);
+    return redirect()->route('home');
+});
+
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
