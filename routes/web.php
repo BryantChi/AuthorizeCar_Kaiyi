@@ -68,8 +68,12 @@ Route::prefix('admin')->group(function () {
         Route::any('detectionReports', [DetectionReportController::class, 'index'])->name('admin.detectionReports.index');
         Route::any('detectionReports/create', [DetectionReportController::class, 'create'])->name('admin.detectionReports.create');
         Route::any('detectionReports/store', [DetectionReportController::class, 'store'])->name('admin.detectionReports.store');
+        Route::any('detectionReports/destroy/{id}', [DetectionReportController::class, 'destroy'])->name('admin.detectionReports.destroy');
+        Route::any('detectionReports/update/{id}', [DetectionReportController::class, 'update'])->name('admin.detectionReports.update');
+        Route::any('detectionReports/edit/{id}', [DetectionReportController::class, 'edit'])->name('admin.detectionReports.edit');
     });
 });
 
 Route::any('get-models-by-brand', [CarModelController::class, 'getModelsByBrand'])->name('getModelsByBrand');
+Route::any('get-status-by-letter', [DetectionReportController::class, 'getStatusByLetter'])->name('getStatusByLetter');
 

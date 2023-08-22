@@ -11,6 +11,7 @@ use App\Models\Admin\CarBrand;
 use App\Models\Admin\CarModel;
 use App\Models\Admin\Regulations;
 use App\Models\Admin\Reporter;
+use App\Repositories\Admin\DetectionReportRepository;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
@@ -18,6 +19,13 @@ use Response;
 
 class DetectionReportController extends Controller
 {
+    private $detectionReportRepository;
+
+    public function __construct(DetectionReportRepository $detectionReportRepository)
+    {
+        $this->detectionReportRepository = $detectionReportRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -27,6 +35,7 @@ class DetectionReportController extends Controller
     {
         //
         $model = DetectionReport::orderBy('updated_at', 'DESC')->paginate(15);
+        // $model = $this->detectionReportRepository->getAllDetectionReports();
 
         return view('admin.detection_report.index', ['detectionReports' => $model]);
     }
@@ -39,7 +48,7 @@ class DetectionReportController extends Controller
     public function create()
     {
         //
-        $auth_status = AuthStatus::all();
+        $auth_status = AuthStatus::whereIn('id', [1, 2, 3])->get();
 
         $reporter = Reporter::all();
 
@@ -47,7 +56,7 @@ class DetectionReportController extends Controller
 
         $carBrand = CarBrand::all();
 
-        return view('admin.detection_report.create', ['authStatus' => $auth_status, 'reporter' => $reporter, 'regulations' => $regulations, 'brand' => $carBrand]);
+        return view('admin.detection_report.create', ['authStatus' => $auth_status, 'reporter' => $reporter, 'regulations' => $regulations, 'brand' => $carBrand, 'mode' => 'create']);
     }
 
     /**
@@ -60,19 +69,26 @@ class DetectionReportController extends Controller
     {
         //
 
-        // $validated = $request->validated();
+        $validated = $request->validated();
 
-        // dd($validated);
+        $input = $request->all();
 
-        // $detectionReport = DetectionReport::create($request->all());
+        // if ($input['letter_id'] == '' && $input['letter_id'] == null) {
+        //     $input['reports_authorize_status'] = '2';
+        // } else {
+        //     $input['reports_authorize_status'] = '3';
+        // }
+        $input['reports_authorize_status'] = '2';
 
-        Flash::error('功能開發中!!!');
+        $detectionReport = DetectionReport::create($request->all());
 
-        return redirect(route('admin.detectionReports.create'));
+        // Flash::error('功能開發中!!!');
 
-        // Flash::success('DetectionReport saved successfully.');
+        // return redirect(route('admin.detectionReports.create'));
 
-        // return redirect(route('admin.detectionReports.index'));
+        Flash::success('DetectionReport saved successfully.');
+
+        return redirect(route('admin.detectionReports.index'));
 
     }
 
@@ -93,9 +109,27 @@ class DetectionReportController extends Controller
      * @param  \App\Models\DetectionReport  $detectionReport
      * @return \Illuminate\Http\Response
      */
-    public function edit(DetectionReport $detectionReport)
+    public function edit($id)
     {
         //
+        $detectionReport = DetectionReport::find($id);
+
+        if (empty($detectionReport)) {
+            Flash::error('Detection Report not found');
+
+            return redirect(route('admin.detectionReports.index'));
+        }
+
+        $auth_status = AuthStatus::all();
+
+        $reporter = Reporter::all();
+
+        $regulations = Regulations::all();
+
+        $carBrand = CarBrand::all();
+
+        return view('admin.detection_report.edit', ['detectionReport' => $detectionReport, 'authStatus' => $auth_status, 'reporter' => $reporter, 'regulations' => $regulations, 'brand' => $carBrand, 'mode' => 'edit']);
+
     }
 
     /**
@@ -105,9 +139,22 @@ class DetectionReportController extends Controller
      * @param  \App\Models\DetectionReport  $detectionReport
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateDetectionReportRequest $request, DetectionReport $detectionReport)
+    public function update(UpdateDetectionReportRequest $request, $id)
     {
         //
+        $detectionReport = DetectionReport::find($id);
+
+        if (empty($detectionReport)) {
+            Flash::error('Detection Report not found');
+
+            return redirect(route('admin.detectionReports.index'));
+        }
+
+        $detectionReport->update($request->all());
+
+        Flash::success('Detection Report updated successfully.');
+
+        return redirect(route('admin.detectionReports.index'));
     }
 
     /**
@@ -116,8 +163,34 @@ class DetectionReportController extends Controller
      * @param  \App\Models\DetectionReport  $detectionReport
      * @return \Illuminate\Http\Response
      */
-    public function destroy(DetectionReport $detectionReport)
+    public function destroy($id)
     {
         //
+        $detectionReport = DetectionReport::find($id);
+
+        if (empty($detectionReport)) {
+            Flash::error('Detection Report not found');
+
+            return redirect(route('admin.detectionReports.index'));
+        }
+
+        $detectionReport->delete($id);
+
+        Flash::success('Detection Report deleted successfully.');
+
+        return redirect(route('admin.detectionReports.index'));
+    }
+
+    public function getStatusByLetter(Request $request)
+    {
+        $enable = $request->input('enable');
+        if($enable == '' && $enable == null) {
+            $auth_status = AuthStatus::whereIn('id', [1, 2, 3])->get(['id', 'status_name']);
+        } else {
+            $auth_status = AuthStatus::whereNotIn('id', [1, 2, 3])->get(['id', 'status_name']);
+        }
+
+
+        return response()->json($auth_status);
     }
 }

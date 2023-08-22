@@ -50,3 +50,35 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script>
+        $('input[name=letter_id]').on('change', function() {
+            $('#reports_authorize_status').prop('disabled', true);
+            var letter_id = $('input[name=letter_id]').val();
+            // console.log(letter_id);
+            $.ajax({
+                url: "{{ route('getStatusByLetter') }}",
+                type: 'GET',
+                data: {
+                    enable: letter_id,
+                    _token: '{{ csrf_token() }}'
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('#reports_authorize_status').empty();
+                    $('#reports_authorize_status').append('<option value="">請選擇</option>');
+                    $.each(data, function(key, value) {
+                        $('#reports_authorize_status').append('<option value="' + value.id +
+                            '">' + value
+                            .status_name + '</option>');
+                    });
+                },
+                complete: function(XMLHttpRequest, textStatus) {
+                    setTimeout(function(){
+                        $('#reports_authorize_status').prop('disabled', false);
+                    }, 300);
+                },
+            });
+        });
+    </script>
+@endpush

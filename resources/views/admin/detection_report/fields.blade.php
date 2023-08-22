@@ -10,7 +10,7 @@
     </div>
     <div class="form-group">
         {!! Form::label('reports_expiration_date_end', '有效期限-迄') !!}
-        {!! Form::text('reports_expiration_date_end', null, ['class' => 'form-control']) !!}
+        {!! Form::date('reports_expiration_date_end', null, ['class' => 'form-control']) !!}
     </div>
     <div class="form-group">
         <label class="font-weight-bold" for="reports_reporter">報告原有人</label>
@@ -18,7 +18,7 @@
             name="reports_reporter" id="reports_reporter">
             <option value="">請選擇</option>
             @foreach ($reporter as $item)
-                <option value="{{ $item->id }}">{{ $item->reporter_name }}</option>
+                <option {{ $detectionReport->reports_reporter ?? '' == $item->id ? ' selected="selected"' : ''}} value="{{ $item->id }}">{{ $item->reporter_name }}</option>
             @endforeach
         </select>
     </div>
@@ -28,7 +28,7 @@
             name="reports_car_brand" id="reports_car_brand">
             <option value="">請選擇</option>
             @foreach ($brand as $item)
-                <option value="{{ $item->id }}">{{ $item->brand_name }}</option>
+                <option {{ $detectionReport->reports_car_brand ?? '' == $item->id ? ' selected="selected"' : ''}} value="{{ $item->id }}">{{ $item->brand_name }}</option>
             @endforeach
         </select>
     </div>
@@ -46,10 +46,13 @@
     <div class="form-group">
         <label class="font-weight-bold" for="reports_regulations">法規項目</label>
         <select class="form-control custom-select bg-white @error('reports_regulations') is-invalid @enderror"
-            name="reports_regulations" id="reports_regulations">
+            name="reports_regulations[]" id="reports_regulations" multiple="multiple" placeholder="請選擇">
             <option value="">請選擇</option>
-            @foreach ($regulations as $item)
-                <option value="{{ $item->regulations_num }}">{{ $item->regulations_name }}</option>
+            <?php
+
+            ?>
+            @foreach ($regulations as  $item)
+                <option {{ in_array($item->regulations_num, $detectionReport->reports_regulations ?? array() ) ? ' selected="selected"' : ''}} value="{{ $item->regulations_num }}">{{ $item->regulations_name }}</option>
             @endforeach
         </select>
     </div>
@@ -62,11 +65,11 @@
     </div>
     <div class="form-group">
         {!! Form::label('reports_test_date', '測試日期') !!}
-        {!! Form::text('reports_test_date', null, ['class' => 'form-control']) !!}
+        {!! Form::date('reports_test_date', null, ['class' => 'form-control']) !!}
     </div>
     <div class="form-group">
         {!! Form::label('reports_date', '報告日期') !!}
-        {!! Form::text('reports_date', null, ['class' => 'form-control']) !!}
+        {!! Form::date('reports_date', null, ['class' => 'form-control']) !!}
     </div>
     <div class="form-group">
         {!! Form::label('reports_vin', '代表車車身碼(VIN)') !!}
@@ -76,29 +79,37 @@
         <label class="font-weight-bold" for="reports_f_e">F/E</label>
         <select class="form-control custom-select bg-white @error('reports_f_e') is-invalid @enderror"
             name="reports_f_e" id="reports_f_e">
-            <option value="F">F</option>
-            <option value="E">E</option>
+            <option value="">請選擇</option>
+            <option {{ ($detectionReport->reports_f_e ?? '') == 'F' ? ' selected="selected"' : ''}} value="F">F</option>
+            <option {{ ($detectionReport->reports_f_e ?? '') == 'E' ? ' selected="selected"' : ''}} value="E">E</option>
         </select>
     </div>
     <div class="form-group">
         {!! Form::label('reports_reply', '車安回函') !!}
         {!! Form::text('reports_reply', null, ['class' => 'form-control']) !!}
     </div>
-    <div class="form-group d-none">
-        {!! Form::label('reports_note', '說明') !!}
-        {!! Form::text('reports_note', null, ['class' => 'form-control']) !!}
-    </div>
-    <div class="form-group">
+    <div class="form-group {{ $mode == 'create' ? 'd-none' : '' }}">
         <label class="font-weight-bold" for="reports_authorize_status">授權狀態</label>
         <select class="form-control custom-select bg-white @error('reports_authorize_status') is-invalid @enderror"
             name="reports_authorize_status" id="reports_authorize_status">
             <option value="">請選擇</option>
             @foreach ($authStatus as $item)
-                <option value="{{ $item->id }}">{{ $item->status_name }}</option>
+                <option {{ ($detectionReport->reports_authorize_status ?? '') == $item->id ? 'selected="selected"' : ''}} value="{{ $item->id }}">{{ $item->status_name }}</option>
             @endforeach
         </select>
     </div>
+    <div class="form-group">
+        {!! Form::label('reports_note', '說明') !!}
+        <textarea class="form-control" name="reports_note" id="reports_note" rows="5">{{ $detectionReport->reports_note ?? ''}}</textarea>
+    </div>
 </div>
+@push('page_css')
+    <style>
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            color: #444444 !important;
+        }
+    </style>
+@endpush
 @push('scripts')
     <script>
         $('#reports_car_model').empty().select2({
@@ -106,7 +117,25 @@
             placeholder: '請先選擇廠牌',
             allowClear: true
         });
+        $('#reports_regulations').select2({
+            language: 'zh-TW',
+            width: '100%',
+            allowClear: true,
+            // placeholder: '請選擇',
+            tags: false,
+            tokenSeparators: [',', ' ']
+        })
+        var modeCheck = '{{ $mode == "edit"}}';
+        console.log(modeCheck);
+        if(modeCheck) {
+            setTimeout(() => {
+                $('#reports_car_brand').change();
+            }, 1000);
+        }
+
+        $('#reports_car_brand').change();
         $('#reports_car_brand').on('change', function() {
+            $('#reports_car_model').prop('disabled', true);
             var brand_id = $(this).val();
             if (brand_id) {
                 $.ajax({
@@ -129,10 +158,15 @@
                         $('#reports_car_model').empty();
                         $('#reports_car_model').append('<option value="">請先選擇廠牌</option>');
                         $.each(data, function(key, value) {
-                            $('#reports_car_model').append('<option value="' + value.id + '">' + value
+                            $('#reports_car_model').append('<option {{ $detectionReport->reports_car_model ?? "" == ' + value.id + ' ? " selected=selected" : ''}} value="' + value.id + '">' + value
                                 .model_name + '</option>');
                         });
-                    }
+                    },
+                    complete: function(XMLHttpRequest, textStatus) {
+                        setTimeout(function(){
+                            $('#reports_car_model').prop('disabled', false);
+                        }, 300);
+                    },
                 });
             } else {
                 // $('#reports_car_model').empty().select2({

@@ -1,7 +1,7 @@
 <li class="nav-item">
     <a href="{{ route('admin.detectionReports.create') }}"
         class="nav-link">
-        <p>新增資料</p>
+        <p>新增檢測報告</p>
     </a>
 </li>
 

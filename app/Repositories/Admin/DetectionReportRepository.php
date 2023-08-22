@@ -4,7 +4,7 @@ namespace App\Repositories\Admin;
 
 use App\Models\Admin\DetectionReport as Model;
 
-class DetailReportRepository {
+class DetectionReportRepository {
 
 
     public static function getAllDetectionReports() {

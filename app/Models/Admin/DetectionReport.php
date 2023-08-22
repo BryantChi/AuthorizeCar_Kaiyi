@@ -13,7 +13,7 @@ class DetectionReport extends Model
     use SoftDeletes;
 
 
-    public $table = 'detection_reports';
+    protected $table = 'detection_reports';
 
 
     protected $dates = ['deleted_at'];
@@ -42,6 +42,7 @@ class DetectionReport extends Model
     ];
 
     protected $casts = [
+        'reports_regulations' => 'json',
         'reports_photo' => 'json',
     ];
 }
