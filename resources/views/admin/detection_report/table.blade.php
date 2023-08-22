@@ -41,10 +41,10 @@
                     <td>{{ $item->reports_inspection_institution }}</td>
                     <td>
                         <?php
-                            $regulations = DB::table('regulations_infos')->whereNull('deleted_at')->whereIn('regulations_num', $item->reports_regulations)->get('regulations_name');
+                            $regulations = DB::table('regulations_infos')->whereNull('deleted_at')->whereIn('regulations_num', $item->reports_regulations)->get();
                         ?>
                         @foreach (json_decode($regulations) as $info)
-                            <span class="rounded mr-1 py-1 px-2 bg-info">{{ $info->regulations_name }}</span>
+                            <span class="rounded mr-1 py-1 px-2 bg-info">{{ $info->regulations_num.' '.$info->regulations_name }}</span>
                         @endforeach
                     </td>
                     <td>{{ $item->reports_car_model_code }}</td>
