@@ -52,7 +52,7 @@
 
             ?>
             @foreach ($regulations as  $item)
-                <option {{ in_array($item->regulations_num, $detectionReport->reports_regulations ?? array() ) ? ' selected="selected"' : ''}} value="{{ $item->regulations_num }}">{{ $item->regulations_name }}</option>
+                <option {{ in_array($item->regulations_num, $detectionReport->reports_regulations ?? array() ) ? ' selected="selected"' : ''}} value="{{ $item->regulations_num }}">{{ $item->regulations_num.' '.$item->regulations_name }}</option>
             @endforeach
         </select>
     </div>
