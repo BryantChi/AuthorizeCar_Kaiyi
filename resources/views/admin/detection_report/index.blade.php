@@ -141,10 +141,10 @@
                         var report = JSON.parse(res);
                         // console.log(window.location.host + report.word);
                         if (report.status == 'success') {
-                            $('.word-download-content>a').attr('href',report.word);
-                            $('.word-download-content>a').prop('href',report.word);
-                            $('.pdf-download-content>a').attr('href',report.pdf);
-                            $('.pdf-download-content>a').prop('href',report.pdf);
+                            $('.word-download-content>a').attr('href',window.location.origin + '/' + report.word);
+                            $('.word-download-content>a').prop('href',window.location.origin + '/' + report.word);
+                            $('.pdf-download-content>a').attr('href',window.location.origin + '/' + report.pdf);
+                            $('.pdf-download-content>a').prop('href',window.location.origin + '/' + report.pdf);
                             setTimeout(function() {
                                 $('#downloadModal').modal('show');
                                 // window.open(window.location.origin + '/' + report.pdf);
