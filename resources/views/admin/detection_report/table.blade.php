@@ -2,7 +2,13 @@
     <table class="table table-hover" id="detectionReports-table">
         <thead>
             <tr>
-                <th></th>
+                <th>
+                    <div class="form-group form-check mb-0 py-1 d-flex align-items-center">
+                        <input type="checkbox" class="form-check-input check-all mr-1 my-0" style="width: 20px;height: 20px;"
+                         id="check-all" value="" />
+                        <label for="check-all" class="check-all-label px-2 mb-0">全選</label>
+                    </div>
+                </th>
                 <th>發函文號</th>
                 <th>檢測報告編號</th>
                 <th>有效期限-迄</th>
@@ -29,22 +35,31 @@
                 <tr>
                     <td>
                         <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" style="width: 20px;height: 20px;" name="reports[]" id="{{ $item->id }}" value="{{$item->id}}" data-reporter="{{$item->reports_reporter}}" />
+                            <input type="checkbox" class="form-check-input" style="width: 20px;height: 20px;"
+                                name="reports[]" id="{{ $item->id }}" value="{{ $item->id }}"
+                                data-reporter="{{ $item->reports_reporter }}" />
                         </div>
                     </td>
                     <td>{{ $item->letter_id }}</td>
                     <td>{{ $item->reports_num }}</td>
                     <td>{{ $item->reports_expiration_date_end }}</td>
-                    <td>{{ DB::table('reporter_infos')->whereNull('deleted_at')->where('id', $item->reports_reporter)->value('reporter_name') }}</td>
-                    <td>{{ DB::table('car_brand')->whereNull('deleted_at')->where('id', $item->reports_car_brand)->value('brand_name') }}</td>
-                    <td>{{ DB::table('car_model')->whereNull('deleted_at')->where('id', $item->reports_car_model)->value('model_name') }}</td>
+                    <td>{{ DB::table('reporter_infos')->whereNull('deleted_at')->where('id', $item->reports_reporter)->value('reporter_name') }}
+                    </td>
+                    <td>{{ DB::table('car_brand')->whereNull('deleted_at')->where('id', $item->reports_car_brand)->value('brand_name') }}
+                    </td>
+                    <td>{{ DB::table('car_model')->whereNull('deleted_at')->where('id', $item->reports_car_model)->value('model_name') }}
+                    </td>
                     <td>{{ $item->reports_inspection_institution }}</td>
                     <td>
                         <?php
-                            $regulations = DB::table('regulations_infos')->whereNull('deleted_at')->whereIn('regulations_num', $item->reports_regulations)->get();
+                        $regulations = DB::table('regulations_infos')
+                            ->whereNull('deleted_at')
+                            ->whereIn('regulations_num', $item->reports_regulations)
+                            ->get();
                         ?>
                         @foreach (json_decode($regulations) as $info)
-                            <span class="rounded mr-1 py-1 px-2 bg-info">{{ $info->regulations_num.' '.$info->regulations_name }}</span>
+                            <span
+                                class="rounded mr-1 py-1 px-2 bg-info">{{ $info->regulations_num . ' ' . $info->regulations_name }}</span>
                         @endforeach
                     </td>
                     <td>{{ $item->reports_car_model_code }}</td>
@@ -56,7 +71,8 @@
                     <td>{{ $item->reports_f_e }}</td>
                     <td>{{ $item->reports_reply }}</td>
                     <td>{{ $item->reports_note }}</td>
-                    <td>{{ DB::table('authorize_status')->whereNull('deleted_at')->where('id', $item->reports_authorize_status)->value('status_name') }}</td>
+                    <td>{{ DB::table('authorize_status')->whereNull('deleted_at')->where('id', $item->reports_authorize_status)->value('status_name') }}
+                    </td>
                     <td width="120">
                         {!! Form::open(['route' => ['admin.detectionReports.destroy', $item->id], 'method' => 'delete']) !!}
                         <div class='btn-group'>
@@ -81,11 +97,29 @@
         </tbody>
     </table>
 </div>
-<style>
-    #detectionReports-table th {
-        white-space: nowrap;
-    }
-    #detectionReports-table td {
-        white-space: nowrap;
-    }
-</style>
+@push('page_css')
+    <style>
+        #detectionReports-table th {
+            white-space: nowrap;
+        }
+
+        #detectionReports-table td {
+            white-space: nowrap;
+        }
+    </style>
+@endpush
+@push('page_scripts')
+    <script>
+        $(function(){
+            $('#check-all').change(function(){
+                if ($(this).is(':checked')) {
+                    $('.check-all-label').html('取消全選');
+                    $('#detectionReports-table input[name="reports[]"]').prop('checked', true);
+                } else {
+                    $('.check-all-label').html('全選');
+                    $('#detectionReports-table input[name="reports[]"]').prop('checked', false);
+                }
+            })
+        })
+    </script>
+@endpush
