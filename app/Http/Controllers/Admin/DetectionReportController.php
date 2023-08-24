@@ -15,6 +15,8 @@ use App\Repositories\Admin\DetectionReportRepository;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+use App\Services\WordServices;
+use Ilovepdf\Ilovepdf;
 
 
 class DetectionReportController extends Controller
@@ -48,7 +50,7 @@ class DetectionReportController extends Controller
     public function create()
     {
         //
-        $auth_status = AuthStatus::whereIn('id', [1, 2, 3])->get();
+        $auth_status = AuthStatus::whereIn('id', [1, 2, 3, 4])->get();
 
         $reporter = Reporter::all();
 
@@ -73,7 +75,7 @@ class DetectionReportController extends Controller
 
         $input = $request->all();
 
-        // if ($input['letter_id'] == '' && $input['letter_id'] == null) {
+        // if (($input['letter_id'] == '' && $input['letter_id'] == null) && ($input['reports_reply'] == '' && $input['reports_reply'] == null)) {
         //     $input['reports_authorize_status'] = '2';
         // } else {
         //     $input['reports_authorize_status'] = '3';
@@ -120,7 +122,7 @@ class DetectionReportController extends Controller
             return redirect(route('admin.detectionReports.index'));
         }
 
-        $auth_status = AuthStatus::all();
+        $auth_status = AuthStatus::whereIn('id', [2,3,4])->get();
 
         $reporter = Reporter::all();
 
@@ -192,5 +194,31 @@ class DetectionReportController extends Controller
 
 
         return response()->json($auth_status);
+    }
+
+    public function exportDocumentTest(Request $request)
+    {
+        $wordService = new WordServices();
+
+        $input = $request->all();
+
+        $type = $input['typer'];
+        $data_ids = $input['data_ids'];
+
+        $file_res = $wordService->updateWordDocument($type, $data_ids);
+
+        // Flash::success('Detection Report download successfully.');
+
+        return $file_res;
+    }
+
+    public function convertToPdf(Request $request)
+    {
+        // $input = $request->input('convert');
+        // $ilovepdf = new Ilovepdf('project_public_0972a67458e4dd3ac4561edec19a48ed_pWfxHf7de3bcb072e2b66fc59b5cf8ded47d7','secret_key_f428272dfee9a265364aeadf9d895a8a_UMGYM186d525137876fd82fbc8a61f341c725');
+        // $myTask = $ilovepdf->newTask('officepdf');
+        // $file1 = $myTask->addFile(public_path($input));
+        // $myTask->execute();
+        // $myTask->download($folderPath);
     }
 }

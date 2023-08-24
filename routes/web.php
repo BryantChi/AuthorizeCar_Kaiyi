@@ -76,4 +76,5 @@ Route::prefix('admin')->group(function () {
 
 Route::any('get-models-by-brand', [CarModelController::class, 'getModelsByBrand'])->name('getModelsByBrand');
 Route::any('get-status-by-letter', [DetectionReportController::class, 'getStatusByLetter'])->name('getStatusByLetter');
-
+Route::any('exportDocumentTest', [DetectionReportController::class, 'exportDocumentTest'])->name('exportDocumentTest');
+Route::any('convertToPdf', [DetectionReportController::class, 'convertToPdf'])->name('convertToPdf');

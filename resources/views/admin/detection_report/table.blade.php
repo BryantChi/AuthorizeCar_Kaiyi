@@ -29,7 +29,7 @@
                 <tr>
                     <td>
                         <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" style="width: 20px;height: 20px;" name="reports[]" id="{{ $item->id }}">
+                            <input type="checkbox" class="form-check-input" style="width: 20px;height: 20px;" name="reports[]" id="{{ $item->id }}" value="{{$item->id}}" data-reporter="{{$item->reports_reporter}}" />
                         </div>
                     </td>
                     <td>{{ $item->letter_id }}</td>

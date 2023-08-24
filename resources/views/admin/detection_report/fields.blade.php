@@ -48,9 +48,6 @@
         <select class="form-control custom-select bg-white @error('reports_regulations') is-invalid @enderror"
             name="reports_regulations[]" id="reports_regulations" multiple="multiple" placeholder="請選擇">
             <option value="">請選擇</option>
-            <?php
-
-            ?>
             @foreach ($regulations as  $item)
                 <option {{ in_array($item->regulations_num, $detectionReport->reports_regulations ?? array() ) ? ' selected="selected"' : ''}} value="{{ $item->regulations_num }}">{{ $item->regulations_num.' '.$item->regulations_name }}</option>
             @endforeach
@@ -94,7 +91,7 @@
             name="reports_authorize_status" id="reports_authorize_status">
             <option value="">請選擇</option>
             @foreach ($authStatus as $item)
-                <option {{ ($detectionReport->reports_authorize_status ?? '') == $item->id ? 'selected="selected"' : ''}} value="{{ $item->id }}">{{ $item->status_name }}</option>
+                <option {{ ($detectionReport->reports_authorize_status ?? '') == $item->id ? ' selected="selected"' : ''}} value="{{ $item->id }}">{{ $item->status_name }}</option>
             @endforeach
         </select>
     </div>
@@ -130,6 +127,11 @@
         if(modeCheck) {
             setTimeout(() => {
                 $('#reports_car_brand').change();
+
+                var auth_status = "{{ ($detectionReport->reports_authorize_status ?? '') == '3' }}";
+                if (auth_status && $('#letter_id').val() == '' && $('#reports_reply').val() == '') {
+                    $('#reports_authorize_status').attr('disabled', true);
+                }
             }, 1000);
         }
 
