@@ -160,7 +160,7 @@
                         $('#reports_car_model').empty();
                         $('#reports_car_model').append('<option value="">請先選擇廠牌</option>');
                         $.each(data, function(key, value) {
-                            $('#reports_car_model').append('<option {{ $detectionReport->reports_car_model ?? "" == ' + value.id + ' ? " selected=selected" : ''}} value="' + value.id + '">' + value
+                            $('#reports_car_model').append('<option {{ ($detectionReport->reports_car_model ?? "") == ' + value.id + ' ? " selected=selected" : ''}} value="' + value.id + '">' + value
                                 .model_name + '</option>');
                         });
                     },
