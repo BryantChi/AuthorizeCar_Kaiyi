@@ -18,7 +18,7 @@
             name="reports_reporter" id="reports_reporter">
             <option value="">請選擇</option>
             @foreach ($reporter as $item)
-                <option {{ $detectionReport->reports_reporter ?? '' == $item->id ? ' selected="selected"' : ''}} value="{{ $item->id }}">{{ $item->reporter_name }}</option>
+                <option {{ ($detectionReport->reports_reporter ?? '') == $item->id ? ' selected="selected"' : ''}} value="{{ $item->id }}">{{ $item->reporter_name }}</option>
             @endforeach
         </select>
     </div>
@@ -28,7 +28,7 @@
             name="reports_car_brand" id="reports_car_brand">
             <option value="">請選擇</option>
             @foreach ($brand as $item)
-                <option {{ $detectionReport->reports_car_brand ?? '' == $item->id ? ' selected="selected"' : ''}} value="{{ $item->id }}">{{ $item->brand_name }}</option>
+                <option {{ ($detectionReport->reports_car_brand ?? '') == $item->id ? ' selected="selected"' : ''}} value="{{ $item->id }}">{{ $item->brand_name }}</option>
             @endforeach
         </select>
     </div>
