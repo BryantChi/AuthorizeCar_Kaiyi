@@ -34,7 +34,7 @@
     </div>
     <div class="form-group">
         <label class="font-weight-bold" for="reports_car_model">型號</label>
-        <select class="form-control custom-select2 bg-white2 @error('reports_car_model') is-invalid @enderror"
+        <select class="form-control custom-select2 bg-white2 w-100 @error('reports_car_model') is-invalid @enderror"
             name="reports_car_model" id="reports_car_model">
             <option value="">請選擇</option>
         </select>
@@ -123,7 +123,7 @@
             tokenSeparators: [',', ' ']
         })
         var modeCheck = '{{ $mode == "edit"}}';
-        console.log(modeCheck);
+        // console.log(modeCheck);
         if(modeCheck) {
             setTimeout(() => {
                 $('#reports_car_brand').change();
@@ -157,10 +157,15 @@
                         //     placeholder: '請先選擇廠牌',
                         //     allowClear: true
                         // });
+                        var selected_id = "{{ $detectionReport->reports_car_model ?? "" }}";
                         $('#reports_car_model').empty();
                         $('#reports_car_model').append('<option value="">請先選擇廠牌</option>');
                         $.each(data, function(key, value) {
-                            $('#reports_car_model').append('<option {{ ($detectionReport->reports_car_model ?? "") == ' + value.id + ' ? " selected=selected" : ''}} value="' + value.id + '">' + value
+                            var selected = '';
+                            if (selected_id == value.id) {
+                                selected = ' selected="selected"';
+                            }
+                            $('#reports_car_model').append('<option '+ selected +' value="' + value.id + '">' + value
                                 .model_name + '</option>');
                         });
                     },
