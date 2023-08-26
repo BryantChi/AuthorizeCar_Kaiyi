@@ -72,6 +72,10 @@
         {!! Form::label('reports_vin', '代表車車身碼(VIN)') !!}
         {!! Form::text('reports_vin', null, ['class' => 'form-control']) !!}
     </div>
+    <div class="form-group">
+        {!! Form::label('reports_authorize_count_before', '移入前授權使用次數') !!}
+        {!! Form::number('reports_authorize_count_before', null, ['class' => 'form-control', 'min' => '0']) !!}
+    </div>
     <div class="form-group position-relative">
         <label class="font-weight-bold" for="reports_f_e">F/E</label>
         <select class="form-control custom-select bg-white @error('reports_f_e') is-invalid @enderror"
