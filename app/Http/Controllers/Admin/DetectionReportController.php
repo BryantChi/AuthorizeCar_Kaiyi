@@ -122,7 +122,9 @@ class DetectionReportController extends Controller
             return redirect(route('admin.detectionReports.index'));
         }
 
-        $auth_status = AuthStatus::whereIn('id', [2,3,4])->get();
+        // $auth_status = AuthStatus::whereIn('id', [2,3,4])->get();
+        // 暫時的需移除
+        $auth_status = AuthStatus::all();
 
         $reporter = Reporter::all();
 
