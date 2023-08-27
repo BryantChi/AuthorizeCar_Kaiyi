@@ -26,7 +26,7 @@
                             {!! Form::button('<i class="far fa-trash-alt"></i>', [
                                 'type' => 'submit',
                                 'class' => 'btn btn-danger btn-sm',
-                                'onclick' => "return confirm('Are you sure?')",
+                                'onclick' => "return check(this)",
                             ]) !!}
                         </div>
                         {!! Form::close() !!}
