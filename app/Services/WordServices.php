@@ -8,6 +8,7 @@ use PhpOffice\PhpWord\TemplateProcessor;
 // use PhpOffice\PhpWord\Writer\PDF;
 use App\Models\Admin\DetectionReport;
 use App\Models\Admin\Reporter;
+use App\Models\Admin\CompanyInfo as Company;
 use stdClass;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -26,6 +27,8 @@ class WordServices
                 $templatefilePath = public_path('template_doc/' . $templatefileName);
                 return $this->setMoveInContract($data_id, $templatefilePath, $templatefileName);
                 break;
+            case 'application_letter': // 申請函
+                break;
             default:
                 $templatefileName = 'Template_檢測報告移入協會合約書.docx';
                 $templatefilePath = public_path('template_doc/' . $templatefileName);
@@ -42,8 +45,21 @@ class WordServices
         $reports_reporter = Reporter::find($detection_reports[0]->reports_reporter);
 
         $templateProcessor->setValue('reports_reporter', $reports_reporter->reporter_name);
+        $templateProcessor->setValue('reporter_num', $reports_reporter->reporter_gui_number);
+        $templateProcessor->setValue('reporter_address', $reports_reporter->reporter_address);
+        $templateProcessor->setValue('reporter_phone', $reports_reporter->reporter_phone);
+        $templateProcessor->setValue('reporter_fax', $reports_reporter->reporter_fax);
+        $templateProcessor->setImageValue('image_sign_reporter', public_path('uploads/'.$reports_reporter->repoter_seal));
 
-        $reports_date = Carbon::parse($detection_reports[0]->reports_date);
+        $company = Company::first();
+        $templateProcessor->setValue('com_name', $reports_reporter->com_name);
+        $templateProcessor->setValue('com_gui_number', $reports_reporter->com_gui_number);
+        $templateProcessor->setValue('com_address', $reports_reporter->com_address);
+        $templateProcessor->setValue('com_phone', $reports_reporter->com_phone);
+        $templateProcessor->setValue('com_fax', $reports_reporter->com_fax);
+        $templateProcessor->setImageValue('image_sign_com', public_path('uploads/'.$company->com_seal));
+
+        $reports_date = Carbon::today();
 
         $start_date_y = ((Int)$reports_date->year) - 1911;
         $start_date_m = $reports_date->month;
@@ -62,9 +78,6 @@ class WordServices
         $templateProcessor->setValue('rpt_y', $expiration_date_y);
         $templateProcessor->setValue('rpt_m', $expiration_date_m);
         $templateProcessor->setValue('rpt_d', $expiration_date_d);
-        // dd(public_path('uploads/repoter_sign/S__16818306222.png'));
-        $templateProcessor->setImageValue('image_sign_reporter', public_path('assets/img/sign_test_icon/sign_com.png'));
-        $templateProcessor->setImageValue('image_sign_com', public_path('assets/img/sign_test_icon/sign_reporter.png'));
 
         $tb_values = array();
 
@@ -129,5 +142,9 @@ class WordServices
             'word' => $fullWordPath,
             'pdf' => $fullPdfPath,
         ]);
+    }
+
+    public function setApplicationLetter($data_id, $filePath) {
+
     }
 }

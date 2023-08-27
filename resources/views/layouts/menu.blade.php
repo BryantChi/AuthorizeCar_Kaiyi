@@ -65,6 +65,13 @@
     </a>
 </li>
 
+<li class="nav-item">
+    <a href="{{ route('admin.companyInfos.index') }}"
+       class="nav-link {{ Request::is('admin/companyInfos*') ? 'active' : '' }}">
+        <p>公司資訊</p>
+    </a>
+</li>
+
 @push('menu_scripts')
     <script>
         $('.dropdown-menus').hide();

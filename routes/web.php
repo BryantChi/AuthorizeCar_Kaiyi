@@ -65,6 +65,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('carBrands', App\Http\Controllers\Admin\CarBrandController::class, ["as" => 'admin']);
         Route::resource('carModels', App\Http\Controllers\Admin\CarModelController::class, ["as" => 'admin']);
         Route::resource('inspectionInstitutions', App\Http\Controllers\Admin\InspectionInstitutionController::class, ["as" => 'admin']);
+        Route::resource('companyInfos', App\Http\Controllers\Admin\CompanyInfoController::class, ["as" => 'admin']);
 
         Route::any('detectionReports', [DetectionReportController::class, 'index'])->name('admin.detectionReports.index');
         Route::any('detectionReports/create', [DetectionReportController::class, 'create'])->name('admin.detectionReports.create');
