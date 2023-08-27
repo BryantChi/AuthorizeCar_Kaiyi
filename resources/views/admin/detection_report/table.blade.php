@@ -49,7 +49,7 @@
                     </td>
                     <td>{{ DB::table('car_model')->whereNull('deleted_at')->where('id', $item->reports_car_model)->value('model_name') }}
                     </td>
-                    <td>{{ $item->reports_inspection_institution }}</td>
+                    <td>{{ App\Models\Admin\InspectionInstitution::where('id', $item->reports_inspection_institution)->value('ii_name') }}</td>
                     <td>
                         <?php
                         $regulations = DB::table('regulations_infos')

@@ -13,9 +13,19 @@
 
     <div class="content px-3">
 
+        @include('flash::message')
+
         @include('adminlte-templates::common.errors')
 
         <div class="card">
+
+            <div class="container-fuild mt-3">
+                <div class="row justify-content-end">
+                    <div class="col-auto mx-3">
+                        <a href="{{ route('admin.detectionReports.index') }}" class="btn btn-outline-primary">列表</a>
+                    </div>
+                </div>
+            </div>
 
             {!! Form::model($detectionReport, ['route' => ['admin.detectionReports.update', $detectionReport->id], 'method' => 'patch']) !!}
 

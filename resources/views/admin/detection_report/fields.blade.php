@@ -41,7 +41,7 @@
     </div>
     <div class="form-group">
         {!! Form::label('reports_inspection_institution', '檢測機構') !!}
-        {!! Form::text('reports_inspection_institution', null, ['class' => 'form-control']) !!}
+        {!! Form::select('reports_inspection_institution', $inspectionInstitution, $detectionReport->reports_inspection_institution ?? '', ['class' => 'form-control']) !!}
     </div>
     <div class="form-group">
         <label class="font-weight-bold" for="reports_regulations">法規項目</label>

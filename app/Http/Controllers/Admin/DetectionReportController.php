@@ -59,7 +59,7 @@ class DetectionReportController extends Controller
 
         $carBrand = CarBrand::all();
 
-        $inspectionInstitution = InspectionInstitution::all();
+        $inspectionInstitution = InspectionInstitution::all()->pluck('ii_name', 'id');
 
         return view('admin.detection_report.create', ['authStatus' => $auth_status, 'reporter' => $reporter, 'regulations' => $regulations, 'brand' => $carBrand, 'inspectionInstitution' => $inspectionInstitution, 'mode' => 'create']);
     }
@@ -135,7 +135,7 @@ class DetectionReportController extends Controller
 
         $carBrand = CarBrand::all();
 
-        $inspectionInstitution = InspectionInstitution::all();
+        $inspectionInstitution = InspectionInstitution::all()->pluck('ii_name', 'id');
 
         return view('admin.detection_report.edit', ['detectionReport' => $detectionReport, 'authStatus' => $auth_status, 'reporter' => $reporter, 'regulations' => $regulations, 'brand' => $carBrand, 'inspectionInstitution' => $inspectionInstitution, 'mode' => 'edit']);
 
