@@ -57,6 +57,14 @@
         </li>
     </ul>
 </li>
+
+<li class="nav-item">
+    <a href="{{ route('admin.inspectionInstitutions.index') }}"
+       class="nav-link {{ Request::is('admin/inspectionInstitutions*') ? 'active' : '' }}">
+        <p>檢測機構管理</p>
+    </a>
+</li>
+
 @push('menu_scripts')
     <script>
         $('.dropdown-menus').hide();

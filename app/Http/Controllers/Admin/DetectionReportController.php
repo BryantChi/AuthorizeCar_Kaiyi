@@ -11,6 +11,7 @@ use App\Models\Admin\CarBrand;
 use App\Models\Admin\CarModel;
 use App\Models\Admin\Regulations;
 use App\Models\Admin\Reporter;
+use App\Models\Admin\InspectionInstitution;
 use App\Repositories\Admin\DetectionReportRepository;
 use Illuminate\Http\Request;
 use Flash;
@@ -58,7 +59,9 @@ class DetectionReportController extends Controller
 
         $carBrand = CarBrand::all();
 
-        return view('admin.detection_report.create', ['authStatus' => $auth_status, 'reporter' => $reporter, 'regulations' => $regulations, 'brand' => $carBrand, 'mode' => 'create']);
+        $inspectionInstitution = InspectionInstitution::all();
+
+        return view('admin.detection_report.create', ['authStatus' => $auth_status, 'reporter' => $reporter, 'regulations' => $regulations, 'brand' => $carBrand, 'inspectionInstitution' => $inspectionInstitution, 'mode' => 'create']);
     }
 
     /**
@@ -132,7 +135,9 @@ class DetectionReportController extends Controller
 
         $carBrand = CarBrand::all();
 
-        return view('admin.detection_report.edit', ['detectionReport' => $detectionReport, 'authStatus' => $auth_status, 'reporter' => $reporter, 'regulations' => $regulations, 'brand' => $carBrand, 'mode' => 'edit']);
+        $inspectionInstitution = InspectionInstitution::all();
+
+        return view('admin.detection_report.edit', ['detectionReport' => $detectionReport, 'authStatus' => $auth_status, 'reporter' => $reporter, 'regulations' => $regulations, 'brand' => $carBrand, 'inspectionInstitution' => $inspectionInstitution, 'mode' => 'edit']);
 
     }
 

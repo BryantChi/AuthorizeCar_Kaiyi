@@ -150,9 +150,16 @@ class CarBrandController extends AppBaseController
 
         // $carModel = CarModel::where('car_brand_id', $carBrand->id)->get();
         $carModel = $carBrand->carModels;
+        $detectionRepoters = $carBrand->detectionRepoters;
 
         if (count($carModel) > 0) {
-            Flash::error('資料關聯使用中，受保護無法移除。');
+            Flash::error('廠牌資料關聯使用中，受保護無法移除。');
+
+            return redirect(route('admin.carBrands.index'));
+        }
+
+        if (count($detectionRepoters) > 0) {
+            Flash::error('檢測報告資料關聯使用中，受保護無法移除。');
 
             return redirect(route('admin.carBrands.index'));
         }

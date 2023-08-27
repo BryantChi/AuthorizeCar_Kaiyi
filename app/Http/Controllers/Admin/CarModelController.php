@@ -151,6 +151,14 @@ class CarModelController extends AppBaseController
             return redirect(route('admin.carModels.index'));
         }
 
+        $detectionRepoters = $carModel->detectionRepoters;
+
+        if (count($detectionRepoters) > 0) {
+            Flash::error('檢測報告資料關聯使用中，受保護無法移除。');
+
+            return redirect(route('admin.carModels.index'));
+        }
+
         $this->carModelRepository->delete($id);
 
         Flash::success('Car Model deleted successfully.');

@@ -2,27 +2,23 @@
 
 namespace App\Models\Admin;
 
-// use Eloquent as Model;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 
 /**
- * Class CarModel
+ * Class InspectionInstitution
  * @package App\Models\Admin
- * @version August 1, 2023, 5:15 pm UTC
+ * @version August 27, 2023, 3:26 am CST
  *
- * @property \App\Models\Admin\CarBrand $id
- * @property string $car_brand_id
- * @property string $model_name
+ * @property string $ii_name
  */
-class CarModel extends Model
+class InspectionInstitution extends Model
 {
     use SoftDeletes;
 
 
-    public $table = 'car_model';
+    public $table = 'inspection_institution_infos';
 
 
     protected $dates = ['deleted_at'];
@@ -30,8 +26,7 @@ class CarModel extends Model
 
 
     public $fillable = [
-        'car_brand_id',
-        'model_name'
+        'ii_name'
     ];
 
     /**
@@ -41,8 +36,7 @@ class CarModel extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'car_brand_id' => 'string',
-        'model_name' => 'string'
+        'ii_name' => 'string'
     ];
 
     /**
@@ -54,16 +48,9 @@ class CarModel extends Model
 
     ];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     **/
-    public function brand()
-    {
-        return $this->belongsTo(\App\Models\Admin\CarBrand::class, 'id', 'car_brand_id');
-    }
-
     public function detectionReports()
     {
         return $this->hasMany(\App\Models\Admin\DetectionReport::class);
     }
+
 }

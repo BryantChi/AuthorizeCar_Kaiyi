@@ -45,4 +45,18 @@ class DetectionReport extends Model
         'reports_regulations' => 'json',
         'reports_photo' => 'json',
     ];
+
+    public function carModel() {
+        return $this->belongsTo(\App\Models\Admin\CarModel::class, 'id', 'reports_car_model');
+    }
+
+    public function carBrand() {
+        return $this->belongsTo(\App\Models\Admin\CarBrand::class, 'id', 'reports_car_brand');
+    }
+
+    public function inspectionInstitution()
+    {
+        return $this->belongsTo(\App\Models\Admin\InspectionInstitution::class, 'id', 'reports_inspection_institution');
+    }
+
 }
