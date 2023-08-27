@@ -27,7 +27,12 @@ class Reporter extends Model
 
 
     public $fillable = [
-        'reporter_name'
+        'reporter_name',
+        'reporter_gui_number',
+        'reporter_address',
+        'reporter_phone',
+        'reporter_fax',
+        'reporter_seal',
     ];
 
     /**
@@ -37,7 +42,11 @@ class Reporter extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'reporter_name' => 'string'
+        'reporter_name' => 'string',
+        'reporter_gui_number' => 'string',
+        'reporter_address' => 'string',
+        'reporter_fax' => 'string',
+        'reporter_seal' => 'string'
     ];
 
     /**
@@ -46,8 +55,12 @@ class Reporter extends Model
      * @var array
      */
     public static $rules = [
-
+        'reporter_seal' => 'required|image',
     ];
 
+    public static $messages = [
+        'reporter_seal.required' => '印章圖片不可空白',
+        'reporter_seal.image' => '格式錯誤，必須是圖檔'
+    ];
 
 }

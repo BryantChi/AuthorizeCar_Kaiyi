@@ -56,6 +56,17 @@ class ReporterController extends AppBaseController
     {
         $input = $request->all();
 
+        $image = $request->file('reporter_seal');
+
+        if ($image) {
+            $filename = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('uploads/images/reporter_info/'.$input['reporter_name'].'/photo_seal'), $filename);
+
+            $input['reporter_seal'] = 'images/reporter_info/'.$input['reporter_name'].'/photo_seal/' . $filename;
+        } else {
+            $input['reporter_seal'] = '';
+        }
+
         $reporter = $this->reporterRepository->create($input);
 
         Flash::success('Reporter saved successfully.');
@@ -120,8 +131,26 @@ class ReporterController extends AppBaseController
 
             return redirect(route('admin.reporters.index'));
         }
+        $input = $request->all();
 
-        $reporter = $this->reporterRepository->update($request->all(), $id);
+        $image = $request->file('reporter_seal');
+
+        if ($image) {
+            $filename = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('uploads/images/reporter_info/'.$reporter->reporter_name.'/photo_seal'), $filename);
+
+            if ($reporter->reporter_seal != null) {
+                // 若已存在，則覆蓋原有圖片
+                if (File::exists(public_path('uploads/' . $reporter->reporter_seal))) {
+                    File::delete(public_path('uploads/' . $reporter->reporter_seal));
+                }
+            }
+            $input['reporter_seal'] = 'images/reporter_info/'.$reporter->reporter_name.'/photo_seal/' . $filename;
+        } else {
+            $input['reporter_seal'] = '';
+        }
+
+        $reporter = $this->reporterRepository->update($input, $id);
 
         Flash::success('Reporter updated successfully.');
 

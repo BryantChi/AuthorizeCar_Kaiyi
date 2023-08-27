@@ -26,4 +26,11 @@ class CreateReporterRequest extends FormRequest
     {
         return Reporter::$rules;
     }
+
+    public function messages()
+    {
+        $messages = Reporter::$messages;
+
+        return $messages;
+    }
 }

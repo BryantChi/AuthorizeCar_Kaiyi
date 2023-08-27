@@ -17,7 +17,12 @@ class ReporterRepository extends BaseRepository
      * @var array
      */
     protected $fieldSearchable = [
-        'reporter_name'
+        'reporter_name',
+        'reporter_gui_number',
+        'reporter_address',
+        'reporter_phone',
+        'reporter_fax',
+        'reporter_seal',
     ];
 
     /**

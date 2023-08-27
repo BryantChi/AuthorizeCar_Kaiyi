@@ -19,7 +19,9 @@
                     <td>{{ $companyInfo->com_address }}</td>
                     <td>{{ $companyInfo->com_phone }}</td>
                     <td>{{ $companyInfo->com_fax }}</td>
-                    <td>{{ $companyInfo->com_seal }}</td>
+                    <td>
+                        <img src="{{ ($companyInfo->com_seal ?? '') == '' ? '' : public_path('uploads/'.$companyInfo->com_seal) }}" class="img-fluid" width="150" alt="">
+                    </td>
                     <td width="120">
                         {!! Form::open(['route' => ['admin.companyInfos.destroy', $companyInfo->id], 'method' => 'delete']) !!}
                         <div class='btn-group'>
