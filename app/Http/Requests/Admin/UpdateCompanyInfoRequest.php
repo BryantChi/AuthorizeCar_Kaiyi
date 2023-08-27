@@ -25,7 +25,14 @@ class UpdateCompanyInfoRequest extends FormRequest
     public function rules()
     {
         $rules = CompanyInfo::$rules;
-        
+
         return $rules;
+    }
+
+    public function messages()
+    {
+        $messages = CompanyInfo::$messages;
+
+        return $messages;
     }
 }

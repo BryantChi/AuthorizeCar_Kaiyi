@@ -31,9 +31,10 @@
 <!-- Com Seal Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('com_seal', '公司印章:') !!}
-    {{-- {!! Form::file('com_seal', null, ['class' => 'custom-file-input', 'accept' => 'image/*']) !!} --}}
+
     <div class="custom-file">
-        <input type="file" class="custom-file-input" id="com_seal" name="com_seal" accept="image/*">
+        {!! Form::file('com_seal', null, ['class' => 'custom-file-input', 'required' => true]) !!}
+        {{-- <input type="file" class="custom-file-input" id="com_seal" name="com_seal" accept="image/*"> --}}
         <label class="custom-file-label" for="com_seal">Choose file</label>
     </div>
 </div>

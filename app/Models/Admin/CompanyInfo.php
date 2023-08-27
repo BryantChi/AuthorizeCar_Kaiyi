@@ -63,5 +63,9 @@ class CompanyInfo extends Model
         'com_seal' => 'required|image',
     ];
 
+    public static $messages = [
+        'com_seal.required' => '印章圖片不可空白',
+        'com_seal.image' => '格式錯誤，必須是圖檔'
+    ];
 
 }

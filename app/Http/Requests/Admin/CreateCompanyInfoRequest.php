@@ -26,4 +26,9 @@ class CreateCompanyInfoRequest extends FormRequest
     {
         return CompanyInfo::$rules;
     }
+
+    public function messages()
+    {
+        return CompanyInfo::$messages;
+    }
 }
