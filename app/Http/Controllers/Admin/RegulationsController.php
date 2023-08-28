@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\Admin\CreateRegulationsRequest;
 use App\Http\Requests\Admin\UpdateRegulationsRequest;
 use App\Repositories\Admin\RegulationsRepository;
+use App\Models\Admin\DetectionReport;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
@@ -158,6 +159,20 @@ class RegulationsController extends AppBaseController
 
         if (empty($regulations)) {
             Flash::error('Regulations not found');
+
+            return redirect(route('admin.regulations.index'));
+        }
+
+        $detectionReport = DetectionReport::all();
+
+        $regulations_num = $regulations->regulations_num;
+
+        $detectionReporters = array_filter($detectionReport->toArray(), function ($dr) use($regulations_num) {
+            return in_array($regulations_num, $dr['reports_regulations']);
+        });
+
+        if (count($detectionReporters) > 0) {
+            Flash::error('檢測報告資料關聯使用中，受保護無法移除。');
 
             return redirect(route('admin.regulations.index'));
         }

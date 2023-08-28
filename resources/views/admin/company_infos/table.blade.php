@@ -20,7 +20,7 @@
                     <td>{{ $companyInfo->com_phone }}</td>
                     <td>{{ $companyInfo->com_fax }}</td>
                     <td>
-                        <img src="{{ ($companyInfo->com_seal ?? '') == '' ? '' : public_path('uploads/'.$companyInfo->com_seal) }}" class="img-fluid" width="150" alt="">
+                        <img src="{{ ($companyInfo->com_seal ?? '') == '' ? '' : env('APP_URL').'/uploads/'.$companyInfo->com_seal }}" class="img-fluid" width="150" alt="">
                     </td>
                     <td width="120">
                         {!! Form::open(['route' => ['admin.companyInfos.destroy', $companyInfo->id], 'method' => 'delete']) !!}
@@ -34,7 +34,7 @@
                                 <i class="far fa-edit"></i>
                             </a>
                             {{-- {!! Form::button('<i class="far fa-trash-alt"></i>', [
-                                'type' => 'submit',
+                                'type' => 'button',
                                 'class' => 'btn btn-danger btn-sm',
                                 'onclick' => "return check(this)",
                             ]) !!} --}}

@@ -194,7 +194,7 @@
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $('form').submit();
+                    e.parentElement.parentElement.submit();
                 }
             })
         }

@@ -11,6 +11,7 @@ use Flash;
 use Response;
 use App\Models\Admin\CarBrand;
 use App\Models\Admin\CarModel;
+use App\Models\Admin\DetectionReport;
 
 class CarModelController extends AppBaseController
 {
@@ -151,9 +152,13 @@ class CarModelController extends AppBaseController
             return redirect(route('admin.carModels.index'));
         }
 
-        $detectionRepoters = $carModel->detectionRepoters;
+        $detectionReport = DetectionReport::all();
 
-        if (count($detectionRepoters) > 0) {
+        $detectionReporters = array_filter($detectionReport->toArray(), function ($dr) use($id) {
+            return $id == $dr['reports_car_model'];
+        });
+
+        if (count($detectionReporters) > 0) {
             Flash::error('檢測報告資料關聯使用中，受保護無法移除。');
 
             return redirect(route('admin.carModels.index'));

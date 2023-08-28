@@ -55,11 +55,6 @@ class CarBrand extends Model
         return $this->hasMany(\App\Models\Admin\CarModel::class);
     }
 
-    public function detectionReports()
-    {
-        return $this->hasMany(\App\Models\Admin\DetectionReport::class);
-    }
-
     // 關聯刪除
     // protected static function booted()
     // {

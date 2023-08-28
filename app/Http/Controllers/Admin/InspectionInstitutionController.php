@@ -6,6 +6,7 @@ use App\Http\Requests\Admin\CreateInspectionInstitutionRequest;
 use App\Http\Requests\Admin\UpdateInspectionInstitutionRequest;
 use App\Repositories\Admin\InspectionInstitutionRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Admin\DetectionReport;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
@@ -147,9 +148,13 @@ class InspectionInstitutionController extends AppBaseController
             return redirect(route('admin.inspectionInstitutions.index'));
         }
 
-        $detectionRepoters = $inspectionInstitution->detectionRepoters;
+        $detectionReport = DetectionReport::all();
 
-        if (count($detectionRepoters) > 0) {
+        $detectionReporters = array_filter($detectionReport->toArray(), function ($dr) use($id) {
+            return $id == $dr['reports_inspection_institution'];
+        });
+
+        if (count($detectionReporters) > 0) {
             Flash::error('檢測報告資料關聯使用中，受保護無法移除。');
 
             return redirect(route('admin.inspectionInstitutions.index'));

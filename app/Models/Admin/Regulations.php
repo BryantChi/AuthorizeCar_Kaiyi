@@ -51,6 +51,4 @@ class Regulations extends Model
     public static $rules = [
 
     ];
-
-
 }

@@ -6,6 +6,7 @@ use App\Http\Requests\Admin\CreateAuthorizeStatusRequest;
 use App\Http\Requests\Admin\UpdateAuthorizeStatusRequest;
 use App\Repositories\Admin\AuthorizeStatusRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Admin\DetectionReport;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
@@ -143,6 +144,18 @@ class AuthorizeStatusController extends AppBaseController
 
         if (empty($authorizeStatus)) {
             Flash::error('Authorize Status not found');
+
+            return redirect(route('admin.authorizeStatuses.index'));
+        }
+
+        $detectionReport = DetectionReport::all();
+
+        $detectionReporters = array_filter($detectionReport->toArray(), function ($dr) use($id) {
+            return $id == $dr['reports_authorize_status'];
+        });
+
+        if (count($detectionReporters) > 0) {
+            Flash::error('檢測報告資料關聯使用中，受保護無法移除。');
 
             return redirect(route('admin.authorizeStatuses.index'));
         }

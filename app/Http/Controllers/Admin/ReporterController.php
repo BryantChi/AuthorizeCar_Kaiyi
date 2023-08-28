@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\Admin\CreateReporterRequest;
 use App\Http\Requests\Admin\UpdateReporterRequest;
 use App\Repositories\Admin\ReporterRepository;
+use App\Models\Admin\DetectionReport;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
@@ -176,10 +177,23 @@ class ReporterController extends AppBaseController
             return redirect(route('admin.reporters.index'));
         }
 
-        $this->reporterRepository->delete($id);
+        $detectionReports = DetectionReport::all();
 
-        Flash::success('Reporter deleted successfully.');
+        $detectionRepoters = array_filter($detectionReports->toArray(), function($dr) use($id) {
+            return $id == $dr['reports_reporter'];
+        });
 
-        return redirect(route('admin.reporters.index'));
+        if (count($detectionRepoters) > 0) {
+            Flash::error('檢測報告資料關聯使用中，受保護無法移除。');
+
+            return redirect(route('admin.reporters.index'));
+        }
+
+
+        // $this->reporterRepository->delete($id);
+
+        // Flash::success('Reporter deleted successfully.');
+
+        // return redirect(route('admin.reporters.index'));
     }
 }

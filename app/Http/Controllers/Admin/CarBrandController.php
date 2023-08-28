@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Flash;
 use Response;
 use App\Models\Admin\CarModel;
+use App\Models\Admin\DetectionReport;
 
 class CarBrandController extends AppBaseController
 {
@@ -150,7 +151,6 @@ class CarBrandController extends AppBaseController
 
         // $carModel = CarModel::where('car_brand_id', $carBrand->id)->get();
         $carModel = $carBrand->carModels;
-        $detectionRepoters = $carBrand->detectionRepoters;
 
         if (count($carModel) > 0) {
             Flash::error('廠牌資料關聯使用中，受保護無法移除。');
@@ -158,7 +158,13 @@ class CarBrandController extends AppBaseController
             return redirect(route('admin.carBrands.index'));
         }
 
-        if (count($detectionRepoters) > 0) {
+        $detectionReport = DetectionReport::all();
+
+        $detectionReporters = array_filter($detectionReport->toArray(), function ($dr) use($id) {
+            return $id == $dr['reports_car_brand'];
+        });
+
+        if (count($detectionReporters) > 0) {
             Flash::error('檢測報告資料關聯使用中，受保護無法移除。');
 
             return redirect(route('admin.carBrands.index'));

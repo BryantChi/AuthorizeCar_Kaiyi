@@ -20,7 +20,7 @@
                     <td>{{ $reporter->reporter_phone }}</td>
                     <td>{{ $reporter->reporter_fax }}</td>
                     <td>
-                        <img src="{{ ($reporter->reporter_seal ?? '') == '' ? '' : public_path('uploads/'.$reporter->reporter_seal) }}" class="img-fluid" width="150" alt="">
+                        <img src="{{ ($reporter->reporter_seal ?? '') == '' ? '' : env('APP_URL').'/uploads/'.$reporter->reporter_seal }}" class="img-fluid" width="150" alt="">
                     </td>
                     <td width="120">
                         {!! Form::open(['route' => ['admin.reporters.destroy', $reporter->id], 'method' => 'delete']) !!}

@@ -46,17 +46,27 @@ class DetectionReport extends Model
         'reports_photo' => 'json',
     ];
 
-    public function carModel() {
-        return $this->belongsTo(\App\Models\Admin\CarModel::class, 'id', 'reports_car_model');
-    }
+    // public function carModel() {
+    //     return $this->belongsTo(\App\Models\Admin\CarModel::class, 'id', 'reports_car_model');
+    // }
 
-    public function carBrand() {
-        return $this->belongsTo(\App\Models\Admin\CarBrand::class, 'id', 'reports_car_brand');
-    }
+    // public function carBrand() {
+    //     return $this->belongsTo(\App\Models\Admin\CarBrand::class, 'id', 'reports_car_brand');
+    // }
 
-    public function inspectionInstitution()
-    {
-        return $this->belongsTo(\App\Models\Admin\InspectionInstitution::class, 'id', 'reports_inspection_institution');
-    }
+    // public function inspectionInstitution()
+    // {
+    //     return $this->belongsTo(\App\Models\Admin\InspectionInstitution::class, 'id', 'reports_inspection_institution');
+    // }
+
+    // public function repoter()
+    // {
+    //     return $this->belongsTo(\App\Models\Admin\Reporter::class, 'id', 'reports_reporter');
+    // }
+
+    // public function regulations()
+    // {
+    //     return $this->belongsToMany(\App\Models\Admin\Regulations::class, 'regulations_infos', 'id', 'reports_regulations');
+    // }
 
 }

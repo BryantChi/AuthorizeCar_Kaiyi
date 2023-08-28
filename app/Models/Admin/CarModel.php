@@ -61,9 +61,4 @@ class CarModel extends Model
     {
         return $this->belongsTo(\App\Models\Admin\CarBrand::class, 'id', 'car_brand_id');
     }
-
-    public function detectionReports()
-    {
-        return $this->hasMany(\App\Models\Admin\DetectionReport::class);
-    }
 }

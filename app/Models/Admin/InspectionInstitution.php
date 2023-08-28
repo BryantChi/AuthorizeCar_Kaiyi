@@ -48,9 +48,4 @@ class InspectionInstitution extends Model
 
     ];
 
-    public function detectionReports()
-    {
-        return $this->hasMany(\App\Models\Admin\DetectionReport::class);
-    }
-
 }
