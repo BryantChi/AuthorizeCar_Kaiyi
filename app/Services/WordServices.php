@@ -52,11 +52,11 @@ class WordServices
         $templateProcessor->setImageValue('image_sign_reporter', public_path('uploads/'.$reports_reporter->repoter_seal));
 
         $company = Company::first();
-        $templateProcessor->setValue('com_name', $reports_reporter->com_name);
-        $templateProcessor->setValue('com_gui_number', $reports_reporter->com_gui_number);
-        $templateProcessor->setValue('com_address', $reports_reporter->com_address);
-        $templateProcessor->setValue('com_phone', $reports_reporter->com_phone);
-        $templateProcessor->setValue('com_fax', $reports_reporter->com_fax);
+        $templateProcessor->setValue('com_name', $company->com_name);
+        $templateProcessor->setValue('com_gui_number', $company->com_gui_number);
+        $templateProcessor->setValue('com_address', $company->com_address);
+        $templateProcessor->setValue('com_phone', $company->com_phone);
+        $templateProcessor->setValue('com_fax', $company->com_fax);
         $templateProcessor->setImageValue('image_sign_com', public_path('uploads/'.$company->com_seal));
 
         $reports_date = Carbon::today();
