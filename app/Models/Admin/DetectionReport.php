@@ -59,10 +59,10 @@ class DetectionReport extends Model
     //     return $this->belongsTo(\App\Models\Admin\InspectionInstitution::class, 'id', 'reports_inspection_institution');
     // }
 
-    // public function repoter()
-    // {
-    //     return $this->belongsTo(\App\Models\Admin\Reporter::class, 'id', 'reports_reporter');
-    // }
+    public function repoter()
+    {   // 屬於Reporter Model, Reporter的id(foreignKey), DetestionReport的reports_reporter(ownerKey)
+        return $this->belongsTo(\App\Models\Admin\Reporter::class, 'id', 'reports_reporter');
+    }
 
     // public function regulations()
     // {

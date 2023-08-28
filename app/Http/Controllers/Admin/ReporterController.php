@@ -177,23 +177,25 @@ class ReporterController extends AppBaseController
             return redirect(route('admin.reporters.index'));
         }
 
-        $detectionReports = DetectionReport::all();
+        // $detectionReports = DetectionReport::all();
 
-        $detectionRepoters = array_filter($detectionReports->toArray(), function($dr) use($id) {
-            return $id == $dr['reports_reporter'];
-        });
+        // $detectionRepoters = array_filter($detectionReports->toArray(), function($dr) use($id) {
+        //     return $id == $dr['reports_reporter'];
+        // });
 
-        if (count($detectionRepoters) > 0) {
+        $detectionReporters = $reporter->detectionReports;
+
+        if (count($detectionReporters) > 0) {
             Flash::error('檢測報告資料關聯使用中，受保護無法移除。');
 
             return redirect(route('admin.reporters.index'));
         }
 
 
-        // $this->reporterRepository->delete($id);
+        $this->reporterRepository->delete($id);
 
-        // Flash::success('Reporter deleted successfully.');
+        Flash::success('Reporter deleted successfully.');
 
-        // return redirect(route('admin.reporters.index'));
+        return redirect(route('admin.reporters.index'));
     }
 }

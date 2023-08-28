@@ -63,4 +63,8 @@ class Reporter extends Model
         'reporter_seal.image' => '格式錯誤，必須是圖檔'
     ];
 
+    public function detectionReports()
+    {   // 擁有DetectionReport Model, DetestionReport的reports_reporter(foreignKey), Reporter的id(localKey)
+        return $this->hasMany(\App\Models\Admin\DetectionReport::class, 'reports_reporter', 'id');
+    }
 }
