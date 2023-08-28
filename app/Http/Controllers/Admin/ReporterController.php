@@ -148,7 +148,7 @@ class ReporterController extends AppBaseController
             }
             $input['reporter_seal'] = 'images/reporter_info/'.$reporter->reporter_name.'/photo_seal/' . $filename;
         } else {
-            $input['reporter_seal'] = '';
+            $input['reporter_seal'] = $reporter->reporter_seal;
         }
 
         $reporter = $this->reporterRepository->update($input, $id);

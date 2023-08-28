@@ -68,4 +68,12 @@ class CompanyInfo extends Model
         'com_seal.image' => '格式錯誤，必須是圖檔'
     ];
 
+    public static $update_rules = [
+        'com_seal' => 'image',
+    ];
+
+    public static $update_messages = [
+        'com_seal.image' => '格式錯誤，必須是圖檔'
+    ];
+
 }

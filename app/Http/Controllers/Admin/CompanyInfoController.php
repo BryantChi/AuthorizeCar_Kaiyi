@@ -138,7 +138,7 @@ class CompanyInfoController extends AppBaseController
             }
             $input['com_seal'] = 'images/company_info/photo_seal/' . $filename;
         } else {
-            $input['com_seal'] = '';
+            $input['com_seal'] = $companyInfo->com_seal;
         }
 
         $companyInfo = $this->companyInfoRepository->update($input, $id);

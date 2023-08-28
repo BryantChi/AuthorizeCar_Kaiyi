@@ -24,14 +24,14 @@ class UpdateReporterRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = Reporter::$rules;
+        $rules = Reporter::$update_rules;
 
         return $rules;
     }
 
     public function messages()
     {
-        $messages = Reporter::$messages;
+        $messages = Reporter::$update_messages;
 
         return $messages;
     }
