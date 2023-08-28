@@ -30,11 +30,11 @@
 
 <!-- Reporter Seal Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('repoter_seal', '原有人印章:') !!}
+    {!! Form::label('reporter_seal', '原有人印章:') !!}
 
     <div class="custom-file">
-        {!! Form::file('repoter_seal', null, ['class' => 'custom-file-input', 'required' => true]) !!}
-        {{-- <input type="file" class="custom-file-input" id="repoter_seal" name="repoter_seal" accept="image/*"> --}}
-        <label class="custom-file-label" for="repoter_seal">Choose file</label>
+        {!! Form::file('reporter_seal', null, ['class' => 'custom-file-input', 'required' => true]) !!}
+        {{-- <input type="file" class="custom-file-input" id="reporter_seal" name="reporter_seal" accept="image/*"> --}}
+        <label class="custom-file-label" for="reporter_seal">Choose file</label>
     </div>
 </div>

@@ -4,8 +4,8 @@
             <tr>
                 <th>
                     <div class="form-group form-check mb-0 py-1 d-flex align-items-center">
-                        <input type="checkbox" class="form-check-input check-all mr-1 my-0" style="width: 20px;height: 20px;"
-                         id="check-all" value="" />
+                        <input type="checkbox" class="form-check-input check-all mr-1 my-0"
+                            style="width: 20px;height: 20px;" id="check-all" value="" />
                         <label for="check-all" class="check-all-label px-2 mb-0">全選</label>
                     </div>
                 </th>
@@ -49,8 +49,9 @@
                     </td>
                     <td>{{ DB::table('car_model')->whereNull('deleted_at')->where('id', $item->reports_car_model)->value('model_name') }}
                     </td>
-                    <td>{{ App\Models\Admin\InspectionInstitution::where('id', $item->reports_inspection_institution)->value('ii_name') }}</td>
-                    <td>
+                    <td>{{ App\Models\Admin\InspectionInstitution::where('id', $item->reports_inspection_institution)->value('ii_name') }}
+                    </td>
+                    <td class="float-left" style="width: 300px;">
                         <?php
                         $regulations = DB::table('regulations_infos')
                             ->whereNull('deleted_at')
@@ -59,7 +60,7 @@
                         ?>
                         @foreach (json_decode($regulations) as $info)
                             <span
-                                class="rounded mr-1 py-1 px-2 bg-info">{{ $info->regulations_num . ' ' . $info->regulations_name }}</span>
+                                class="rounded mr-1 my-1 py-1 px-2 bg-info d-flex float-left" style="width: max-content;">{{ $info->regulations_num . ' ' . $info->regulations_name }}</span>
                         @endforeach
                     </td>
                     <td>{{ $item->reports_car_model_code }}</td>
@@ -110,8 +111,8 @@
 @endpush
 @push('page_scripts')
     <script>
-        $(function(){
-            $('#check-all').change(function(){
+        $(function() {
+            $('#check-all').change(function() {
                 if ($(this).is(':checked')) {
                     $('.check-all-label').html('取消全選');
                     $('#detectionReports-table input[name="reports[]"]').prop('checked', true);
