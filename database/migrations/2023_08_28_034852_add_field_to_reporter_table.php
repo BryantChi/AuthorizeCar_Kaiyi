@@ -13,13 +13,13 @@ class AddFieldToReporterTable extends Migration
      */
     public function up()
     {
-        Schema::table('repoter_infos', function (Blueprint $table) {
+        Schema::table('reporter_infos', function (Blueprint $table) {
             //
-            $table->string('repoter_gui_number')->after('reporter_name');
-            $table->string('repoter_address')->after('repoter_gui_number');
-            $table->string('repoter_phone')->after('repoter_address');
-            $table->string('repoter_fax')->after('reporter_phone');
-            $table->text('repoter_seal')->after('repoter_fax')->nullable();
+            $table->string('reporter_gui_number')->after('reporter_name');
+            $table->string('reporter_address')->after('reporter_gui_number');
+            $table->string('reporter_phone')->after('reporter_address');
+            $table->string('reporter_fax')->after('reporter_phone');
+            $table->text('reporter_seal')->after('reporter_fax')->nullable();
         });
     }
 
@@ -30,7 +30,7 @@ class AddFieldToReporterTable extends Migration
      */
     public function down()
     {
-        Schema::table('repoter_infos', function (Blueprint $table) {
+        Schema::table('reporter_infos', function (Blueprint $table) {
             //
         });
     }
