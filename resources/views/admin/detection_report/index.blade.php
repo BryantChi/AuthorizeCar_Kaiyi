@@ -13,7 +13,7 @@
                         新增
                     </a>
                     <div class="float-right d-flex mr-2">
-                        <a class="btn btn-outline-success" id="btn-apply-delivery" href="javascript:void(0)"
+                        <a class="btn btn-outline-success mr-2" id="btn-apply-delivery" href="javascript:void(0)"
                             onclick="applyForDelivery()">
                             申請送件
                         </a>
