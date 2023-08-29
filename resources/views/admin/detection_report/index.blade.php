@@ -106,6 +106,7 @@
                     $('#btn-apply-delivery').show();
                 } else {
                     $('#btn-apply-delivery').hide();
+                    $('#export-step-1').hide();
                 }
             });
 
