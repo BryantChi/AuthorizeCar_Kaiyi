@@ -18,7 +18,7 @@ use Flash;
 use Response;
 use App\Services\WordServices;
 use Ilovepdf\Ilovepdf;
-
+use ImageManager;
 
 class DetectionReportController extends Controller
 {
@@ -37,7 +37,8 @@ class DetectionReportController extends Controller
     public function index()
     {
         //
-        $model = DetectionReport::orderBy('updated_at', 'DESC')->paginate(15);
+        // $model = DetectionReport::orderBy('updated_at', 'DESC')->paginate(15);
+        $model = DetectionReport::orderBy('updated_at', 'DESC')->get();
         // $model = $this->detectionReportRepository->getAllDetectionReports();
 
         return view('admin.detection_report.index', ['detectionReports' => $model]);

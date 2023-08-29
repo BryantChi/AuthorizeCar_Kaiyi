@@ -27,7 +27,7 @@
                 <th>車安回函</th>
                 <th>說明</th>
                 <th>授權狀態</th>
-                <th colspan="3">Action</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -108,19 +108,4 @@
             white-space: nowrap;
         }
     </style>
-@endpush
-@push('page_scripts')
-    <script>
-        $(function() {
-            $('#check-all').change(function() {
-                if ($(this).is(':checked')) {
-                    $('.check-all-label').html('取消全選');
-                    $('#detectionReports-table input[name="reports[]"]').prop('checked', true);
-                } else {
-                    $('.check-all-label').html('全選');
-                    $('#detectionReports-table input[name="reports[]"]').prop('checked', false);
-                }
-            })
-        })
-    </script>
 @endpush

@@ -176,6 +176,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         InfyOm\GeneratorBuilder\GeneratorBuilderServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
 
     ],
 
@@ -235,6 +236,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Flash' => Laracasts\Flash\Flash::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
+        'ImageManager' => Intervention\Image\Facades\Image::class,
     ],
 
 ];
