@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\DetectionReportExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreDetectionReportRequest;
 use App\Http\Requests\Admin\UpdateDetectionReportRequest;
@@ -17,8 +18,10 @@ use Illuminate\Http\Request;
 use Flash;
 use Response;
 use App\Services\WordServices;
+use Illuminate\Support\Facades\File;
 use Ilovepdf\Ilovepdf;
 use ImageManager;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DetectionReportController extends Controller
 {
@@ -204,7 +207,7 @@ class DetectionReportController extends Controller
         return response()->json($auth_status);
     }
 
-    public function exportDocumentTest(Request $request)
+    public function exportDocument(Request $request)
     {
         $wordService = new WordServices();
 
@@ -213,20 +216,39 @@ class DetectionReportController extends Controller
         $type = $input['typer'];
         $data_ids = $input['data_ids'];
 
-        $file_res = $wordService->updateWordDocument($type, $data_ids);
+        if ($type == 's1') {
+            // 檢測報告移入協會合約書
+            $reporters = DetectionReport::whereIn('id', $data_ids)->pluck('reports_reporter')->unique();
+            $contract_file_res = array();
+            foreach ($reporters as $reporter) {
+                $reports = DetectionReport::whereIn('id', $data_ids)->where('reports_reporter', $reporter)->pluck('id');
+                $res = $wordService->updateWordDocument('move_in_contract', $reports);
+                array_push($contract_file_res, $res);
+            }
+
+            // 申請函
+            $apply_letter_file_res = $wordService->updateWordDocument('application_letter', $data_ids);
+
+
+            $data_entry_res = $wordService->updateWordDocument('data_entry_excel', $data_ids);
+        }
+
+
+
+        // $file_res = $wordService->updateWordDocument($type, $data_ids);
 
         // Flash::success('Detection Report download successfully.');
 
-        return $file_res;
+        return \Response::json(['status' => 'success', 'contract_data' => $contract_file_res, 'apply_letter_data' => $apply_letter_file_res, 'data_entry_data' => $data_entry_res]);
     }
 
-    public function convertToPdf(Request $request)
-    {
+    // public function convertToPdf(Request $request)
+    // {
         // $input = $request->input('convert');
         // $ilovepdf = new Ilovepdf('project_public_0972a67458e4dd3ac4561edec19a48ed_pWfxHf7de3bcb072e2b66fc59b5cf8ded47d7','secret_key_f428272dfee9a265364aeadf9d895a8a_UMGYM186d525137876fd82fbc8a61f341c725');
         // $myTask = $ilovepdf->newTask('officepdf');
         // $file1 = $myTask->addFile(public_path($input));
         // $myTask->execute();
         // $myTask->download($folderPath);
-    }
+    // }
 }

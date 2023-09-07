@@ -20,6 +20,7 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
         "laravelcollective/html": "^6.2",
+        "maatwebsite/excel": "^3.1",
         "nesbot/carbon": "^2.69",
         "phpoffice/phpword": "^1.1",
         "yajra/laravel-datatables": "*",

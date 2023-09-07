@@ -17,7 +17,7 @@
                             onclick="applyForDelivery()">
                             申請送件
                         </a>
-                        <div class="dropdown" id="export-step-1">
+                        {{-- <div class="dropdown" id="export-step-1">
                             <a class="btn btn-outline-secondary dropdown-toggle" href="javascript:void(0)" role="button"
                                 data-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-download"></i> 匯出
@@ -31,7 +31,7 @@
                                 <a class="dropdown-item" href="#" href="javascript:void(0)"
                                     onclick="exportApplicationLetter()">申請函</a>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
 
                 </div>
@@ -58,7 +58,7 @@
     </div>
 
     <div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm2 modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">檔案下載</h5>
@@ -67,9 +67,10 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="row justify-content-center">
-                        <div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">
+                    <div class="row justify-content-center file-container">
+                        {{-- <div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">
                             <a href="javascript:void(0)" download>
+                                <p class="file-name"></p>
                                 <img src="{{ asset('assets/img/word-icon.png') }}" class="img-fluid" width="80"
                                     alt="">
                                 <p class="text-secondary font-weight-lighter">點擊即可下載</p>
@@ -77,11 +78,20 @@
                         </div>
                         <div class="col-auto d-block pdf-download-content text-center mx-3">
                             <a href="javascript:void(0)" download>
+                                <p class="file-name"></p>
                                 <img src="{{ asset('assets/img/pdf-icon.png') }}" class="img-fluid" width="80"
                                     alt="">
                                 <p class="text-secondary font-weight-lighter">點擊即可下載</p>
                             </a>
                         </div>
+                        <div class="col-auto d-block pdf-download-content text-center mx-3">
+                            <a href="javascript:void(0)" download>
+                                <p class="file-name"></p>
+                                <img src="{{ asset('assets/img/excel-icon.png') }}" class="img-fluid" width="80"
+                                    alt="">
+                                <p class="text-secondary font-weight-lighter">點擊即可下載</p>
+                            </a>
+                        </div> --}}
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -93,11 +103,21 @@
     </div>
 @endsection
 
+@push('page_css')
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
+@endpush
+
 @push('page_scripts')
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js">
+    </script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js">
+    </script>
     <script>
         $(function() {
             $('#btn-apply-delivery').hide();
-            $('#export-step-1').hide();
+            // $('#export-step-1').hide();
             $('input[name="reports[]"]').change(function() {
                 var ck_reports = $('input[name="reports[]"]:checked').map(function() {
                     return $(this).val();
@@ -106,13 +126,9 @@
                     $('#btn-apply-delivery').show();
                 } else {
                     $('#btn-apply-delivery').hide();
-                    $('#export-step-1').hide();
+                    // $('#export-step-1').hide();
                 }
             });
-
-            // $('#btn-apply-delivery').click(function() {
-
-            // })
 
             $('#check-all').change(function() {
                 if ($(this).is(':checked')) {
@@ -137,28 +153,45 @@
                 scrollCollapse: true,
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/zh_Hant.json"
-                }
+                },
+                // dom: 'Bfrtip',  // 這行代碼是必須的，用於告訴 DataTables 插入哪些按鈕
+                // buttons: [
+                //     {
+                //         extend: 'excel',
+                //         // text: '導出已篩選的數據到 Excel',
+                //         exportOptions: {
+                //             modifier: {
+                //                 search: 'applied',  // 這裡確保只有已篩選的數據會被導出
+                //                 order: 'applied'   // 這裡確保導出的數據與目前的排序方式一致
+                //             },
+                //             rows: function (idx, data, node) {
+                //                 return $(node).find('input[name="reports[]"]').prop('checked');
+                //             },
+                //             columns: [1,2,3,4,5,6,7,8,9,10,11,14,15,17],
+                //         }
+                //     }
+                // ],
             });
         });
 
         function getReportsCheckbox() {
 
-            var checkReporter = $('input[name="reports[]"]:checked').map(function() {
-                return $(this).data('reporter');
+            var checkReportLetter = $('input[name="reports[]"]:checked').map(function() {
+                return $(this).data('letter');
             }).get();
 
-            if (checkReporter.length == 0) {
-                Swal.fire('注意！', '請選擇至少一個項目！', 'warning');
+            if (checkReportLetter.length == 0) {
+                // Swal.fire('注意！', '請選擇至少一個項目！', 'warning');
                 return [];
             } else {
-                if (areAllValuesSame(checkReporter)) {
+                if (areAllValuesSame(checkReportLetter)) {
                     var ck = $('input[name="reports[]"]:checked').map(function() {
                         return $(this).val();
                     }).get();
 
                     return ck;
                 } else {
-                    Swal.fire('注意！', '報告原有人需相同！', 'warning');
+                    Swal.fire('注意！', '發函文號需相同！', 'warning');
                     return [];
                 }
             }
@@ -177,60 +210,99 @@
         function applyForDelivery() {
             var reports_id = getReportsCheckbox();
 
-            if (reports_id.length > 0) {
-                $('#export-step-1').show();
-            } else {
-                $('#export-step-1').hide();
-            }
-        }
-
-        function exportContract() {
-            // console.log(getReportsCheckbox());
-
-            var reports_id = getReportsCheckbox();
+            // if (reports_id.length > 0) {
+            //     $('#export-step-1').show();
+            // } else {
+            //     $('#export-step-1').hide();
+            // }
 
             if (reports_id.length > 0) {
-                // $('#downloadModal').modal('show');
-
                 $.ajax({
-                    url: "{{ route('exportDocumentTest') }}",
+                    url: "{{ route('exportDocument') }}",
                     type: 'POST',
                     data: {
                         data_ids: reports_id,
-                        typer: 'move_in_contract',
+                        typer: 's1',
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(res) {
-                        var report = JSON.parse(res);
+                        // var report = JSON.parse(res);
+                        // console.log(res.data[0].original.file_name);
                         // console.log(window.location.host + report.word);
-                        if (report.status == 'success') {
-                            $('.word-download-content>a').attr('href', window.location.origin + '/' + report
-                                .word);
-                            $('.word-download-content>a').prop('href', window.location.origin + '/' + report
-                                .word);
-                            $('.pdf-download-content>a').attr('href', window.location.origin + '/' + report
-                            .pdf);
-                            $('.pdf-download-content>a').prop('href', window.location.origin + '/' + report
-                            .pdf);
+                        // if (report.status == 'success') {
+                        //     $('.word-download-content>a').attr('href', window.location.origin + '/' + report
+                        //         .word);
+                        //     $('.word-download-content>a').prop('href', window.location.origin + '/' + report
+                        //         .word);
+                        //     $('.pdf-download-content>a').attr('href', window.location.origin + '/' + report
+                        //         .pdf);
+                        //     $('.pdf-download-content>a').prop('href', window.location.origin + '/' + report
+                        //         .pdf);
+                        //     setTimeout(function() {
+                        //         $('#downloadModal').modal('show');
+                        //         // window.open(window.location.origin + '/' + report.pdf);
+                        //         // window.location.herf = " ('', ['convert' => '" + report.word + "']) ";
+                        //     }, 500);
+                        // }
+                        if (res.status == 'success') {
+                            $('.file-container').empty();
+                            $('.file-container').append('<div class="col-12"></div><div class="col-12"><h5>合約書</h5></div>');
+                            res.contract_data.forEach(element => {
+                                $('.file-container').append(
+                                    '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
+                                    '<a href="' + window.location.origin + '/' + element.original.word + '" download>' +
+                                    '<p class="text-secondary file-name" style="max-width: 200px;">' + element.original.contract_file_name + '</p>' +
+                                    '<img src="{{ asset('assets/img/word-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                                    '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                                    '</a>' +
+                                    '</div>' +
+                                    '<div class="col-auto d-block pdf-download-content text-center mx-3">' +
+                                    '<a href="' + window.location.origin + '/' + element.original.pdf + '" download>' +
+                                    '<p class="text-secondary file-name" style="max-width: 200px;">' + element.original.contract_file_name + '</p>' +
+                                    '<img src="{{ asset('assets/img/pdf-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                                    '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                                    '</a>' +
+                                    '</div>');
+                            });
+
+                            $('.file-container').append('<div class="col-12"></div><div class="col-12 mt-3"><h5>申請函</h5></div>');
+                            $('.file-container').append(
+                                '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
+                                '<a href="' + window.location.origin + '/' + res.apply_letter_data.original.word + '" download>' +
+                                '<p class="text-secondary file-name" style="max-width: 200px;">' + res.apply_letter_data.original.apply_letter_file_name + '</p>' +
+                                '<img src="{{ asset('assets/img/word-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                                '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                                '</a>' +
+                                '</div>' +
+                                '<div class="col-auto d-block pdf-download-content text-center mx-3">' +
+                                '<a href="' + window.location.origin + '/' + res.apply_letter_data.original.pdf + '" download>' +
+                                '<p class="text-secondary file-name" style="max-width: 200px;">' + res.apply_letter_data.original.apply_letter_file_name + '</p>' +
+                                '<img src="{{ asset('assets/img/pdf-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                                '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                                '</a>' +
+                                '</div>');
+
+                            $('.file-container').append('<div class="col-12"></div><div class="col-12 mt-3"><h5>登錄清冊</h5></div>');
+                            $('.file-container').append(
+                                '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
+                                '<a href="' + window.location.origin + '/' + res.data_entry_data.original.excel + '" download>' +
+                                '<p class="text-secondary file-name" style="max-width: 200px;">' + res.data_entry_data.original.data_entry_file_name + '</p>' +
+                                '<img src="{{ asset('assets/img/excel-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                                '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                                '</a>' +
+                                '</div>');
+
                             setTimeout(function() {
                                 $('#downloadModal').modal('show');
-                                // window.open(window.location.origin + '/' + report.pdf);
-                                // window.location.herf = "{{ route('convertToPdf', ['convert' => '" + report.word + "']) }}";
                             }, 500);
                         }
 
                     }
                 })
+            } else {
+                Swal.fire('注意！', '請選擇至少一個項目！', 'warning');
             }
 
-        }
-
-        function exportInventory() {
-            Swal.fire('注意！', '開發維護中！', 'warning');
-        }
-
-        function exportApplicationLetter() {
-            Swal.fire('注意！', '開發維護中！', 'warning');
         }
     </script>
 @endpush
