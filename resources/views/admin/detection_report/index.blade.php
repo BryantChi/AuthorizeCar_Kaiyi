@@ -181,14 +181,13 @@
             }).get();
 
             if (checkReportLetter.length == 0) {
-                // Swal.fire('注意！', '請選擇至少一個項目！', 'warning');
+                Swal.fire('注意！', '請選擇至少一個項目！', 'warning');
                 return [];
             } else {
                 if (areAllValuesSame(checkReportLetter)) {
                     var ck = $('input[name="reports[]"]:checked').map(function() {
                         return $(this).val();
                     }).get();
-
                     return ck;
                 } else {
                     Swal.fire('注意！', '發函文號需相同！', 'warning');
@@ -246,47 +245,60 @@
                         // }
                         if (res.status == 'success') {
                             $('.file-container').empty();
-                            $('.file-container').append('<div class="col-12"></div><div class="col-12"><h5>合約書</h5></div>');
+                            $('.file-container').append(
+                                '<div class="col-12"></div><div class="col-12"><h5>合約書</h5></div>');
                             res.contract_data.forEach(element => {
                                 $('.file-container').append(
                                     '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
-                                    '<a href="' + window.location.origin + '/' + element.original.word + '" download>' +
-                                    '<p class="text-secondary file-name" style="max-width: 200px;">' + element.original.contract_file_name + '</p>' +
+                                    '<a href="' + window.location.origin + '/' + element.original
+                                    .word + '" download>' +
+                                    '<p class="text-secondary file-name" style="max-width: 200px;">' +
+                                    element.original.contract_file_name + '</p>' +
                                     '<img src="{{ asset('assets/img/word-icon.png') }}" class="img-fluid" width="80" alt="">' +
                                     '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
                                     '</a>' +
                                     '</div>' +
                                     '<div class="col-auto d-block pdf-download-content text-center mx-3">' +
-                                    '<a href="' + window.location.origin + '/' + element.original.pdf + '" download>' +
-                                    '<p class="text-secondary file-name" style="max-width: 200px;">' + element.original.contract_file_name + '</p>' +
+                                    '<a href="' + window.location.origin + '/' + element.original
+                                    .pdf + '" download>' +
+                                    '<p class="text-secondary file-name" style="max-width: 200px;">' +
+                                    element.original.contract_file_name + '</p>' +
                                     '<img src="{{ asset('assets/img/pdf-icon.png') }}" class="img-fluid" width="80" alt="">' +
                                     '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
                                     '</a>' +
                                     '</div>');
                             });
 
-                            $('.file-container').append('<div class="col-12"></div><div class="col-12 mt-3"><h5>申請函</h5></div>');
+                            $('.file-container').append(
+                                '<div class="col-12"></div><div class="col-12 mt-3"><h5>申請函</h5></div>');
                             $('.file-container').append(
                                 '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
-                                '<a href="' + window.location.origin + '/' + res.apply_letter_data.original.word + '" download>' +
-                                '<p class="text-secondary file-name" style="max-width: 200px;">' + res.apply_letter_data.original.apply_letter_file_name + '</p>' +
+                                '<a href="' + window.location.origin + '/' + res.apply_letter_data.original
+                                .word + '" download>' +
+                                '<p class="text-secondary file-name" style="max-width: 200px;">' + res
+                                .apply_letter_data.original.apply_letter_file_name + '</p>' +
                                 '<img src="{{ asset('assets/img/word-icon.png') }}" class="img-fluid" width="80" alt="">' +
                                 '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
                                 '</a>' +
                                 '</div>' +
                                 '<div class="col-auto d-block pdf-download-content text-center mx-3">' +
-                                '<a href="' + window.location.origin + '/' + res.apply_letter_data.original.pdf + '" download>' +
-                                '<p class="text-secondary file-name" style="max-width: 200px;">' + res.apply_letter_data.original.apply_letter_file_name + '</p>' +
+                                '<a href="' + window.location.origin + '/' + res.apply_letter_data.original
+                                .pdf + '" download>' +
+                                '<p class="text-secondary file-name" style="max-width: 200px;">' + res
+                                .apply_letter_data.original.apply_letter_file_name + '</p>' +
                                 '<img src="{{ asset('assets/img/pdf-icon.png') }}" class="img-fluid" width="80" alt="">' +
                                 '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
                                 '</a>' +
                                 '</div>');
 
-                            $('.file-container').append('<div class="col-12"></div><div class="col-12 mt-3"><h5>登錄清冊</h5></div>');
+                            $('.file-container').append(
+                                '<div class="col-12"></div><div class="col-12 mt-3"><h5>登錄清冊</h5></div>');
                             $('.file-container').append(
                                 '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
-                                '<a href="' + window.location.origin + '/' + res.data_entry_data.original.excel + '" download>' +
-                                '<p class="text-secondary file-name" style="max-width: 200px;">' + res.data_entry_data.original.data_entry_file_name + '</p>' +
+                                '<a href="' + window.location.origin + '/' + res.data_entry_data.original
+                                .excel + '" download>' +
+                                '<p class="text-secondary file-name" style="max-width: 200px;">' + res
+                                .data_entry_data.original.data_entry_file_name + '</p>' +
                                 '<img src="{{ asset('assets/img/excel-icon.png') }}" class="img-fluid" width="80" alt="">' +
                                 '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
                                 '</a>' +
@@ -299,8 +311,6 @@
 
                     }
                 })
-            } else {
-                Swal.fire('注意！', '請選擇至少一個項目！', 'warning');
             }
 
         }
