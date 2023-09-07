@@ -11,8 +11,11 @@ use App\Models\Admin\Regulations;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class DetectionReportExport implements FromCollection, WithHeadings
+class DetectionReportExport implements FromCollection, WithHeadings, WithStyles, ShouldAutoSize
 {
     protected $data_id;
 
@@ -61,7 +64,7 @@ class DetectionReportExport implements FromCollection, WithHeadings
                 'reports_test_date' => $reports_test_date,
                 'reports_date' => $reports_date,
                 'reports_note' => $detectionReport->reports_note,
-                'reports_authorize_count_current' => (int)$detectionReport->reports_authorize_count_current,
+                'reports_authorize_count_current' => (string)$detectionReport->reports_authorize_count_current,
                 'reports_f_e' => $detectionReport->reports_f_e,
             ];
 
@@ -88,5 +91,14 @@ class DetectionReportExport implements FromCollection, WithHeadings
             '次數',
             'F/E'
         ];
+    }
+
+    public function styles(Worksheet $sheet)
+    {
+        // 設置整個工作表的字體大小
+        $sheet->getStyle('A1:Z1000')->getFont()->setSize(12);
+
+        // 設置標題行的字體大小
+        // $sheet->getStyle('A1:Z1')->getFont()->setSize(16);
     }
 }
