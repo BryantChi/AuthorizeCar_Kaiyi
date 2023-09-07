@@ -54,7 +54,7 @@ class WordServices
         $templateProcessor->setValue('reporter_address', $reports_reporter->reporter_address);
         $templateProcessor->setValue('reporter_phone', $reports_reporter->reporter_phone);
         $templateProcessor->setValue('reporter_fax', $reports_reporter->reporter_fax);
-        $templateProcessor->setImageValue('image_sign_reporter', public_path('uploads/'.$reports_reporter->repoter_seal));
+        $templateProcessor->setImageValue('image_sign_reporter', public_path('uploads/'.$reports_reporter->reporter_seal));
         // $templateProcessor->setImageValue('image_sign_reporter', public_path('assets/img/sign_test_icon/sign_com.png'));
 
         $company = Company::first();
