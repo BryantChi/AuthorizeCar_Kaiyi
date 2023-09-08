@@ -21,20 +21,24 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class WordServices
 {
+    const MOVE_IN_CONTRACT = 'MOVE_IN_CONTRACT';
+    const APPLICATION_LETTER = 'APPLICATION_LETTER';
+    const DATA_ENTRY_EXCEL = 'DATA_ENTRY_EXCEL';
+
     function updateWordDocument($fileType = null, $data_id, $options = array())
     {
         switch ($fileType) {
-            case 'move_in_contract': // 檢測報告移入合約書
+            case self::MOVE_IN_CONTRACT: // 檢測報告移入合約書
                 $templatefileName = 'Template_檢測報告移入協會合約書.docx';
                 $templatefilePath = public_path('template_doc/' . $templatefileName);
                 return $this->setMoveInContract($data_id, $templatefilePath);
                 break;
-            case 'application_letter': // 申請函
+            case self::APPLICATION_LETTER: // 申請函
                 $templatefileName = 'Template_申請函.docx';
                 $templatefilePath = public_path('template_doc/' . $templatefileName);
                 return $this->setApplicationLetter($data_id, $templatefilePath);
                 break;
-            case 'data_entry_excel': // 登錄清冊
+            case self::DATA_ENTRY_EXCEL: // 登錄清冊
                 return $this->setDataEntryExcel($data_id);
                 break;
         }
@@ -163,7 +167,7 @@ class WordServices
 
         $detection_reports = DetectionReport::whereIn('id', $data_id)->get();
 
-        $reports_reporter = Reporter::find($detection_reports[0]->reports_reporter);
+        $reports_letter_id= $detection_reports[0]->letter_id;
 
         $reports_date = Carbon::today();
         $date_y = ((int)$reports_date->year) - 1911;
@@ -173,18 +177,18 @@ class WordServices
         $templateProcessor->setValue('rf_y', $date_y);
         $templateProcessor->setValue('rf_m', $date_m);
         $templateProcessor->setValue('rf_d', $date_d);
-        $templateProcessor->setValue('rf_letter_id', $detection_reports[0]->letter_id);
+        $templateProcessor->setValue('rf_letter_id', $reports_letter_id);
         $templateProcessor->setValue('rf_count', count($detection_reports));
 
         $time = Carbon::now();
         $fullTime = $time->format('Y-m-d_H-i-s');
         $month_year = $time->format('Ym');
 
-        $wordName = '/申請函_' . $reports_reporter->reporter_name . '_' . $fullTime . '.docx';
-        $pdfName = '/申請函_' . $reports_reporter->reporter_name . '_' . $fullTime . '.pdf';
+        $wordName = '/申請函_' . $fullTime . '.docx';
+        $pdfName = '/申請函_' . $fullTime . '.pdf';
 
-        $folderWordPath = 'files/letter_s1/' . $reports_reporter->reporter_name . '/word/' . $month_year;
-        $folderPdfPath = 'files/letter_s1/' . $reports_reporter->reporter_name . '/pdf/' . $month_year;
+        $folderWordPath = 'files/letter_s1/word/' . $month_year;
+        $folderPdfPath = 'files/letter_s1/pdf/' . $month_year;
 
         $fullWordPath = $folderWordPath . $wordName;
         $fullPdfPath = $folderPdfPath . $pdfName;
@@ -215,7 +219,7 @@ class WordServices
         //     'pdf' => $fullPdfPath,
         // ]);
         return \Response::json([
-            'apply_letter_file_name' => '申請函_' . $reports_reporter->reporter_name . '_' . $fullTime,
+            'apply_letter_file_name' => '申請函_' . $fullTime,
             'word' => $fullWordPath,
             'pdf' => $fullPdfPath,
         ]);

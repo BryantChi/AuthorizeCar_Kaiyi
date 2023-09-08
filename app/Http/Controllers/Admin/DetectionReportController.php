@@ -216,21 +216,21 @@ class DetectionReportController extends Controller
         $type = $input['typer'];
         $data_ids = $input['data_ids'];
 
-        if ($type == 's1') {
-            // 檢測報告移入協會合約書
+        if ($type == 's1') { // 申請送件階段 - 只有一個發函文號
+            // 檢測報告移入協會合約書 - 因多個報告原有人有多份合約書
             $reporters = DetectionReport::whereIn('id', $data_ids)->pluck('reports_reporter')->unique();
             $contract_file_res = array();
             foreach ($reporters as $reporter) {
                 $reports = DetectionReport::whereIn('id', $data_ids)->where('reports_reporter', $reporter)->pluck('id');
-                $res = $wordService->updateWordDocument('move_in_contract', $reports);
+                $res = $wordService->updateWordDocument(WordServices::MOVE_IN_CONTRACT, $reports);
                 array_push($contract_file_res, $res);
             }
 
-            // 申請函
-            $apply_letter_file_res = $wordService->updateWordDocument('application_letter', $data_ids);
+            // 申請函 - 只有一份 by 發函文號
+            $apply_letter_file_res = $wordService->updateWordDocument(WordServices::APPLICATION_LETTER, $data_ids);
 
-
-            $data_entry_res = $wordService->updateWordDocument('data_entry_excel', $data_ids);
+            // 登入清冊 - 只有一份 by 發函文號
+            $data_entry_res = $wordService->updateWordDocument(WordServices::DATA_ENTRY_EXCEL, $data_ids);
         }
 
 
