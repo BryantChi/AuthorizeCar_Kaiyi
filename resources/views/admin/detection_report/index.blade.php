@@ -13,10 +13,29 @@
                         新增
                     </a>
                     <div class="float-right d-flex mr-2">
-                        <a class="btn btn-outline-success mr-2" id="btn-apply-delivery" href="javascript:void(0)"
-                            onclick="applyForDelivery()">
-                            申請送件
-                        </a>
+                        <div class="btn-action" id="btn-action">
+                            <a class="btn btn-outline-success mr-2" id="btn-apply-delivery" href="javascript:void(0)"
+                                onclick="applyForDelivery()">
+                                申請送件
+                            </a>
+                            <a class="btn btn-outline-success mr-2" id="btn-apply-authorize" href="javascript:void(0)"
+                                onclick="applyForAuthorize()">
+                                開立授權
+                            </a>
+                            <a class="btn btn-outline-success mr-2" id="btn-move-out" href="javascript:void(0)"
+                                onclick="moveOut()">
+                                移出
+                            </a>
+                            <a class="btn btn-outline-success mr-2" id="btn-postpone" href="javascript:void(0)"
+                                onclick="postpone()">
+                                展延
+                            </a>
+                            <a class="btn btn-outline-success mr-2" id="btn-reply" href="javascript:void(0)"
+                                onclick="reply()">
+                                已回函
+                            </a>
+                        </div>
+
                         {{-- <div class="dropdown" id="export-step-1">
                             <a class="btn btn-outline-secondary dropdown-toggle" href="javascript:void(0)" role="button"
                                 data-toggle="dropdown" aria-expanded="false">
@@ -43,6 +62,11 @@
         @include('flash::message')
         <div class="card">
             <div class="card-body">
+                <div class="form-group form-check mb-3 py-1 d-flex align-items-center btn btn-outline-secondary" style="width: max-content;">
+                    <input type="checkbox" class="form-check-input check-all mr-1 my-0 ml-1 d-none"
+                        style="width: 20px;height: 20px;" id="check-all" value="" />
+                    <label for="check-all" class="check-all-label px-2 mb-0 ml-42">全選</label>
+                </div>
                 @include('admin.detection_report.table')
 
                 {{-- <div class="card-footer clearfix">
@@ -116,33 +140,34 @@
     </script>
     <script>
         $(function() {
-            $('#btn-apply-delivery').hide();
+            $('.btn-action').hide();
             // $('#export-step-1').hide();
-            $('input[name="reports[]"]').change(function() {
+            $('#detectionReports-table tbody').on('change', 'input[name="reports[]"]', function () {
                 var ck_reports = $('input[name="reports[]"]:checked').map(function() {
                     return $(this).val();
                 }).get();
                 if (ck_reports.length > 0) {
-                    $('#btn-apply-delivery').show();
+                    $('.btn-action').show(600);
                 } else {
-                    $('#btn-apply-delivery').hide();
+                    $('.btn-action').hide(600);
                     // $('#export-step-1').hide();
                 }
             });
 
             $('#check-all').change(function() {
                 if ($(this).is(':checked')) {
+                    var rows = table.rows({ 'page': 'current' }).nodes();
                     $('.check-all-label').html('取消全選');
-                    $('#detectionReports-table input[name="reports[]"]').prop('checked', true);
-                    $('#detectionReports-table input[name="reports[]"]').change();
+                    $('input[name="reports[]"]', rows).prop('checked', true);
+                    $('input[name="reports[]"]', rows).change();
                 } else {
                     $('.check-all-label').html('全選');
-                    $('#detectionReports-table input[name="reports[]"]').prop('checked', false);
-                    $('#detectionReports-table input[name="reports[]"]').change();
+                    $('input[name="reports[]"]', rows).prop('checked', false);
+                    $('input[name="reports[]"]', rows).change();
                 }
             });
 
-            $('#detectionReports-table').DataTable({
+            var table = $('#detectionReports-table').DataTable({
                 lengthChange: true, // 呈現選單
                 lengthMenu: [10, 15, 20, 30, 50], // 選單值設定
                 pageLength: 10, // 不用選單設定也可改用固定每頁列數
@@ -154,6 +179,16 @@
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/zh_Hant.json"
                 },
+                columnDefs: [{
+                    'targets': 0,
+                    'searchable': false,
+                    'orderable': false,
+                    'className': 'dt-body-center',
+                    'render': function (data, type, full, meta) {
+                        var d = JSON.parse(data);
+                        return '<input type="checkbox" name="reports[]"  style="width: 20px;height: 20px;" value="' + $('<div/>').text(d.id).html() + '" data-letter="' + $('<div/>').text(d.letter_id).html() + '" data-status="' + $('<div/>').text(d.reports_authorize_status).html() + '">';
+                    }
+                }],
                 // dom: 'Bfrtip',  // 這行代碼是必須的，用於告訴 DataTables 插入哪些按鈕
                 // buttons: [
                 //     {
@@ -174,27 +209,104 @@
             });
         });
 
-        function getReportsCheckbox() {
+        function getReportsCheckbox() { // 申請送件
+
+            var ck_reports = $('input[name="reports[]"]:checked').map(function() {
+                    return $(this).val();
+                }).get();
 
             var checkReportLetter = $('input[name="reports[]"]:checked').map(function() {
                 return $(this).data('letter');
             }).get();
 
-            if (checkReportLetter.length == 0) {
+            if (ck_reports.length == 0) {
                 Swal.fire('注意！', '請選擇至少一個項目！', 'warning');
                 return [];
             } else {
                 if (areAllValuesSame(checkReportLetter)) {
-                    var ck = $('input[name="reports[]"]:checked').map(function() {
-                        return $(this).val();
-                    }).get();
-                    return ck;
+                    return ck_reports;
                 } else {
                     Swal.fire('注意！', '發函文號需相同！', 'warning');
                     return [];
                 }
             }
 
+        }
+
+        function getReportsCheckboxForStatus(status) {
+
+            var ck_reports = $('input[name="reports[]"]:checked').map(function() {
+                return $(this).val();
+            }).get();
+
+            var checkReportLetter = $('input[name="reports[]"]:checked').map(function() {
+                return $(this).data('letter');
+            }).get();
+
+            var checkReportStatus = $('input[name="reports[]"]:checked').map(function() {
+                return $(this).data('status');
+            }).get();
+
+            if (ck_reports.length == 0) {
+                Swal.fire('注意！', '請選擇至少一個項目！', 'warning');
+                return [];
+            } else {
+                switch (status) {
+                    case 'authorize':
+                        var validValues = [5, 6, 7];
+                        if (containsOnly(checkReportStatus, validValues)) {
+                            return ck_reports;
+                        } else {
+                            Swal.fire('注意！', '開立授權需為以下狀態：可開立授權、即將到期、即將達上限！', 'warning');
+                            return [];
+                        }
+                        break;
+                    case 'delivery':
+                        var validValues = [2];
+                        if (areAllValuesSame(checkReportLetter)) {
+                            return ck_reports;
+                        } else {
+                            Swal.fire('注意！', '發函文號需相同！', 'warning');
+                            return [];
+                        }
+                        break;
+                    case 'reply':
+                        var validValues = [3];
+                        if (areAllValuesSame(checkReportLetter) && containsOnly(checkReportStatus, validValues)) {
+                            return ck_reports;
+                        } else {
+                            Swal.fire('注意！', '發函文號需相同且狀態皆需為已送件！', 'warning');
+                            return [];
+                        }
+                        break;
+                    case 'moveout':
+                        var validValues = [13];
+                        if (areAllValuesSame(checkReportLetter) && containsOnly(checkReportStatus, validValues)) {
+                            return ck_reports;
+                        } else {
+                            Swal.fire('注意！', '發函文號需相同且狀態皆需為移出！', 'warning');
+                            return [];
+                        }
+                        break;
+                    case 'postpone':
+                        var validValues = [14];
+                        if (areAllValuesSame(checkReportLetter) && containsOnly(checkReportStatus, validValues)) {
+                            return ck_reports;
+                        } else {
+                            Swal.fire('注意！', '發函文號需相同且狀態皆需為展延！', 'warning');
+                            return [];
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+        }
+
+        function containsOnly(arr, validValues) {
+            return arr.every(value => validValues.includes(value));
         }
 
         function areAllValuesSame(arr) {
@@ -207,7 +319,7 @@
         }
 
         function applyForDelivery() {
-            var reports_id = getReportsCheckbox();
+            var reports_id = getReportsCheckboxForStatus('delivery');
 
             // if (reports_id.length > 0) {
             //     $('#export-step-1').show();
@@ -311,6 +423,46 @@
 
                     }
                 })
+            }
+
+        }
+
+        function applyForAuthorize() {
+
+            var reports_id = getReportsCheckboxForStatus('authorize');
+
+            if (reports_id.length > 0) {
+                Swal.fire('注意！', '開發中！', 'warning');
+            }
+
+        }
+
+        function moveOut() {
+
+            var reports_id = getReportsCheckboxForStatus('moveout');
+
+            if (reports_id.length > 0) {
+                Swal.fire('注意！', '開發中！', 'warning');
+            }
+
+        }
+
+        function postpone() {
+
+            var reports_id = getReportsCheckboxForStatus('postpone');
+
+            if (reports_id.length > 0) {
+                Swal.fire('注意！', '開發中！', 'warning');
+            }
+
+        }
+
+        function reply() {
+
+            var reports_id = getReportsCheckboxForStatus('reply');
+
+            if (reports_id.length > 0) {
+                Swal.fire('注意！', '開發中！', 'warning');
             }
 
         }

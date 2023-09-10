@@ -3,14 +3,11 @@
         <thead>
             <tr>
                 <th>
-                    <div class="form-group form-check mb-0 py-1 d-flex align-items-center">
-                        <input type="checkbox" class="form-check-input check-all mr-1 my-0"
-                            style="width: 20px;height: 20px;" id="check-all" value="" />
-                        <label for="check-all" class="check-all-label px-2 mb-0">全選</label>
-                    </div>
+
                 </th>
                 <th>發函文號</th>
                 <th>檢測報告編號</th>
+                <th>授權狀態</th>
                 <th>有效期限-迄</th>
                 <th>報告原有人</th>
                 <th>廠牌</th>
@@ -26,7 +23,6 @@
                 <th>F/E</th>
                 <th>車安回函</th>
                 <th>說明</th>
-                <th>授權狀態</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -34,14 +30,17 @@
             @foreach ($detectionReports as $item)
                 <tr>
                     <td>
-                        <div class="form-group form-check">
+                        {{-- <div class="form-group form-check">
                             <input type="checkbox" class="form-check-input" style="width: 20px;height: 20px;"
                                 name="reports[]" id="{{ $item->id }}" value="{{ $item->id }}"
                                 data-letter="{{ $item->letter_id }}" />
-                        </div>
+                        </div> --}}
+                        { "id" : "{{ $item->id }}", "letter_id" : "{{ $item->letter_id }}", "reports_authorize_status" : "{{ $item->reports_authorize_status }}" }
                     </td>
                     <td>{{ $item->letter_id }}</td>
                     <td>{{ $item->reports_num }}</td>
+                    <td>{{ DB::table('authorize_status')->whereNull('deleted_at')->where('id', $item->reports_authorize_status)->value('status_name') }}
+                    </td>
                     <td>{{ $item->reports_expiration_date_end }}</td>
                     <td>{{ DB::table('reporter_infos')->whereNull('deleted_at')->where('id', $item->reports_reporter)->value('reporter_name') }}
                     </td>
@@ -72,8 +71,6 @@
                     <td>{{ $item->reports_f_e }}</td>
                     <td>{{ $item->reports_reply }}</td>
                     <td>{{ $item->reports_note }}</td>
-                    <td>{{ DB::table('authorize_status')->whereNull('deleted_at')->where('id', $item->reports_authorize_status)->value('status_name') }}
-                    </td>
                     <td width="120">
                         {!! Form::open(['route' => ['admin.detectionReports.destroy', $item->id], 'method' => 'delete']) !!}
                         <div class='btn-group'>
@@ -109,3 +106,4 @@
         }
     </style>
 @endpush
+{{--  --}}
