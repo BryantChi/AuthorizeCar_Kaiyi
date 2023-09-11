@@ -13,6 +13,7 @@ use App\Models\Admin\CarModel;
 use App\Models\Admin\Regulations;
 use App\Models\Admin\Reporter;
 use App\Models\Admin\InspectionInstitution;
+use App\Models\Admin\DeliveryRecord;
 use App\Repositories\Admin\DetectionReportRepository as DetectionReportRep;
 use Illuminate\Http\Request;
 use Flash;
@@ -301,7 +302,7 @@ class DetectionReportController extends Controller
             foreach ($reporters as $reporter) {
                 $reports = DetectionReport::whereIn('id', $data_ids)->where('reports_reporter', $reporter)->pluck('id');
                 $res = $wordService->updateWordDocument(WordServices::MOVE_IN_CONTRACT, $reports);
-                array_push($contract_file_res, $res);
+                array_push($contract_file_res, $res->original);
             }
 
             // 申請函 - 只有一份 by 發函文號
@@ -309,6 +310,14 @@ class DetectionReportController extends Controller
 
             // 登入清冊 - 只有一份 by 發函文號
             $data_entry_res = $wordService->updateWordDocument(WordServices::DATA_ENTRY_EXCEL, $data_ids);
+
+            DeliveryRecord::create(['report_id' => $data_ids, 'delivery_path' => [$contract_file_res, $apply_letter_file_res->original, $data_entry_res->original]]);
+
+            return \Response::json(['status' => 'success', 'contract_data' => $contract_file_res, 'apply_letter_data' => $apply_letter_file_res->original, 'data_entry_data' => $data_entry_res->original]);
+        }
+
+        if ($type == 's2') {
+
         }
 
 
@@ -317,7 +326,7 @@ class DetectionReportController extends Controller
 
         // Flash::success('Detection Report download successfully.');
 
-        return \Response::json(['status' => 'success', 'contract_data' => $contract_file_res, 'apply_letter_data' => $apply_letter_file_res, 'data_entry_data' => $data_entry_res]);
+        // return \Response::json(['status' => 'success', 'contract_data' => $contract_file_res, 'apply_letter_data' => $apply_letter_file_res, 'data_entry_data' => $data_entry_res]);
     }
 
     // public function convertToPdf(Request $request)
