@@ -47,7 +47,5 @@ class AuthAutiCheckCronCommand extends Command
             \Log::debug($checkAuthorizeStatus);
             \Log::error('Cron Job has fail.');
         }
-
-        return 0;
     }
 }
