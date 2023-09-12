@@ -74,6 +74,7 @@ Route::prefix('admin')->group(function () {
         Route::any('detectionReports/destroy/{id}', [DetectionReportController::class, 'destroy'])->name('admin.detectionReports.destroy');
         Route::any('detectionReports/update/{id}', [DetectionReportController::class, 'update'])->name('admin.detectionReports.update');
         Route::any('detectionReports/edit/{id}', [DetectionReportController::class, 'edit'])->name('admin.detectionReports.edit');
+        Route::any('detectionReports/reply-modify', [DetectionReportController::class, 'modifyReply'])->name('admin.detectionReports.reply-modify');
     });
 });
 

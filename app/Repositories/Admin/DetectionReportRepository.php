@@ -41,6 +41,37 @@ class DetectionReportRepository {
 
             $reports_expiration_date_end = Carbon::parse($dr->reports_expiration_date_end);
 
+            if ($dr->reports_authorize_status == self::REPLIED) {
+                $dr->reports_authorize_status = self::AUTHORIZATION;
+
+                if ($today >= $reports_expiration_date_end) {
+                    $dr->reports_authorize_status = self::ACTION_FOR_POSTPONE;
+                    $dr->save();
+                    continue;
+                }
+
+                if ($today >= $reports_expiration_date_end->subMonths(2)) {
+                    $dr->reports_authorize_status = self::OUT_OF_TIME;
+                    $dr->save();
+                    continue;
+                }
+
+                if ($dr->reports_authorize_count_current >= 300) {
+                    $dr->reports_authorize_status = self::ACTION_FOR_MOVE_OUT;
+                    $dr->save();
+                    continue;
+                }
+
+                if ($dr->reports_authorize_count_current >= 280) {
+                    $dr->reports_authorize_status = self::REACH_LIMIT_280;
+                    $dr->save();
+                    continue;
+                }
+
+                $dr->save();
+                continue;
+            }
+
             if ($dr->reports_authorize_status == self::WAIT_FOR_MOVE_OUT) {
                 $dr->reports_authorize_status = self::ACTION_FOR_MOVE_OUT;
 
@@ -67,6 +98,9 @@ class DetectionReportRepository {
                     $dr->save();
                     continue;
                 }
+
+                $dr->save();
+                continue;
             }
 
             if ($dr->reports_authorize_status == self::WAIT_FOR_POSTPONE) {
@@ -95,6 +129,9 @@ class DetectionReportRepository {
                     $dr->save();
                     continue;
                 }
+
+                $dr->save();
+                continue;
             }
 
             if ($today >= $reports_expiration_date_end) {

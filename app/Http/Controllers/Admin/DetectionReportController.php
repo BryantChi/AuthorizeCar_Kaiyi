@@ -44,7 +44,7 @@ class DetectionReportController extends Controller
         $this->detectionReportRep::autoCheckAuthorizedStatus();
         //
         // $model = DetectionReport::orderBy('updated_at', 'DESC')->paginate(15);
-        $model = DetectionReport::orderBy('updated_at', 'DESC')->get();
+        $model = DetectionReport::orderBy('updated_at', 'DESC')->cursor();
         // $model = $this->detectionReportRepository->getAllDetectionReports();
 
         return view('admin.detection_report.index', ['detectionReports' => $model]);
@@ -316,7 +316,8 @@ class DetectionReportController extends Controller
             return \Response::json(['status' => 'success', 'contract_data' => $contract_file_res, 'apply_letter_data' => $apply_letter_file_res->original, 'data_entry_data' => $data_entry_res->original]);
         }
 
-        if ($type == 's2') {
+        if ($type == 's2') { // 開立授權
+
 
         }
 
@@ -327,6 +328,20 @@ class DetectionReportController extends Controller
         // Flash::success('Detection Report download successfully.');
 
         // return \Response::json(['status' => 'success', 'contract_data' => $contract_file_res, 'apply_letter_data' => $apply_letter_file_res, 'data_entry_data' => $data_entry_res]);
+    }
+
+    public function modifyReply(Request $request)
+    {
+        $input = $request->all();
+
+        $data_ids = $input['data_ids'];
+        $reply_num = $input['reply_num'];
+
+        $replyRequest = DetectionReport::whereIn('id', $data_ids);
+
+        $replyRequest->update(['reports_reply' => $reply_num, 'reports_authorize_status' => DetectionReportRep::REPLIED]);
+
+        return \Response::json(['status' => 'success']);
     }
 
     // public function convertToPdf(Request $request)

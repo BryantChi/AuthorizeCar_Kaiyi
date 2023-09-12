@@ -62,7 +62,8 @@
         @include('flash::message')
         <div class="card">
             <div class="card-body">
-                <div class="form-group form-check mb-3 py-1 d-flex align-items-center btn btn-outline-secondary" style="width: max-content;">
+                <div class="form-group form-check mb-3 py-1 d-flex align-items-center btn btn-outline-secondary"
+                    style="width: max-content;">
                     <input type="checkbox" class="form-check-input check-all mr-1 my-0 ml-1 d-none"
                         style="width: 20px;height: 20px;" id="check-all" value="" />
                     <label for="check-all" class="check-all-label px-2 mb-0 ml-42">全選</label>
@@ -142,7 +143,7 @@
         $(function() {
             $('.btn-action').hide();
             // $('#export-step-1').hide();
-            $('#detectionReports-table tbody').on('change', 'input[name="reports[]"]', function () {
+            $('#detectionReports-table tbody').on('change', 'input[name="reports[]"]', function() {
                 var ck_reports = $('input[name="reports[]"]:checked').map(function() {
                     return $(this).val();
                 }).get();
@@ -156,7 +157,9 @@
 
             $('#check-all').change(function() {
                 if ($(this).is(':checked')) {
-                    var rows = table.rows({ 'page': 'current' }).nodes();
+                    var rows = table.rows({
+                        'page': 'current'
+                    }).nodes();
                     $('.check-all-label').html('取消全選');
                     $('input[name="reports[]"]', rows).prop('checked', true);
                     $('input[name="reports[]"]', rows).change();
@@ -184,9 +187,12 @@
                     'searchable': false,
                     'orderable': false,
                     'className': 'dt-body-center',
-                    'render': function (data, type, full, meta) {
+                    'render': function(data, type, full, meta) {
                         var d = JSON.parse(data);
-                        return '<input type="checkbox" name="reports[]"  style="width: 20px;height: 20px;" value="' + $('<div/>').text(d.id).html() + '" data-letter="' + $('<div/>').text(d.letter_id).html() + '" data-status="' + $('<div/>').text(d.reports_authorize_status).html() + '">';
+                        return '<input type="checkbox" name="reports[]"  style="width: 20px;height: 20px;" value="' +
+                            $('<div/>').text(d.id).html() + '" data-letter="' + $('<div/>')
+                            .text(d.letter_id).html() + '" data-status="' + $('<div/>').text(d
+                                .reports_authorize_status).html() + '">';
                     }
                 }],
                 // dom: 'Bfrtip',  // 這行代碼是必須的，用於告訴 DataTables 插入哪些按鈕
@@ -212,8 +218,8 @@
         function getReportsCheckbox() { // 申請送件
 
             var ck_reports = $('input[name="reports[]"]:checked').map(function() {
-                    return $(this).val();
-                }).get();
+                return $(this).val();
+            }).get();
 
             var checkReportLetter = $('input[name="reports[]"]:checked').map(function() {
                 return $(this).data('letter');
@@ -328,6 +334,15 @@
             // }
 
             if (reports_id.length > 0) {
+                Swal.fire({
+                    title: '處理中...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
                 $.ajax({
                     url: "{{ route('exportDocument') }}",
                     type: 'POST',
@@ -355,6 +370,7 @@
                         //         // window.location.herf = " ('', ['convert' => '" + report.word + "']) ";
                         //     }, 500);
                         // }
+                        Swal.close();
                         if (res.status == 'success') {
                             $('.file-container').empty();
                             $('.file-container').append(
@@ -457,12 +473,54 @@
 
         }
 
-        function reply() {
+        async function reply() {
 
             var reports_id = getReportsCheckboxForStatus('reply');
 
             if (reports_id.length > 0) {
-                Swal.fire('注意！', '開發中！', 'warning');
+                // Swal.fire('注意！', '開發中！', 'warning');
+
+                const {
+                    value: formValues
+                } = await Swal.fire({
+                    title: '請輸入回函文號',
+                    html: '<input id="swal-input1" class="swal2-input">',
+                    focusConfirm: false,
+                    showCancelButton: true,
+                    preConfirm: () => {
+                        return document.getElementById('swal-input1').value
+                    }
+                })
+
+                if (formValues) {
+                    Swal.fire({
+                        title: '處理中...',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    $.ajax({
+                        url: "{{ route('admin.detectionReports.reply-modify') }}",
+                        type: 'POST',
+                        data: {
+                            data_ids: reports_id,
+                            reply_num: formValues,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(res) {
+                            // Swal.close();
+                            if (res.status == 'success') {
+                                window.location.reload();
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            Swal.fire('錯誤！', '程序失敗', 'error');
+                        }
+                    });
+                }
             }
 
         }
