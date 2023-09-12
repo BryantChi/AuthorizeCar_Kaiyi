@@ -102,7 +102,7 @@ class WordServices
                 }
             }
             array_push($tb_values, [
-                'reports_index' => $index,
+                'reports_index' => ($index + 1),
                 'reports_num' => $value->reports_num,
                 'reports_regulations' => $reports_regulations,
                 'reports_self_count' => '0',
