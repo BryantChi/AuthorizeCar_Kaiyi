@@ -120,7 +120,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                    <button type="button" class="btn btn-secondary btn-close" data-dismiss="modal">關閉</button>
                     {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
                 </div>
             </div>
@@ -348,7 +348,7 @@
                     type: 'POST',
                     data: {
                         data_ids: reports_id,
-                        typer: 's1',
+                        typer: 'delivery',
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(res) {
@@ -443,12 +443,114 @@
 
         }
 
-        function applyForAuthorize() {
+        async function applyForAuthorize() {
 
             var reports_id = getReportsCheckboxForStatus('authorize');
 
             if (reports_id.length > 0) {
-                Swal.fire('注意！', '開發中！', 'warning');
+                // Swal.fire('注意！', '開發中！', 'warning');
+
+                const {
+                    value: formValues
+                } = await Swal.fire({
+                    title: '開立授權',
+                    html: '<input id="swal-input1" class="swal2-input" placeholder="輸入授權公司" required="true">' +
+                        '<input id="swal-input2" class="swal2-input" placeholder="輸入廠牌" required="true">' +
+                        '<input id="swal-input3" class="swal2-input" placeholder="輸入車型" required="true">' +
+                        '<input id="swal-input4" class="swal2-input" placeholder="輸入車身碼" required="true">',
+                    focusConfirm: false,
+                    showCancelButton: true,
+                    preConfirm: () => {
+                        if (document.getElementById('swal-input1').value != '' && document.getElementById('swal-input2').value != '' && document.getElementById(
+                                'swal-input3').value != '' && document.getElementById('swal-input4')
+                                .value != '') {
+
+                            return [
+                                document.getElementById('swal-input1').value,
+                                document.getElementById('swal-input2').value,
+                                document.getElementById('swal-input3').value,
+                                document.getElementById('swal-input4').value
+                            ];
+                        } else {
+                            Swal.showValidationMessage('輸入不能為空');
+                        }
+                    }
+                })
+
+                if (formValues) {
+                    Swal.fire({
+                        title: '處理中...',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    $.ajax({
+                        url: "{{ route('exportDocument') }}",
+                        type: 'POST',
+                        data: {
+                            data_ids: reports_id,
+                            typer: 'authorize',
+                            auth_input: formValues,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(res) {
+                            Swal.close();
+                            if (res.status == 'success') {
+                                $('.file-container').empty();
+                                $('.file-container').append(
+                                    '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
+                                    '<a href="' + window.location.origin + '/' + res.authorize_data
+                                    .word + '" download>' +
+                                    '<p class="text-secondary file-name" style="max-width: 200px;">' +
+                                    res
+                                    .authorize_data.authorize_file_name + '</p>' +
+                                    '<img src="{{ asset('assets/img/word-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                                    '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                                    '</a>' +
+                                    '</div>' +
+                                    '<div class="col-auto d-block pdf-download-content text-center mx-3">' +
+                                    '<a href="' + window.location.origin + '/' + res.authorize_data
+                                    .pdf + '" download>' +
+                                    '<p class="text-secondary file-name" style="max-width: 200px;">' +
+                                    res
+                                    .authorize_data.authorize_file_name + '</p>' +
+                                    '<img src="{{ asset('assets/img/pdf-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                                    '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                                    '</a>' +
+                                    '</div>');
+
+                                // $('.btn-close').click(function () {
+                                //     window.location.reload();
+                                // });
+                                setTimeout(function() {
+                                    $('#downloadModal').modal('show');
+                                    $('#downloadModal').on('hidden.bs.modal', function(event) {
+                                        // do something...
+                                        Swal.fire({
+                                            title: '載入中...',
+                                            allowOutsideClick: false,
+                                            showConfirmButton: false,
+                                            didOpen: () => {
+                                                Swal.showLoading();
+                                            }
+                                        });
+                                        window.location.reload();
+                                    });
+                                }, 500);
+
+
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            Swal.fire('錯誤！', '程序失敗', 'error');
+                        }
+                    });
+                }
+
+
             }
 
         }

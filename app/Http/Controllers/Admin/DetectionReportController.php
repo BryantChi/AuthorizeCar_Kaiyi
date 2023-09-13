@@ -295,7 +295,7 @@ class DetectionReportController extends Controller
         $type = $input['typer'];
         $data_ids = $input['data_ids'];
 
-        if ($type == 's1') { // 申請送件階段 - 只有一個發函文號
+        if ($type == 'delivery') { // 申請送件階段 - 只有一個發函文號
             // 檢測報告移入協會合約書 - 因多個報告原有人有多份合約書
             $reporters = DetectionReport::whereIn('id', $data_ids)->pluck('reports_reporter')->unique();
             $contract_file_res = array();
@@ -316,8 +316,21 @@ class DetectionReportController extends Controller
             return \Response::json(['status' => 'success', 'contract_data' => $contract_file_res, 'apply_letter_data' => $apply_letter_file_res->original, 'data_entry_data' => $data_entry_res->original]);
         }
 
-        if ($type == 's2') { // 開立授權
+        if ($type == 'authorize') { // 開立授權
+            $auth_input = $input['auth_input'];
 
+            $authorize_file_res = $wordService->updateWordDocument(WordServices::POWER_OF_ATTORNEY, $data_ids, ['auth_input' => $auth_input]);
+
+            return \Response::json(['status' => 'success', 'authorize_data' => $authorize_file_res->original]);
+
+            // if (!empty($authorize_file_res)) {
+            //     $reports = DetectionReport::whereIn('id', $data_ids)->get();
+
+            //     foreach ($reports as $report) {
+            //         $report->reports_authorize_count_current = ($report->reports_authorize_count_before + 1);
+            //         $report->save();
+            //     }
+            // }
 
         }
 

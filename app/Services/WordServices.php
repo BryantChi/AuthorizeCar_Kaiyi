@@ -10,6 +10,7 @@ use PhpOffice\PhpWord\TemplateProcessor;
 use App\Models\Admin\DetectionReport;
 use App\Models\Admin\Reporter;
 use App\Models\Admin\CompanyInfo as Company;
+use App\Models\Admin\Regulations;
 use stdClass;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -24,6 +25,7 @@ class WordServices
     const MOVE_IN_CONTRACT = 'MOVE_IN_CONTRACT';
     const APPLICATION_LETTER = 'APPLICATION_LETTER';
     const DATA_ENTRY_EXCEL = 'DATA_ENTRY_EXCEL';
+    const POWER_OF_ATTORNEY = 'POWER_OF_ATTORNEY';
 
     function updateWordDocument($fileType = null, $data_id, $options = array())
     {
@@ -40,6 +42,11 @@ class WordServices
                 break;
             case self::DATA_ENTRY_EXCEL: // 登錄清冊
                 return $this->setDataEntryExcel($data_id);
+                break;
+            case self::POWER_OF_ATTORNEY: // 授權書
+                $templatefileName = 'Template_授權書.docx';
+                $templatefilePath = public_path('template_doc/' . $templatefileName);
+                return $this->setPowerOfAttorney($data_id, $templatefilePath, $options['auth_input']);
                 break;
         }
     }
@@ -249,6 +256,110 @@ class WordServices
         return \Response::json([
             'data_entry_file_name' => '附件一、檢測報告登錄清冊 登錄 (' . count($data_id) . ') _' . $fullTime,
             'excel' => $folderPath . '/'. $fileName,
+        ]);
+    }
+
+    public function setPowerOfAttorney($data_id, $filePath, $auth_input)
+    {
+        $templateProcessor = new TemplateProcessor($filePath);
+
+        $detection_reports = DetectionReport::whereIn('id', $data_id)->get();
+
+        $tb_values = array();
+
+        foreach ($detection_reports as $index => $value) {
+            if ($value->reports_authorize_count_current < $value->reports_authorize_count_before) {
+                $value->reports_authorize_count_current = ($value->reports_authorize_count_before + 1);
+            } else {
+                $value->reports_authorize_count_current += 1;
+            }
+            $reports_regulations = '';
+            foreach ($value->reports_regulations as $i => $info) {
+                $regulation = Regulations::where('regulations_num', $info)->first();
+                if ($i == 0) {
+                    $reports_regulations .= $info . ' ' . $regulation->regulations_name;
+                } else {
+                    $reports_regulations .= ', ' . $info . ' ' . $regulation->regulations_name;
+                }
+            }
+            $expiration_date = Carbon::parse($value->reports_expiration_date_end);
+            $expiration_date_y = ((int)$expiration_date->year) - 1911;
+            $expiration_date_m = str_pad($expiration_date->month, 2, "0", STR_PAD_LEFT);
+            $expiration_date_d = str_pad($expiration_date->day, 2, "0", STR_PAD_LEFT);
+            $authorize_sid = $value->reports_num . '-Y' . $value->reports_f_e . $expiration_date_y . $expiration_date_m . $expiration_date_d . '-' . str_pad($value->reports_authorize_count_current, 3, "0", STR_PAD_LEFT);
+            array_push($tb_values, [
+                'reports_regulations' => $reports_regulations,
+                'reports_num' => $value->reports_num,
+                'reports_authorize_sid' => $authorize_sid,
+            ]);
+
+            $value->save();
+        }
+
+        // dd($tb_values);
+
+        $templateProcessor->setValue('authorize_com', $auth_input[0]);
+        $templateProcessor->setValue('authorize_brand', $auth_input[1]);
+        $templateProcessor->setValue('authorize_model', $auth_input[2]);
+        $templateProcessor->setValue('authorize_vin', $auth_input[3]);
+
+        $templateProcessor->cloneRowAndSetValues('reports_regulations', $tb_values);
+
+        $authorize_date = Carbon::today();
+        $date_y = ((int)$authorize_date->year) - 1911;
+        $date_m = str_pad($authorize_date->month, 2, "0", STR_PAD_LEFT);
+        $date_d = str_pad($authorize_date->day, 2, "0", STR_PAD_LEFT);
+
+        $templateProcessor->setValue('a_y', $date_y);
+        $templateProcessor->setValue('a_m', $date_m);
+        $templateProcessor->setValue('a_d', $date_d);
+
+        $company = Company::first();
+        $templateProcessor->setImageValue('image_sign_com', public_path('uploads/'.$company->com_seal));
+        // $templateProcessor->setImageValue('image_sign_com', public_path('assets/img/sign_test_icon/sign_com.png'));
+
+        $time = Carbon::now();
+        $fullTime = $time->format('Y-m-d_H-i-s');
+        $month_year = $time->format('Ym');
+
+        $wordName = '/授權書_' . $auth_input[0] . '_' . $fullTime . '.docx';
+        $pdfName = '/授權書_' . $auth_input[0] . '_' . $fullTime . '.pdf';
+
+        $folderWordPath = 'files/autorize/word/' . $month_year;
+        $folderPdfPath = 'files/autorize/pdf/' . $month_year;
+
+        $fullWordPath = $folderWordPath . $wordName;
+        $fullPdfPath = $folderPdfPath . $pdfName;
+
+        $newWordFilePath = public_path($fullWordPath);
+        $newPdfFilePath = public_path($fullPdfPath);
+
+        if (!File::exists($folderWordPath)) {
+            File::makeDirectory($folderWordPath, 0777, true); // 使用 File 類別建立資料夾
+        }
+
+        if (!File::exists($folderPdfPath)) {
+            File::makeDirectory($folderPdfPath, 0777, true); // 使用 File 類別建立資料夾
+        }
+
+        $templateProcessor->saveAs($newWordFilePath);
+
+        $ilovepdf = new Ilovepdf('project_public_0972a67458e4dd3ac4561edec19a48ed_pWfxHf7de3bcb072e2b66fc59b5cf8ded47d7', 'secret_key_f428272dfee9a265364aeadf9d895a8a_UMGYM186d525137876fd82fbc8a61f341c725');
+        $myTask = $ilovepdf->newTask('officepdf');
+        $file1 = $myTask->addFile($newWordFilePath);
+        $myTask->execute();
+        $myTask->download(public_path($folderPdfPath));
+
+        // return json_encode([
+        //     'status' => 'success',
+        //     'file_name' => '申請函_' . $reports_reporter->reporter_name . '_' . $fullTime,
+        //     'word' => $fullWordPath,
+        //     'pdf' => $fullPdfPath,
+        // ]);
+        return \Response::json([
+            'authorize_file_name' => '授權書_' . $auth_input[0] . '_' . $fullTime,
+            'word' => $fullWordPath,
+            'pdf' => $fullPdfPath,
         ]);
     }
 }
