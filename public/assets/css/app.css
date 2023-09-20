@@ -29,3 +29,10 @@
     /* height: 34px !important; */
     height: calc(2.25rem + 2px) !important;
 }
+
+.btn-primary {
+    color: #fff;
+    background-color: #7066e0 !important;
+    border-color: #7066e0 !important;
+    box-shadow: none;
+}

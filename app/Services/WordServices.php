@@ -11,6 +11,8 @@ use App\Models\Admin\DetectionReport;
 use App\Models\Admin\Reporter;
 use App\Models\Admin\CompanyInfo as Company;
 use App\Models\Admin\Regulations;
+use App\Models\Admin\CarBrand;
+use App\Models\Admin\CarModel;
 use stdClass;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -298,9 +300,11 @@ class WordServices
 
         // dd($tb_values);
 
+        $brand = CarBrand::find($auth_input[1]);
+        $model = CarModel::find($auth_input[2]);
         $templateProcessor->setValue('authorize_com', $auth_input[0]);
-        $templateProcessor->setValue('authorize_brand', $auth_input[1]);
-        $templateProcessor->setValue('authorize_model', $auth_input[2]);
+        $templateProcessor->setValue('authorize_brand', $brand->brand_name);
+        $templateProcessor->setValue('authorize_model', $model->model_name);
         $templateProcessor->setValue('authorize_vin', $auth_input[3]);
 
         $templateProcessor->cloneRowAndSetValues('reports_regulations', $tb_values);

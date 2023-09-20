@@ -47,7 +47,9 @@ class DetectionReportController extends Controller
         $model = DetectionReport::orderBy('updated_at', 'DESC')->cursor();
         // $model = $this->detectionReportRepository->getAllDetectionReports();
 
-        return view('admin.detection_report.index', ['detectionReports' => $model]);
+        $carBrand = CarBrand::all();
+
+        return view('admin.detection_report.index', ['detectionReports' => $model, 'brand' => $carBrand]);
     }
 
     /**

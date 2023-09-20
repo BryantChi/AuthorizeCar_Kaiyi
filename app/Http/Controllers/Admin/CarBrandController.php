@@ -6,6 +6,7 @@ use App\Http\Requests\Admin\CreateCarBrandRequest;
 use App\Http\Requests\Admin\UpdateCarBrandRequest;
 use App\Repositories\Admin\CarBrandRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Admin\CarBrand;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
@@ -175,5 +176,12 @@ class CarBrandController extends AppBaseController
         Flash::success('Car Brand deleted successfully.');
 
         return redirect(route('admin.carBrands.index'));
+    }
+
+    public function getBrands()
+    {
+        $brands = CarBrand::get(['id', 'brand_name']);
+
+        return response()->json($brands);
     }
 }

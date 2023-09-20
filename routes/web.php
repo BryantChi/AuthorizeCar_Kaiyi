@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\CarBrandController;
 use App\Http\Controllers\Admin\CarModelController;
 use App\Http\Controllers\Admin\DetectionReportController;
+use App\Models\Admin\CarBrand;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -78,6 +80,7 @@ Route::prefix('admin')->group(function () {
     });
 });
 
+Route::any('getBrands', [CarBrandController::class, 'getBrands'])->name('getBrands');
 Route::any('get-models-by-brand', [CarModelController::class, 'getModelsByBrand'])->name('getModelsByBrand');
 Route::any('get-status-by-letter', [DetectionReportController::class, 'getStatusByLetter'])->name('getStatusByLetter');
 Route::any('exportDocument', [DetectionReportController::class, 'exportDocument'])->name('exportDocument');

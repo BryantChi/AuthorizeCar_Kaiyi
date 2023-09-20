@@ -41,7 +41,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css"/>
 
-    <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}?v=1.1.0">
+    <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}?v=1.1.1">
 
     @stack('third_party_stylesheets')
 
