@@ -95,7 +95,7 @@ class DetectionReportController extends Controller
         // }
         $input['reports_authorize_status'] = '2';
 
-        $detectionReport = DetectionReport::create($request->all());
+        $detectionReport = DetectionReport::create($input);
 
         // Flash::error('功能開發中!!!');
 
