@@ -63,7 +63,7 @@ class DetectionReportExport implements FromCollection, WithHeadings, WithStyles,
                 'reports_car_model_code' => $detectionReport->reports_car_model_code,
                 'reports_test_date' => $reports_test_date,
                 'reports_date' => $reports_date,
-                'reports_note' => $detectionReport->reports_note,
+                'reports_note' => $detectionReport->reports_vin, // 登錄清冊備註欄為車身碼
                 'reports_authorize_count_current' => (string)$detectionReport->reports_authorize_count_current,
                 'reports_f_e' => $detectionReport->reports_f_e,
             ];
