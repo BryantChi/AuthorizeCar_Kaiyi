@@ -319,8 +319,8 @@ class WordServices
         $templateProcessor->setValue('a_d', $date_d);
 
         $company = Company::first();
-        $templateProcessor->setImageValue('image_sign_com', ["path" => public_path('uploads/'.$company->com_seal), "width" => 250]);
-        // $templateProcessor->setImageValue('image_sign_com', public_path('assets/img/sign_test_icon/sign_com.png'));
+        $templateProcessor->setImageValue('image_sign_com', ["path" => public_path('uploads/'.$company->com_seal), "width" => 150, "height" => '']);
+        // $templateProcessor->setImageValue('image_sign_com', ["path" => public_path('assets/img/sign_test_icon/sign_com.png'), "width" => 150, "height" => '']);
 
         $time = Carbon::now();
         $fullTime = $time->format('Y-m-d_H-i-s');
