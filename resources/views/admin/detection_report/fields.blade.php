@@ -53,13 +53,14 @@
             @endforeach
         </select>
     </div>
-
-</div>
-<div class="col-md-6">
     <div class="form-group">
         {!! Form::label('reports_car_model_code', '車種代號') !!}
         {!! Form::text('reports_car_model_code', null, ['class' => 'form-control']) !!}
     </div>
+
+</div>
+<div class="col-md-6">
+
     <div class="form-group">
         {!! Form::label('reports_test_date', '測試日期') !!}
         {!! Form::date('reports_test_date', null, ['class' => 'form-control']) !!}
@@ -75,6 +76,10 @@
     <div class="form-group">
         {!! Form::label('reports_authorize_count_before', '移入前授權使用次數') !!}
         {!! Form::number('reports_authorize_count_before', null, ['class' => 'form-control', 'min' => '0']) !!}
+    </div>
+    <div class="form-group">
+        {!! Form::label('reports_authorize_count_current', '移入後累計授權次數') !!}
+        {!! Form::number('reports_authorize_count_current', null, ['class' => 'form-control', 'min' => '0']) !!}
     </div>
     <div class="form-group position-relative">
         <label class="font-weight-bold" for="reports_f_e">F/E</label>
