@@ -314,6 +314,7 @@ class DetectionReportController extends Controller
             $data_entry_res = $wordService->updateWordDocument(WordServices::DATA_ENTRY_EXCEL, $data_ids);
 
             DeliveryRecord::create(['report_id' => $data_ids, 'delivery_path' => [$contract_file_res, $apply_letter_file_res->original, $data_entry_res->original]]);
+            DetectionReport::whereIn('id', $data_ids)->update(["reports_authorize_status" => DetectionReportRep::DELIVERY]);
 
             return \Response::json(['status' => 'success', 'contract_data' => $contract_file_res, 'apply_letter_data' => $apply_letter_file_res->original, 'data_entry_data' => $data_entry_res->original]);
         }
