@@ -16,9 +16,9 @@
                 $num = '';
                 foreach ($reports as $i => $report) {
                     if ($i == 0) {
-                        $num .= $report->reports_num;
+                        $num .= '<a href="javascript:void(0)" onclick="openReport('.$report->id.');">'.$report->reports_num.'</a>';
                     } else {
-                        $num .= ', ' . $report->reports_num;
+                        $num .= ', ' . '<a href="javascript:void(0)" onclick="openReport(' . $report->id . ');">' . $report->reports_num . '</a>';
                     }
                 }
 
@@ -49,7 +49,7 @@
                         {{ $deliveryRecord->id }}
                     </td>
                     <td class="text-bold" style="min-width: 15rem;">
-                        {{ $num }}
+                        {!! $num !!}
                     </td>
                     <td>
                         <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#collapseExample_{{ $deliveryRecord->id }}"

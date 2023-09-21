@@ -369,4 +369,38 @@ class DetectionReportController extends Controller
     // $myTask->execute();
     // $myTask->download($folderPath);
     // }
+
+    public function showReportModal(Request $request)
+    {
+        $input = $request->all();
+        $report = DetectionReport::find($input['reportId']);
+
+        $rt = new \StdClass();
+
+        $rt->letter_id = $report->letter_id;
+        $rt->reports_num = $report->reports_num;
+        $rt->reports_expiration_date_end = Carbon::parse($report->reports_expiration_date_end)->format('Y/m/d');
+        $rt->reports_reporter = Reporter::where('id', $report->reports_reporter)->value('reporter_name');
+        $rt->reports_car_brand = CarBrand::where('id', $report->reports_car_brand)->value('brand_name');
+        $rt->reports_car_model = CarModel::where('id', $report->reports_car_model)->value('model_name');
+        $rt->reports_inspection_institution = InspectionInstitution::where('id', $report->reports_inspection_institution)->value('ii_name');
+        $regulations = Regulations::whereIn('regulations_num', $report->reports_regulations)->get();
+        $reg = '';
+        foreach ($regulations as $info) {
+            $reg .= '<span class="rounded mr-1 my-1 py-1 px-2 bg-info d-flex float-left" style="width: max-content;">' . $info->regulations_num . ' ' . $info->regulations_name . '</span>';
+        }
+        $rt->reports_regulations = $reg;
+        $rt->reports_car_model_code = $report->reports_car_model_code;
+        $rt->reports_test_date = Carbon::parse($report->reports_test_date)->format('Y/m/d');
+        $rt->reports_date = Carbon::parse($report->reports_date)->format('Y/m/d');
+        $rt->reports_vin = $report->reports_vin;
+        $rt->reports_authorize_count_before = $report->reports_authorize_count_before;
+        $rt->reports_authorize_count_current = $report->reports_authorize_count_current;
+        $rt->reports_f_e = $report->reports_f_e;
+        $rt->reports_reply = $report->reports_reply;
+        $rt->reports_note = $report->reports_note;
+        $rt->reports_authorize_status = AuthStatus::where('id', $report->reports_authorize_status)->value('status_name');
+
+        return \Response::json(['status' => 'success', 'data' => $rt]);
+    }
 }

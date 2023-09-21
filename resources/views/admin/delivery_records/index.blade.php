@@ -37,6 +37,100 @@
         </div>
     </div>
 
+
+    <div class="modal fade" id="reportShowModal" tabindex="-1" aria-labelledby="reportShowModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reportShowModalLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row p-3">
+                        <div class="col-12">
+                            <label for="letter_id">發函文號</label>
+                            <p id="letter_id"></p>
+                        </div>
+                        <div class="col-12">
+                            <label for="reports_num">檢測報告編號</label>
+                            <p id="reports_num"></p>
+                        </div>
+                        <div class="col-12">
+                            <label for="reports_expiration_date_end">有效期限-迄</label>
+                            <p id="reports_expiration_date_end"></p>
+                        </div>
+                        <div class="col-12">
+                            <label for="reports_reporter">報告原有人</label>
+                            <p id="reports_reporter"></p>
+                        </div>
+                        <div class="col-12">
+                            <label for="reports_car_brand">廠牌</label>
+                            <p id="reports_car_brand"></p>
+                        </div>
+                        <div class="col-12">
+                            <label for="reports_car_model">型號</label>
+                            <p id="reports_car_model"></p>
+                        </div>
+                        <div class="col-12">
+                            <label for="reports_inspection_institution">檢測機構</label>
+                            <p id="reports_inspection_institution"></p>
+                        </div>
+                        <div class="col-12">
+                            <label for="reports_regulations">法規項目</label>
+                            <p id="reports_regulations"></p>
+                        </div>
+                        <div class="col-12">
+                            <label for="reports_car_model_code">車種代號</label>
+                            <p id="reports_car_model_code"></p>
+                        </div>
+                        <div class="col-12">
+                            <label for="reports_test_date">測試日期</label>
+                            <p id="reports_test_date"></p>
+                        </div>
+                        <div class="col-12">
+                            <label for="reports_date">報告日期</label>
+                            <p id="reports_date"></p>
+                        </div>
+                        <div class="col-12">
+                            <label for="reports_vin">代表車車身碼(VIN)</label>
+                            <p id="reports_vin"></p>
+                        </div>
+                        <div class="col-12">
+                            <label for="reports_authorize_count_before">移入前授權使用次數</label>
+                            <p id="reports_authorize_count_before"></p>
+                        </div>
+                        <div class="col-12">
+                            <label for="reports_authorize_count_current">移入後累計授權次數</label>
+                            <p id="reports_authorize_count_current"></p>
+                        </div>
+                        <div class="col-12">
+                            <label for="reports_f_e">F/E</label>
+                            <p id="reports_f_e"></p>
+                        </div>
+                        <div class="col-12">
+                            <label for="reports_reply">車安回函</label>
+                            <p id="reports_reply"></p>
+                        </div>
+                        <div class="col-12">
+                            <label for="reports_authorize_status">授權狀態</label>
+                            <p id="reports_authorize_status"></p>
+                        </div>
+                        <div class="col-12">
+                            <label for="reports_note">說明</label>
+                            <p id="reports_note"></p>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('page_css')
@@ -51,7 +145,6 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js">
     </script>
     <script>
-
         $(function() {
             var table = $('#deliveryRecords-table').DataTable({
                 lengthChange: true, // 呈現選單
@@ -95,6 +188,55 @@
             });
         })
 
+        function openReport(reportId) {
+            Swal.fire({
+                title: '載入中...',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            $.ajax({
+                url: "{{ route('showReportModal') }}",
+                type: 'POST',
+                data: {
+                    reportId: reportId,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(res) {
+                    Swal.close();
+                    if (res.status == 'success') {
+                        console.log(res.data);
+                        $('#letter_id').html(res.data.letter_id);
+                        $('#reports_num').html(res.data.reports_num);
+                        $('#reports_expiration_date_end').html(res.data.reports_expiration_date_end);
+                        $('#reports_reporter').html(res.data.reports_reporter);
+                        $('#reports_car_brand').html(res.data.reports_car_brand);
+                        $('#reports_car_model').html(res.data.reports_car_model);
+                        $('#reports_inspection_institution').html(res.data.reports_inspection_institution);
+                        $('#reports_regulations').html(res.data.reports_regulations);
+                        $('#reports_car_model_code').html(res.data.reports_car_model_code);
+                        $('#reports_test_date').html(res.data.reports_test_date);
+                        $('#reports_date').html(res.data.reports_date);
+                        $('#reports_vin').html(res.data.reports_vin);
+                        $('#reports_authorize_count_before').html(res.data.reports_authorize_count_before);
+                        $('#reports_authorize_count_current').html(res.data.reports_authorize_count_current);
+                        $('#reports_f_e').html(res.data.reports_f_e);
+                        $('#reports_reply').html(res.data.reports_reply);
+                        $('#reports_authorize_status').html(res.data.reports_authorize_status);
+                        $('#reports_note').html(res.data.reports_note);
+                        setTimeout(function() {
+                            $('#reportShowModal').modal('show');
+                        }, 500);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    Swal.fire('錯誤！', '程序失敗', 'error');
+                }
+            })
+
+        }
     </script>
 @endpush
-
