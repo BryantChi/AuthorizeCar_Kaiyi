@@ -319,7 +319,7 @@ class WordServices
         $templateProcessor->setValue('a_d', $date_d);
 
         $company = Company::first();
-        $templateProcessor->setImageValue('image_sign_com', ["path" => public_path('uploads/'.$company->com_seal), "width" => "200"]);
+        $templateProcessor->setImageValue('image_sign_com', ["path" => public_path('uploads/'.$company->com_seal), "width" => "250"]);
         // $templateProcessor->setImageValue('image_sign_com', public_path('assets/img/sign_test_icon/sign_com.png'));
 
         $time = Carbon::now();
