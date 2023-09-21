@@ -41,7 +41,7 @@
                     <td>{{ $item->reports_num }}</td>
                     <td>{{ DB::table('authorize_status')->whereNull('deleted_at')->where('id', $item->reports_authorize_status)->value('status_name') }}
                     </td>
-                    <td>{{ $item->reports_expiration_date_end }}</td>
+                    <td>{{ Carbon\Carbon::parse($item->reports_expiration_date_end)->format('Y/m/d') }}</td>
                     <td>{{ DB::table('reporter_infos')->whereNull('deleted_at')->where('id', $item->reports_reporter)->value('reporter_name') }}
                     </td>
                     <td>{{ DB::table('car_brand')->whereNull('deleted_at')->where('id', $item->reports_car_brand)->value('brand_name') }}
@@ -63,8 +63,8 @@
                         @endforeach
                     </td>
                     <td>{{ $item->reports_car_model_code }}</td>
-                    <td>{{ $item->reports_test_date }}</td>
-                    <td>{{ $item->reports_date }}</td>
+                    <td>{{ Carbon\Carbon::parse($item->reports_test_date)->format('Y/m/d') }}</td>
+                    <td>{{ Carbon\Carbon::parse($item->reports_date)->format('Y/m/d') }}</td>
                     <td>{{ $item->reports_vin }}</td>
                     <td>{{ $item->reports_authorize_count_before }}</td>
                     <td>{{ $item->reports_authorize_count_current }}</td>

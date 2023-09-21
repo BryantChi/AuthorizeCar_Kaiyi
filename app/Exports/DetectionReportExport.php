@@ -45,6 +45,7 @@ class DetectionReportExport implements FromCollection, WithHeadings, WithStyles,
                     $regulations .= '，' . $regulation->regulations_num . ' ' . $regulation->regulations_name;
                 }
             }
+            $reports_expiration_date_end = Carbon::parse($detectionReport->reports_expiration_date_end)->format('Y/m/d');
             $td = Carbon::parse($detectionReport->reports_test_date);
             $reports_test_date = ((int)$td->year - 1911) . '/' . str_pad($td->month, 2, "0", STR_PAD_LEFT) . '/' . str_pad($td->day, 2, "0", STR_PAD_LEFT);
 
@@ -54,7 +55,7 @@ class DetectionReportExport implements FromCollection, WithHeadings, WithStyles,
             return [
                 'index' => $index + 1,
                 'reports_num' => $detectionReport->reports_num,
-                'reports_expiration_date_end' => $detectionReport->reports_expiration_date_end,
+                'reports_expiration_date_end' => $reports_expiration_date_end,
                 'reports_reporter' => $reporter,
                 'reports_car_brand' => $brand,
                 'reports_car_model' => $model,
