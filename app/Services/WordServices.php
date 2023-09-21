@@ -306,6 +306,7 @@ class WordServices
         $templateProcessor->setValue('authorize_brand', $brand->brand_name);
         $templateProcessor->setValue('authorize_model', $model->model_name);
         $templateProcessor->setValue('authorize_vin', $auth_input[3]);
+        $templateProcessor->setValue('auth_num', $auth_input[4]);
 
         $templateProcessor->cloneRowAndSetValues('reports_regulations', $tb_values);
 

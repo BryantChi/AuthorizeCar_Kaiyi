@@ -163,6 +163,10 @@
                             <label for="inp_vin">車身碼</label>
                             <input type="text" class="form-control" id="inp_vin" placeholder="輸入車身碼">
                         </div>
+                        <div class="form-group">
+                            <label for="inp_auth_num">授權書編號</label>
+                            <input type="text" class="form-control" id="inp_auth_num" placeholder="輸入授權書編號">
+                        </div>
                     </div>
 
                 </div>
@@ -594,7 +598,7 @@
                 $('#btn-auth').click(function() {
 
                     if ($('#inp_com').val() == '' || $('#car_brand').val() == '' || $('#car_model').val() ==
-                        '' || $('#inp_vin').val() == '') {
+                        '' || $('#inp_vin').val() == '' || $('#inp_auth_num').val() == '') {
                         if ($('#inp_com').val() == '') {
                             $('#inp_com').addClass('is-invalid');
                         } else {
@@ -619,10 +623,17 @@
                             $('#inp_vin').removeClass('is-invalid');
                         }
 
+                        if ($('#inp_auth_num').val() == '') {
+                            $('#inp_auth_num').addClass('is-invalid');
+                        } else {
+                            $('#inp_auth_num').removeClass('is-invalid');
+                        }
+
+
                         Swal.fire('注意！', '輸入不能為空', 'warning');
                     } else {
                         const formValues = [$('#inp_com').val(), $('#car_brand').val(), $('#car_model').val(),
-                            $('#inp_vin').val()
+                            $('#inp_vin').val(), $('#inp_auth_num').val()
                         ];
 
                         $('#authorizationModal').modal('hide');
