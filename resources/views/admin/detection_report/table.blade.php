@@ -1,4 +1,4 @@
-<div class="table-responsive">
+<div class="table-responsive2">
     <table class="table table-hover table-striped table-bordered" id="detectionReports-table">
         <thead>
             <tr>

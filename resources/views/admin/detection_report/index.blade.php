@@ -61,7 +61,7 @@
     <div class="container-fluid">
         @include('flash::message')
         <div class="card">
-            <div class="card-body">
+            <div class="card-body overflow-hidden">
                 <div class="form-group form-check mb-3 py-1 d-flex align-items-center btn btn-outline-secondary"
                     style="width: max-content;">
                     <input type="checkbox" class="form-check-input check-all mr-1 my-0 ml-1 d-none"
@@ -192,7 +192,8 @@
         }
 
         .ft-none input,
-        .ft-none select {
+        .ft-none select,
+        .ft-none .select2 {
             display: none !important;
         }
     </style>
@@ -236,27 +237,24 @@
                 }
             });
 
-            // $('#detectionReports-table').DataTable({
-            //     initComplete: function () {
-            //         this.api()
-            //             .columns()
-            //             .every(function () {
-            //                 var column = this;
-            //                 var title = column.footer().textContent;
-
-            //                 // Create input element and add event listener
-            //                 $('<input type="text" placeholder="Search ' + title + '" />')
-            //                     .appendTo($(column.footer()).empty())
-            //                     .on('keyup change clear', function () {
-            //                         if (column.search() !== this.value) {
-            //                             column.search(this.value).draw();
-            //                         }
-            //                     });
-            //             });
-            //     }
-            // });
-
             var table = $('#detectionReports-table').DataTable({
+                // initComplete: function() {
+                //     this.api()
+                //         .columns()
+                //         .every(function() {
+                //             var column = this;
+                //             var title = column.footer().textContent;
+
+                //             // Create input element and add event listener
+                //             $('<input type="text" placeholder="Search ' + title + '" />')
+                //                 .appendTo($(column.footer()).empty())
+                //                 .on('keyup change clear', function() {
+                //                     if (column.search() !== this.value) {
+                //                         column.search(this.value).draw();
+                //                     }
+                //                 });
+                //         });
+                // },
                 initComplete: function() {
                     this.api()
                         .columns()
@@ -264,45 +262,41 @@
                             var column = this;
                             var title = column.footer().textContent;
 
-                            // Create input element and add event listener
-                            $('<input type="text" placeholder="Search ' + title + '" />')
+                            // Create select element and listener
+                            var select = $(
+                                    '<select class="form-control"><option value=""></option></select>'
+                                    )
                                 .appendTo($(column.footer()).empty())
-                                .on('keyup change clear', function() {
-                                    if (column.search() !== this.value) {
-                                        column.search(this.value).draw();
-                                    }
+                                .on('change', function() {
+                                    var val = DataTable.util.escapeRegex($(this).val());
+
+                                    column
+                                        .search(val ? '^' + val + '$' : '', true, false)
+                                        .draw();
+                                });
+
+                            select.select2({
+                                language: 'zh-TW',
+                                width: '100%',
+                                maximumInputLength: 10,
+                                minimumInputLength: 0,
+                                tags: false,
+                                placeholder: '請選擇' + title,
+                                allowClear: true
+                            });
+
+                            // Add list of options
+                            column
+                                .data()
+                                .unique()
+                                .sort()
+                                .each(function(d, j) {
+                                    select.append(
+                                        '<option value="' + d + '">' + d + '</option>'
+                                    );
                                 });
                         });
                 },
-                // initComplete: function() {
-                //     this.api()
-                //         .columns()
-                //         .every(function() {
-                //             var column = this;
-
-                //             // Create select element and listener
-                //             var select = $('<select><option value=""></option></select>')
-                //                 .appendTo($(column.footer()).empty())
-                //                 .on('change', function() {
-                //                     var val = DataTable.util.escapeRegex($(this).val());
-
-                //                     column
-                //                         .search(val ? '^' + val + '$' : '', true, false)
-                //                         .draw();
-                //                 });
-
-                //             // Add list of options
-                //             column
-                //                 .data()
-                //                 .unique()
-                //                 .sort()
-                //                 .each(function(d, j) {
-                //                     select.append(
-                //                         '<option value="' + d + '">' + d + '</option>'
-                //                     );
-                //                 });
-                //         });
-                // },
                 lengthChange: true, // 呈現選單
                 lengthMenu: [10, 15, 20, 30, 50], // 選單值設定
                 pageLength: 10, // 不用選單設定也可改用固定每頁列數
@@ -310,7 +304,7 @@
                 searching: true, // 搜索功能
                 ordering: true,
                 // stateSave: true, // 保留狀態
-                // scrollCollapse: true,
+                scrollCollapse: true,
                 scrollX: true,
                 scrollY: '60vh',
                 language: {
@@ -352,15 +346,6 @@
 
             setTimeout(function() {
                 table.draw();
-                // $('#detectionReports-table tfoot select').select2({
-                //     language: 'zh-TW',
-                //     width: '100%',
-                //     maximumInputLength: 10,
-                //     minimumInputLength: 0,
-                //     tags: false,
-                //     placeholder: '請選擇',
-                //     allowClear: true
-                // });
             }, 1000);
 
             $('#car_model').empty().select2({
