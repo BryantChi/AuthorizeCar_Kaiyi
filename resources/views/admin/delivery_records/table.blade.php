@@ -16,9 +16,9 @@
                 $num = '';
                 foreach ($reports as $i => $report) {
                     if ($i == 0) {
-                        $num .= '<a href="javascript:void(0)" onclick="openReport('.$report->id.');">'.$report->reports_num.'</a>';
+                        $num .= '<a href="javascript:void(0)" class="text-secondary" onclick="openReport('.$report->id.');">'.$report->reports_num.'</a>';
                     } else {
-                        $num .= ', ' . '<a href="javascript:void(0)" onclick="openReport(' . $report->id . ');">' . $report->reports_num . '</a>';
+                        $num .= ', ' . '<a href="javascript:void(0)" class="text-secondary" onclick="openReport(' . $report->id . ');">' . $report->reports_num . '</a>';
                     }
                 }
 

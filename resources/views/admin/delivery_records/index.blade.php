@@ -155,6 +155,7 @@
                 ordering: true,
                 // stateSave: true, // 保留狀態
                 scrollCollapse: true,
+                scrollX: true,
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/zh_Hant.json"
                 },

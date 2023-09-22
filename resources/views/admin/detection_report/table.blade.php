@@ -93,6 +93,32 @@
                 </tr>
             @endforeach
         </tbody>
+        <tfoot>
+            <tr>
+                <th class="ft-none">
+
+                </th>
+                <th>發函文號</th>
+                <th>檢測報告編號</th>
+                <th>授權狀態</th>
+                <th>有效期限-迄</th>
+                <th>報告原有人</th>
+                <th>廠牌</th>
+                <th>車型</th>
+                <th>檢測機構</th>
+                <th>法規項目</th>
+                <th>車種代號</th>
+                <th>測試日期</th>
+                <th>報告日期</th>
+                <th>代表車車身碼</th>
+                <th>移入前授權使用次數</th>
+                <th>移入後累計授權次數</th>
+                <th>F/E</th>
+                <th>車安回函</th>
+                <th>說明</th>
+                <th class="ft-none">Action</th>
+            </tr>
+        </tfoot>
     </table>
 </div>
 @push('page_css')

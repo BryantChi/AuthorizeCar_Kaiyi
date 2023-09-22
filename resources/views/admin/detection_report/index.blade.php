@@ -190,6 +190,11 @@
         .has-error .select2-selection {
             border-color: rgb(185, 74, 72) !important;
         }
+
+        .ft-none input,
+        .ft-none select {
+            display: none !important;
+        }
     </style>
 @endpush
 
@@ -231,7 +236,73 @@
                 }
             });
 
+            // $('#detectionReports-table').DataTable({
+            //     initComplete: function () {
+            //         this.api()
+            //             .columns()
+            //             .every(function () {
+            //                 var column = this;
+            //                 var title = column.footer().textContent;
+
+            //                 // Create input element and add event listener
+            //                 $('<input type="text" placeholder="Search ' + title + '" />')
+            //                     .appendTo($(column.footer()).empty())
+            //                     .on('keyup change clear', function () {
+            //                         if (column.search() !== this.value) {
+            //                             column.search(this.value).draw();
+            //                         }
+            //                     });
+            //             });
+            //     }
+            // });
+
             var table = $('#detectionReports-table').DataTable({
+                initComplete: function() {
+                    this.api()
+                        .columns()
+                        .every(function() {
+                            var column = this;
+                            var title = column.footer().textContent;
+
+                            // Create input element and add event listener
+                            $('<input type="text" placeholder="Search ' + title + '" />')
+                                .appendTo($(column.footer()).empty())
+                                .on('keyup change clear', function() {
+                                    if (column.search() !== this.value) {
+                                        column.search(this.value).draw();
+                                    }
+                                });
+                        });
+                },
+                // initComplete: function() {
+                //     this.api()
+                //         .columns()
+                //         .every(function() {
+                //             var column = this;
+
+                //             // Create select element and listener
+                //             var select = $('<select><option value=""></option></select>')
+                //                 .appendTo($(column.footer()).empty())
+                //                 .on('change', function() {
+                //                     var val = DataTable.util.escapeRegex($(this).val());
+
+                //                     column
+                //                         .search(val ? '^' + val + '$' : '', true, false)
+                //                         .draw();
+                //                 });
+
+                //             // Add list of options
+                //             column
+                //                 .data()
+                //                 .unique()
+                //                 .sort()
+                //                 .each(function(d, j) {
+                //                     select.append(
+                //                         '<option value="' + d + '">' + d + '</option>'
+                //                     );
+                //                 });
+                //         });
+                // },
                 lengthChange: true, // 呈現選單
                 lengthMenu: [10, 15, 20, 30, 50], // 選單值設定
                 pageLength: 10, // 不用選單設定也可改用固定每頁列數
@@ -239,7 +310,9 @@
                 searching: true, // 搜索功能
                 ordering: true,
                 // stateSave: true, // 保留狀態
-                scrollCollapse: true,
+                // scrollCollapse: true,
+                scrollX: true,
+                scrollY: '60vh',
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/zh_Hant.json"
                 },
@@ -273,7 +346,22 @@
                 //         }
                 //     }
                 // ],
+
+
             });
+
+            setTimeout(function() {
+                table.draw();
+                // $('#detectionReports-table tfoot select').select2({
+                //     language: 'zh-TW',
+                //     width: '100%',
+                //     maximumInputLength: 10,
+                //     minimumInputLength: 0,
+                //     tags: false,
+                //     placeholder: '請選擇',
+                //     allowClear: true
+                // });
+            }, 1000);
 
             $('#car_model').empty().select2({
                 data: [],
