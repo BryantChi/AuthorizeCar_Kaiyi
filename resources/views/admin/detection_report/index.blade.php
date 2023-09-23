@@ -808,7 +808,7 @@
             });
 
             $('#reports_num').change(function() {
-                if ($(this).val() != null || $(this).val() != ''){
+                if ($('#reports_num').val() != null || $('#reports_num').val() != ''){
                     // console.log($(this).find(':selected').text());
                     // console.log($(this).find(':selected').data('expirationdate'));
                     // console.log($(this).find(':selected').data('fe'));
