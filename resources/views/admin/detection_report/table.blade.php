@@ -5,8 +5,8 @@
                 <th>
 
                 </th>
-                <th>發函文號</th>
                 <th>檢測報告編號</th>
+                <th>發函文號</th>
                 <th>授權狀態</th>
                 <th>有效期限-迄</th>
                 <th>報告原有人</th>
@@ -37,8 +37,8 @@
                         </div> --}}
                         { "id" : "{{ $item->id }}", "letter_id" : "{{ $item->letter_id }}", "reports_authorize_status" : "{{ $item->reports_authorize_status }}" }
                     </td>
-                    <td>{{ $item->letter_id }}</td>
                     <td>{{ $item->reports_num }}</td>
+                    <td>{{ $item->letter_id }}</td>
                     <td>{{ DB::table('authorize_status')->whereNull('deleted_at')->where('id', $item->reports_authorize_status)->value('status_name') }}
                     </td>
                     <td>{{ Carbon\Carbon::parse($item->reports_expiration_date_end)->format('Y/m/d') }}</td>
@@ -98,15 +98,15 @@
                 <th class="ft-none">
 
                 </th>
-                <th>發函文號</th>
                 <th>檢測報告編號</th>
+                <th>發函文號</th>
                 <th>授權狀態</th>
                 <th>有效期限-迄</th>
                 <th>報告原有人</th>
                 <th>廠牌</th>
                 <th>車型</th>
                 <th>檢測機構</th>
-                <th>法規項目</th>
+                <th style="max-width: 300px;">法規項目</th>
                 <th>車種代號</th>
                 <th>測試日期</th>
                 <th>報告日期</th>

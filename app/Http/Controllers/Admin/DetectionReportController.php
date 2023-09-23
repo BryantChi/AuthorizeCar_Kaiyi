@@ -49,7 +49,9 @@ class DetectionReportController extends Controller
 
         $carBrand = CarBrand::all();
 
-        return view('admin.detection_report.index', ['detectionReports' => $model, 'brand' => $carBrand]);
+        $regulations = Regulations::all();
+
+        return view('admin.detection_report.index', ['detectionReports' => $model, 'brand' => $carBrand, 'regulations' => $regulations]);
     }
 
     /**
@@ -136,44 +138,46 @@ class DetectionReportController extends Controller
             return redirect(route('admin.detectionReports.index'));
         }
 
-        $base_status = [DetectionReportRep::UNDELIVERY, DetectionReportRep::DELIVERY,
-                DetectionReportRep::REPLIED];
+        $base_status = [
+            DetectionReportRep::UNDELIVERY, DetectionReportRep::DELIVERY,
+            DetectionReportRep::REPLIED
+        ];
 
         switch ($detectionReport->reports_authorize_status) {
-            case DetectionReportRep::UNDELIVERY :
+            case DetectionReportRep::UNDELIVERY:
                 $status = $base_status;
                 array_push($status, DetectionReportRep::AUTHORIZATION);
                 break;
-            case DetectionReportRep::AUTHORIZATION :
+            case DetectionReportRep::AUTHORIZATION:
                 $status = $base_status;
                 array_push($status, DetectionReportRep::ACTION_FOR_POSTPONE);
                 array_push($status, DetectionReportRep::ACTION_FOR_MOVE_OUT);
                 break;
-            case DetectionReportRep::OUT_OF_TIME :
+            case DetectionReportRep::OUT_OF_TIME:
                 $status = $base_status;
                 array_push($status, DetectionReportRep::ACTION_FOR_POSTPONE);
                 break;
-            case DetectionReportRep::REACH_LIMIT_280 :
+            case DetectionReportRep::REACH_LIMIT_280:
                 $status = $base_status;
                 array_push($status, DetectionReportRep::ACTION_FOR_MOVE_OUT);
-            case DetectionReportRep::WAIT_FOR_POSTPONE :
+            case DetectionReportRep::WAIT_FOR_POSTPONE:
                 $status = $base_status;
                 array_push($status, DetectionReportRep::ACTION_FOR_POSTPONE);
                 break;
-            case DetectionReportRep::WAIT_FOR_MOVE_OUT :
+            case DetectionReportRep::WAIT_FOR_MOVE_OUT:
                 $status = $base_status;
                 array_push($status, DetectionReportRep::ACTION_FOR_MOVE_OUT);
                 break;
-            case DetectionReportRep::ACTION_FOR_MOVE_OUT :
+            case DetectionReportRep::ACTION_FOR_MOVE_OUT:
                 $status = $base_status;
                 array_push($status, DetectionReportRep::AUTHORIZATION);
                 array_push($status, DetectionReportRep::MOVE_OUT);
                 break;
-            case DetectionReportRep::ACTION_FOR_POSTPONE :
+            case DetectionReportRep::ACTION_FOR_POSTPONE:
                 $status = $base_status;
                 array_push($status, DetectionReportRep::AUTHORIZATION);
                 break;
-            default :
+            default:
                 $status = $base_status;
                 break;
         }
@@ -221,8 +225,8 @@ class DetectionReportController extends Controller
         }
 
         switch ($input['reports_authorize_status']) {
-            case DetectionReportRep::REPLIED :
-            case DetectionReportRep::AUTHORIZATION :
+            case DetectionReportRep::REPLIED:
+            case DetectionReportRep::AUTHORIZATION:
                 if (!empty($input['letter_id']) && !empty($input['reports_reply'])) {
                     if ($today >= $expiration_date) {
                         $input['reports_authorize_status'] = DetectionReportRep::WAIT_FOR_POSTPONE;
@@ -402,5 +406,24 @@ class DetectionReportController extends Controller
         $rt->reports_authorize_status = AuthStatus::where('id', $report->reports_authorize_status)->value('status_name');
 
         return \Response::json(['status' => 'success', 'data' => $rt]);
+    }
+
+    public function getReportsByRegs(Request $request)
+    {
+        $regs = $request->input('regs');
+        $json_regs = json_encode($regs);
+        // dd($regs);
+        $reports = DetectionReport::whereIn('reports_authorize_status', [DetectionReportRep::AUTHORIZATION, DetectionReportRep::REACH_LIMIT_280, DetectionReportRep::OUT_OF_TIME])
+            ->where('reports_regulations', $json_regs)
+            ->get(['id', 'reports_num', 'reports_expiration_date_end', 'reports_f_e', 'reports_authorize_count_before', 'reports_authorize_count_current']);
+
+        return response()->json($reports);
+    }
+
+    private function containsOnly($arr, $validValues)
+    {
+        return collect($arr)->every(function ($value) use ($validValues) {
+            return in_array($value, $validValues);
+        });
     }
 }

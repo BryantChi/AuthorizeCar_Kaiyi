@@ -14,23 +14,23 @@
                     </a>
                     <div class="float-right d-flex mr-2">
                         <div class="btn-action" id="btn-action">
-                            <a class="btn btn-outline-success mr-2" id="btn-apply-delivery" href="javascript:void(0)"
-                                onclick="applyForDelivery()">
+                            <a class="btn btn-outline-success mr-2 mb-md-auto mb-2" id="btn-apply-delivery"
+                                href="javascript:void(0)" onclick="applyForDelivery()">
                                 申請送件
                             </a>
-                            <a class="btn btn-outline-success mr-2" id="btn-apply-authorize" href="javascript:void(0)"
-                                onclick="applyForAuthorize()">
+                            <a class="btn btn-outline-success mr-2 mb-md-auto mb-2" id="btn-apply-authorize"
+                                href="javascript:void(0)" onclick="applyForAuthorize()">
                                 開立授權
                             </a>
-                            <a class="btn btn-outline-success mr-2" id="btn-move-out" href="javascript:void(0)"
-                                onclick="moveOut()">
+                            <a class="btn btn-outline-success mr-2 mb-md-auto mb-2" id="btn-move-out"
+                                href="javascript:void(0)" onclick="moveOut()">
                                 移出
                             </a>
-                            <a class="btn btn-outline-success mr-2" id="btn-postpone" href="javascript:void(0)"
-                                onclick="postpone()">
+                            <a class="btn btn-outline-success mr-2 mb-md-auto mb-2" id="btn-postpone"
+                                href="javascript:void(0)" onclick="postpone()">
                                 展延
                             </a>
-                            <a class="btn btn-outline-success mr-2" id="btn-reply" href="javascript:void(0)"
+                            <a class="btn btn-outline-success mr-2 mb-md-auto mb-2" id="btn-reply" href="javascript:void(0)"
                                 onclick="reply()">
                                 已回函
                             </a>
@@ -60,6 +60,13 @@
 
     <div class="container-fluid">
         @include('flash::message')
+
+        <div class="card card-authorize" id="card-authorize">
+            <div class="card-body">
+                @include('admin.detection_report.applyAuthorize')
+            </div>
+        </div>
+
         <div class="card">
             <div class="card-body overflow-hidden">
                 <div class="form-group form-check mb-3 py-1 d-flex align-items-center btn btn-outline-secondary"
@@ -126,62 +133,10 @@
             </div>
         </div>
     </div>
-
-    <div class="modal fade" id="authorizationModal" tabindex="-1" aria-labelledby="authorizationModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                {{-- <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div> --}}
-                <div class="modal-body">
-                    <h3 class="modal-title text-center" id="authorizationModalLabel">開立授權</h3>
-
-                    <div class="p-3">
-                        <div class="form-group">
-                            <label for="inp_com">授權公司</label>
-                            <input type="text" class="form-control" id="inp_com" placeholder="輸入授權公司">
-                        </div>
-                        <div class="form-group">
-                            <label class="font-weight-bold" for="car_brand">廠牌</label>
-                            <select class="form-control custom-select bg-white" name="car_brand" id="car_brand">
-                                <option value="">請選擇</option>
-                                @foreach ($brand as $item)
-                                    <option value="{{ $item->id }}">{{ $item->brand_name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group d-block">
-                            <label class="font-weight-bold" for="car_model">型號</label>
-                            <select class="form-control custom-select2 bg-white2 w-100" name="car_model" id="car_model">
-                                <option value="">請選擇</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="inp_vin">車身碼</label>
-                            <input type="text" class="form-control" id="inp_vin" placeholder="輸入車身碼">
-                        </div>
-                        <div class="form-group">
-                            <label for="inp_auth_num">授權書編號</label>
-                            <input type="text" class="form-control" id="inp_auth_num" placeholder="輸入授權書編號">
-                        </div>
-                    </div>
-
-                </div>
-                <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-primary" id="btn-auth">開立</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 
 @push('page_css')
-    <link rel="stylesheet" type="text/css"
-        href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
     <style>
         .select2-container {
             width: 100% !important;
@@ -196,7 +151,23 @@
         .ft-none .select2 {
             display: none !important;
         }
+
+        @media(min-width:768px) {
+            .authorize-temp-conatiner {
+                border-left: 1px solid #444444bf;
+            }
+        }
+
+        @media(max-width:768px) {
+            .authorize-temp-conatiner {
+                border-top: 1px solid #444444bf;
+            }
+        }
     </style>
+@endpush
+
+@push('third_party_stylesheets')
+    <link href="https://cdn.datatables.net/v/dt/fc-4.3.0/datatables.min.css" rel="stylesheet">
 @endpush
 
 @push('page_scripts')
@@ -206,21 +177,24 @@
     </script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js">
     </script>
+    <script src="https://cdn.datatables.net/v/dt/fc-4.3.0/datatables.min.js"></script>
     <script>
+        let reports_data = [];
         $(function() {
-            $('.btn-action').hide();
+            $('#card-authorize').hide();
+            // $('.btn-action').hide();
             // $('#export-step-1').hide();
-            $('#detectionReports-table tbody').on('change', 'input[name="reports[]"]', function() {
-                var ck_reports = $('input[name="reports[]"]:checked').map(function() {
-                    return $(this).val();
-                }).get();
-                if (ck_reports.length > 0) {
-                    $('.btn-action').show(600);
-                } else {
-                    $('.btn-action').hide(600);
-                    // $('#export-step-1').hide();
-                }
-            });
+            // $('#detectionReports-table tbody').on('change', 'input[name="reports[]"]', function() {
+            //     var ck_reports = $('input[name="reports[]"]:checked').map(function() {
+            //         return $(this).val();
+            //     }).get();
+            //     if (ck_reports.length > 0) {
+            //         $('.btn-action').show(600);
+            //     } else {
+            //         $('.btn-action').hide(600);
+            //         // $('#export-step-1').hide();
+            //     }
+            // });
 
             $('#check-all').change(function() {
                 if ($(this).is(':checked')) {
@@ -229,11 +203,11 @@
                     }).nodes();
                     $('.check-all-label').html('取消全選');
                     $('input[name="reports[]"]', rows).prop('checked', true);
-                    $('input[name="reports[]"]', rows).change();
+                    // $('input[name="reports[]"]', rows).change();
                 } else {
                     $('.check-all-label').html('全選');
                     $('input[name="reports[]"]', rows).prop('checked', false);
-                    $('input[name="reports[]"]', rows).change();
+                    // $('input[name="reports[]"]', rows).change();
                 }
             });
 
@@ -265,7 +239,7 @@
                             // Create select element and listener
                             var select = $(
                                     '<select class="form-control"><option value=""></option></select>'
-                                    )
+                                )
                                 .appendTo($(column.footer()).empty())
                                 .on('change', function() {
                                     var val = DataTable.util.escapeRegex($(this).val());
@@ -280,27 +254,60 @@
                                 width: '100%',
                                 maximumInputLength: 10,
                                 minimumInputLength: 0,
-                                tags: false,
+                                tags: true,
                                 placeholder: '請選擇' + title,
                                 allowClear: true
                             });
 
                             // Add list of options
-                            column
-                                .data()
-                                .unique()
-                                .sort()
-                                .each(function(d, j) {
-                                    select.append(
-                                        '<option value="' + d + '">' + d + '</option>'
-                                    );
-                                });
+                            if (title == '法規項目' || title == '有效期限-迄' || title == '測試日期' || title ==
+                                '報告日期') {
+                                $('<input type="text" class="form-control" placeholder="Search ' +
+                                        title + '" />')
+                                    .appendTo($(column.footer()).empty())
+                                    .on('keyup change clear', function() {
+                                        if (column.search() !== this.value) {
+                                            column.search(this.value).draw();
+                                        }
+                                    });
+                            } else {
+                                column
+                                    .data()
+                                    .unique()
+                                    .sort()
+                                    .each(function(d, j) {
+                                        let s = d;
+                                        // if (title == '法規項目') {
+                                        //     // console.log(d);
+                                        //     let charToRemove =
+                                        //         '<span class="rounded mr-1 my-1 py-1 px-2 bg-info d-flex float-left" style="width: max-content;">';
+                                        //     let charToRemove2 = '</span>';
+                                        //     s = d.replace(new RegExp(charToRemove, 'g'), '');
+                                        //     s = s.replace(new RegExp(charToRemove2, 'g'), '');
+                                        //     s = s.replace(new RegExp("\n", 'g'), ' ');
+                                        //     s = s.replace(new RegExp(
+                                        //         "                                                    ",
+                                        //         'g'), '')
+                                        //     console.log(s);
+                                        // }
+
+                                        select.append(
+                                            '<option value="' + s + '">' + s + '</option>'
+                                        );
+                                    });
+
+                            }
+
                         });
                 },
                 lengthChange: true, // 呈現選單
                 lengthMenu: [10, 15, 20, 30, 50], // 選單值設定
                 pageLength: 10, // 不用選單設定也可改用固定每頁列數
-
+                fixedHeader: true,
+                fixedColumns: {
+                    'left': 2, // 固定左边的1列
+                    // rightColumns: 1 // 固定右边的1列
+                },
                 searching: true, // 搜索功能
                 ordering: true,
                 // stateSave: true, // 保留狀態
@@ -510,6 +517,18 @@
             return true;
         }
 
+        function padZero(number, length) {
+            // 將 number 轉換為字符串
+            var str = number.toString();
+
+            // 如果 str 的長度小於指定的 length，則在前面補零
+            while (str.length < length) {
+                str = "0" + str;
+            }
+
+            return str;
+        }
+
         function applyForDelivery() {
             var reports_id = getReportsCheckboxForStatus('delivery');
 
@@ -629,167 +648,331 @@
 
         }
 
+        function deleteTempAuth(temp) {
+            $('#' + temp).remove();
+            reports_data.splice($.inArray(temp, reports_data), 1);
+            if (reports_data.length > 0) {
+                $('#btn-auth').prop('disabled', false);
+            } else {
+                $('#btn-auth').prop('disabled', true);
+            }
+        }
         async function applyForAuthorize() {
 
-            var reports_id = getReportsCheckboxForStatus('authorize');
-
-            if (reports_id.length > 0) {
-                // Swal.fire('注意！', '開發中！', 'warning');
-
-                // const {
-                //     value: formValues
-                // } = await Swal.fire({
-                //     title: '開立授權',
-                //     html: '<input id="swal-input1" class="swal2-input" placeholder="輸入授權公司" required="true">' +
-                //         '<input id="swal-input2" class="swal2-input" placeholder="輸入廠牌" required="true">' +
-                //         '<input id="swal-input3" class="swal2-input" placeholder="輸入車型" required="true">' +
-                //         '<input id="swal-input4" class="swal2-input" placeholder="輸入車身碼" required="true">',
-                //     focusConfirm: false,
-                //     showCancelButton: true,
-                //     preConfirm: () => {
-                //         if (document.getElementById('swal-input1').value != '' && document.getElementById(
-                //                 'swal-input2').value != '' && document.getElementById(
-                //                 'swal-input3').value != '' && document.getElementById('swal-input4')
-                //             .value != '') {
-
-                //             return [
-                //                 document.getElementById('swal-input1').value,
-                //                 document.getElementById('swal-input2').value,
-                //                 document.getElementById('swal-input3').value,
-                //                 document.getElementById('swal-input4').value
-                //             ];
-                //         } else {
-                //             Swal.showValidationMessage('輸入不能為空');
-                //         }
-                //     }
-                // })
-
-                $('#authorizationModal').modal('show');
+            // var reports_id = getReportsCheckboxForStatus('authorize');
 
 
+            // Swal.fire('注意！', '開發中！', 'warning');
 
-                $('#btn-auth').click(function() {
+            // const {
+            //     value: formValues
+            // } = await Swal.fire({
+            //     title: '開立授權',
+            //     html: '<input id="swal-input1" class="swal2-input" placeholder="輸入授權公司" required="true">' +
+            //         '<input id="swal-input2" class="swal2-input" placeholder="輸入廠牌" required="true">' +
+            //         '<input id="swal-input3" class="swal2-input" placeholder="輸入車型" required="true">' +
+            //         '<input id="swal-input4" class="swal2-input" placeholder="輸入車身碼" required="true">',
+            //     focusConfirm: false,
+            //     showCancelButton: true,
+            //     preConfirm: () => {
+            //         if (document.getElementById('swal-input1').value != '' && document.getElementById(
+            //                 'swal-input2').value != '' && document.getElementById(
+            //                 'swal-input3').value != '' && document.getElementById('swal-input4')
+            //             .value != '') {
 
-                    if ($('#inp_com').val() == '' || $('#car_brand').val() == '' || $('#car_model').val() ==
-                        '' || $('#inp_vin').val() == '' || $('#inp_auth_num').val() == '') {
-                        if ($('#inp_com').val() == '') {
-                            $('#inp_com').addClass('is-invalid');
-                        } else {
-                            $('#inp_com').removeClass('is-invalid');
-                        }
+            //             return [
+            //                 document.getElementById('swal-input1').value,
+            //                 document.getElementById('swal-input2').value,
+            //                 document.getElementById('swal-input3').value,
+            //                 document.getElementById('swal-input4').value
+            //             ];
+            //         } else {
+            //             Swal.showValidationMessage('輸入不能為空');
+            //         }
+            //     }
+            // })
 
-                        if ($('#car_brand').val() == '') {
-                            $('#car_brand').parent().addClass('has-error');
-                        } else {
-                            $('#car_brand').parent().removeClass('has-error');
-                        }
+            // $('#authorizationModal').modal('show');
 
-                        if ($('#car_model').val() == '') {
-                            $('#car_model').parent().addClass('has-error');
-                        } else {
-                            $('#car_model').parent().removeClass('has-error');
-                        }
+            $('#card-authorize').slideDown(1500);
 
-                        if ($('#inp_vin').val() == '') {
-                            $('#inp_vin').addClass('is-invalid');
-                        } else {
-                            $('#inp_vin').removeClass('is-invalid');
-                        }
+            $('.btn-auth-cancel').click(function() {
+                reports_data = [];
+                $('#inp_com').val('');
+                $('#car_brand').val(null).trigger('change');
+                $('#car_model').val(null).trigger('change');
+                $('#inp_vin').val('');
+                $('#inp_auth_num').val('');
 
-                        if ($('#inp_auth_num').val() == '') {
-                            $('#inp_auth_num').addClass('is-invalid');
-                        } else {
-                            $('#inp_auth_num').removeClass('is-invalid');
-                        }
+                $('#reports_regulations').val([]).trigger('change');
+                $('#reports_num').val(null).trigger('change');
+                $('#inputAuthNum').val('');
+                $('#authorize-data-temp-table tbody').empty();
+                $('#card-authorize').slideUp(750);
+            });
 
+            $('#addAuth').click(function() {
 
-                        Swal.fire('注意！', '輸入不能為空', 'warning');
+                if ($('#reports_regulations').val() == '' || $('#reports_num').val() == '' || $(
+                        '#inputAuthNum').val() == '') {
+                    if ($('#reports_regulations').val() == '') {
+                        $('#reports_regulations').parent().addClass('has-error');
                     } else {
-                        const formValues = [$('#inp_com').val(), $('#car_brand').val(), $('#car_model').val(),
-                            $('#inp_vin').val(), $('#inp_auth_num').val()
-                        ];
+                        $('#reports_regulations').parent().removeClass('has-error');
+                    }
 
-                        $('#authorizationModal').modal('hide');
-                        Swal.fire({
-                            title: '處理中...',
-                            allowOutsideClick: false,
-                            showConfirmButton: false,
-                            didOpen: () => {
-                                Swal.showLoading();
-                            }
-                        });
+                    if ($('#reports_num').val() == '') {
+                        $('#reports_num').parent().addClass('has-error');
+                    } else {
+                        $('#reports_num').parent().removeClass('has-error');
+                    }
 
-                        $.ajax({
-                            url: "{{ route('exportDocument') }}",
-                            type: 'POST',
-                            data: {
-                                data_ids: reports_id,
-                                typer: 'authorize',
-                                auth_input: formValues,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(res) {
-                                Swal.close();
-                                if (res.status == 'success') {
-                                    $('.file-container').empty();
-                                    $('.file-container').append(
-                                        '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
-                                        '<a href="' + window.location.origin + '/' + res
-                                        .authorize_data
-                                        .word + '" download>' +
-                                        '<p class="text-secondary file-name" style="max-width: 200px;">' +
-                                        res
-                                        .authorize_data.authorize_file_name + '</p>' +
-                                        '<img src="{{ asset('assets/img/word-icon.png') }}" class="img-fluid" width="80" alt="">' +
-                                        '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
-                                        '</a>' +
-                                        '</div>' +
-                                        '<div class="col-auto d-block pdf-download-content text-center mx-3">' +
-                                        '<a href="' + window.location.origin + '/' + res
-                                        .authorize_data
-                                        .pdf + '" download>' +
-                                        '<p class="text-secondary file-name" style="max-width: 200px;">' +
-                                        res
-                                        .authorize_data.authorize_file_name + '</p>' +
-                                        '<img src="{{ asset('assets/img/pdf-icon.png') }}" class="img-fluid" width="80" alt="">' +
-                                        '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
-                                        '</a>' +
-                                        '</div>');
+                    if ($('#inputAuthNum').val() == '') {
+                        $('#inputAuthNum').addClass('is-invalid');
+                    } else {
+                        $('#inputAuthNum').removeClass('is-invalid');
+                    }
 
-                                    // $('.btn-close').click(function () {
-                                    //     window.location.reload();
-                                    // });
-                                    setTimeout(function() {
-                                        $('#downloadModal').modal('show');
-                                        $('#downloadModal').on('hidden.bs.modal', function(
-                                            event) {
-                                            // do something...
-                                            Swal.fire({
-                                                title: '載入中...',
-                                                allowOutsideClick: false,
-                                                showConfirmButton: false,
-                                                didOpen: () => {
-                                                    Swal.showLoading();
-                                                }
-                                            });
-                                            window.location.reload();
-                                        });
-                                    }, 500);
+                    Swal.fire('注意！', '輸入不能為空', 'warning');
+                } else {
+                    $('#reports_regulations').parent().removeClass('has-error').css('border-color', '$aaa');
+                    $('#reports_num').parent().removeClass('has-error').css('border-color', '$aaa');
+                    $('#inputAuthNum').removeClass('is-invalid').css('border-color', '$aaa');
 
+                    if ($.inArray($('#reports_num').val(), reports_data) == -1) {
+                        reports_data.push($('#reports_num').val());
+                        let regs_txt_temp = $('#reports_regulations').find(':selected').text()
+                            .replace(new RegExp('\n', 'g'), ',')
+                            .replace(new RegExp('                            ', 'g'), '')
+                            .substring(1);
+                        let reports_num_temp = $('#reports_num').find(':selected').text();
+                        let auth_num_temp = $('#inputAuthNum').val();
+                        $('#authorize-data-temp-table tbody').append('<tr id="' + $('#reports_num').val() +
+                            '">' +
+                            '<td style="max-width: 300px;">' + regs_txt_temp + '</td>' +
+                            '<td>' + reports_num_temp + '</td>' +
+                            '<td>' + auth_num_temp + '</td>' +
+                            '<td><a herf="javascript:void(0)" class="btn btn-danger" onclick="deleteTempAuth(\'' +
+                            $('#reports_num').val() + '\')" >刪除</a></td>' +
+                            '</tr>');
+                    }
 
-                                }
-                            },
-                            error: function(jqXHR, textStatus, errorThrown) {
-                                Swal.fire('錯誤！', '程序失敗', 'error');
-                            }
-                        });
+                    if (reports_data.length > 0) {
+                        $('#btn-auth').prop('disabled', false);
+                    } else {
+                        $('#btn-auth').prop('disabled', true);
+                    }
+                }
+            });
+
+            $('#reports_regulations').change(function() {
+                $('#reports_num').prop('disabled', true);
+                $('#inputAuthNum').val('');
+                let regs = $(this).val();
+                if (regs.length > 0) {
+                    $.ajax({
+                        url: '{{ route('getReportsByRegs') }}',
+                        type: 'GET',
+                        data: {
+                            regs: regs,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            $('#reports_num').empty();
+                            $('#reports_num').append('<option value="">請先選擇法規項目</option>');
+                            $.each(data, function(key, value) {
+                                $('#reports_num').append('<option value="' + value.id +
+                                    '" data-expirationdate="' + value
+                                    .reports_expiration_date_end + '" data-fe="' +
+                                    value.reports_f_e + '" data-countbefore="' +
+                                    value.reports_authorize_count_before +
+                                    '" data-countcurrent="' + value
+                                    .reports_authorize_count_current + '">' + value
+                                    .reports_num + '</option>');
+                            });
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            setTimeout(function() {
+                                $('#reports_num').prop('disabled', false);
+                            }, 300);
+                        },
+                        complete: function(XMLHttpRequest, textStatus) {
+                            setTimeout(function() {
+                                $('#reports_num').prop('disabled', false);
+                            }, 300);
+                        },
+                    });
+                }
+
+            });
+
+            $('#reports_num').change(function() {
+                if ($(this).val() != null) {
+                    // console.log($(this).find(':selected').text());
+                    // console.log($(this).find(':selected').data('expirationdate'));
+                    // console.log($(this).find(':selected').data('fe'));
+                    // console.log($(this).find(':selected').data('countbefore'));
+                    // console.log($(this).find(':selected').data('countcurrent'));
+                    let e_date = $(this).find(':selected').data('expirationdate').split('-');
+                    let e_date_y = e_date[0] - 1911;
+                    let e_date_m = padZero(e_date[1], 2);
+                    let e_date_d = padZero(e_date[2], 2);
+                    let auth_count = 0;
+                    if ($(this).find(':selected').data('countcurrent') < $(this).find(':selected').data(
+                            'countbefore')) {
+                        auth_count = padZero(($(this).find(':selected').data('countbefore') + 1), 3);
+                    } else {
+                        auth_count = padZero(($(this).find(':selected').data('countcurrent') + 1), 3);
+                    }
+                    let authorize_id = $(this).find(':selected').text() + '-Y' + $(this).find(':selected').data(
+                        'fe') + e_date_y + e_date_m + e_date_d + '-' + auth_count;
+                    $('#inputAuthNum').val(authorize_id);
+                }
+            });
+
+            $('#btn-auth').click(function() {
+
+                if ($('#inp_com').val() == '' || $('#car_brand').val() == '' || $('#car_model').val() ==
+                    '' || $('#inp_vin').val() == '' || $('#inp_auth_num').val() == '' || $(
+                        '#reports_regulations').val() == '' || $('#reports_num').val() == '' || $(
+                        '#inputAuthNum').val() == '') {
+                    if ($('#inp_com').val() == '') {
+                        $('#inp_com').addClass('is-invalid');
+                    } else {
+                        $('#inp_com').removeClass('is-invalid');
+                    }
+
+                    if ($('#car_brand').val() == '') {
+                        $('#car_brand').parent().addClass('has-error');
+                    } else {
+                        $('#car_brand').parent().removeClass('has-error');
+                    }
+
+                    if ($('#car_model').val() == '') {
+                        $('#car_model').parent().addClass('has-error');
+                    } else {
+                        $('#car_model').parent().removeClass('has-error');
+                    }
+
+                    if ($('#inp_vin').val() == '') {
+                        $('#inp_vin').addClass('is-invalid');
+                    } else {
+                        $('#inp_vin').removeClass('is-invalid');
+                    }
+
+                    if ($('#inp_auth_num').val() == '') {
+                        $('#inp_auth_num').addClass('is-invalid');
+                    } else {
+                        $('#inp_auth_num').removeClass('is-invalid');
+                    }
+
+                    if ($('#reports_regulations').val() == '') {
+                        $('#reports_regulations').parent().addClass('has-error');
+                    } else {
+                        $('#reports_regulations').parent().removeClass('has-error');
+                    }
+
+                    if ($('#reports_num').val() == '') {
+                        $('#reports_num').parent().addClass('has-error');
+                    } else {
+                        $('#reports_num').parent().removeClass('has-error');
+                    }
+
+                    if ($('#inputAuthNum').val() == '') {
+                        $('#inputAuthNum').addClass('is-invalid');
+                    } else {
+                        $('#inputAuthNum').removeClass('is-invalid');
                     }
 
 
-                });
+                    Swal.fire('注意！', '輸入不能為空', 'warning');
+                } else {
+                    const formValues = [$('#inp_com').val(), $('#car_brand').val(), $('#car_model').val(),
+                        $('#inp_vin').val(), $('#inp_auth_num').val()
+                    ];
+
+                    // $('#authorizationModal').modal('hide');
+                    Swal.fire({
+                        title: '處理中...',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    $.ajax({
+                        url: "{{ route('exportDocument') }}",
+                        type: 'POST',
+                        data: {
+                            data_ids: reports_data,
+                            typer: 'authorize',
+                            auth_input: formValues,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(res) {
+                            Swal.close();
+                            if (res.status == 'success') {
+                                $('.file-container').empty();
+                                $('.file-container').append(
+                                    '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
+                                    '<a href="' + window.location.origin + '/' + res
+                                    .authorize_data
+                                    .word + '" download>' +
+                                    '<p class="text-secondary file-name" style="max-width: 200px;">' +
+                                    res
+                                    .authorize_data.authorize_file_name + '</p>' +
+                                    '<img src="{{ asset('assets/img/word-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                                    '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                                    '</a>' +
+                                    '</div>' +
+                                    '<div class="col-auto d-block pdf-download-content text-center mx-3">' +
+                                    '<a href="' + window.location.origin + '/' + res
+                                    .authorize_data
+                                    .pdf + '" download>' +
+                                    '<p class="text-secondary file-name" style="max-width: 200px;">' +
+                                    res
+                                    .authorize_data.authorize_file_name + '</p>' +
+                                    '<img src="{{ asset('assets/img/pdf-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                                    '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                                    '</a>' +
+                                    '</div>');
+
+                                // $('.btn-close').click(function () {
+                                //     window.location.reload();
+                                // });
+                                setTimeout(function() {
+                                    $('#downloadModal').modal('show');
+                                    $('#downloadModal').on('hidden.bs.modal', function(
+                                        event) {
+                                        // do something...
+                                        reports_data = [];
+                                        Swal.fire({
+                                            title: '載入中...',
+                                            allowOutsideClick: false,
+                                            showConfirmButton: false,
+                                            didOpen: () => {
+                                                Swal.showLoading();
+                                            }
+                                        });
+                                        window.location.reload();
+                                    });
+                                }, 500);
 
 
-            }
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            reports_data = [];
+                            Swal.fire('錯誤！', '程序失敗', 'error');
+                        }
+                    });
+                }
+
+
+            });
+
 
         }
 

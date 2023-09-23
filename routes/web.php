@@ -85,5 +85,6 @@ Route::any('get-models-by-brand', [CarModelController::class, 'getModelsByBrand'
 Route::any('get-status-by-letter', [DetectionReportController::class, 'getStatusByLetter'])->name('getStatusByLetter');
 Route::any('exportDocument', [DetectionReportController::class, 'exportDocument'])->name('exportDocument');
 Route::any('showReportModal', [DetectionReportController::class, 'showReportModal'])->name('showReportModal');
+Route::any('getReportsByRegs', [DetectionReportController::class, 'getReportsByRegs'])->name('getReportsByRegs');
 // Route::any('exportExcelTest', [DetectionReportController::class, 'exportExcelTest'])->name('exportExcelTest');
 // Route::any('convertToPdf', [DetectionReportController::class, 'convertToPdf'])->name('convertToPdf');
