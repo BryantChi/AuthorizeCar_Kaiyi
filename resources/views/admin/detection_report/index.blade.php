@@ -808,12 +808,9 @@
             });
 
             $('#reports_num').change(function() {
-                if ($('#reports_regulations').length > 0){
-                    // console.log($(this).find(':selected').text());
-                    // console.log($(this).find(':selected').data('expirationdate'));
-                    // console.log($(this).find(':selected').data('fe'));
-                    // console.log($(this).find(':selected').data('countbefore'));
-                    // console.log($(this).find(':selected').data('countcurrent'));
+                console.log($('#reports_num').val());
+                console.log($('#reports_regulations').length);
+                if ($('#reports_num').val() != null && $('#reports_num').val() != ''){
                     let e_date = $(this).find(':selected').data('expirationdate').split('-');
                     let e_date_y = e_date[0] - 1911;
                     let e_date_m = padZero(e_date[1], 2);
