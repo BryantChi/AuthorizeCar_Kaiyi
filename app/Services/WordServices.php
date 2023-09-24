@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Exports\DetectionReportExport;
+use App\Models\Admin\AgreeAuthorizeRecords;
 use PhpOffice\PhpWord\TemplateProcessor;
 // use PhpOffice\PhpWord\IOFactory;
 // use PhpOffice\PhpWord\PhpWord;
@@ -13,6 +14,8 @@ use App\Models\Admin\CompanyInfo as Company;
 use App\Models\Admin\Regulations;
 use App\Models\Admin\CarBrand;
 use App\Models\Admin\CarModel;
+use App\Models\Admin\CumulativeAuthorizedUsageRecords;
+use App\Models\Admin\ExportAuthorizeRecords;
 use stdClass;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -267,7 +270,14 @@ class WordServices
 
         $detection_reports = DetectionReport::whereIn('id', $data_id)->get();
 
+        $authorize_date = Carbon::today();
+        $date_y = ((int)$authorize_date->year) - 1911;
+        $date_m = str_pad($authorize_date->month, 2, "0", STR_PAD_LEFT);
+        $date_d = str_pad($authorize_date->day, 2, "0", STR_PAD_LEFT);
+
         $tb_values = array();
+        $export_authorize_auth_num_id = array();
+        $export_authorize_reports_nums = array();
 
         foreach ($detection_reports as $index => $value) {
             if ($value->reports_authorize_count_current < $value->reports_authorize_count_before) {
@@ -294,8 +304,37 @@ class WordServices
                 'reports_num' => $value->reports_num,
                 'reports_authorize_sid' => $authorize_sid,
             ]);
+            array_push($export_authorize_auth_num_id, $authorize_sid);
+            array_push($export_authorize_reports_nums, $value->reports_num);
 
             $value->save();
+
+            // 同意授權使用證明書記錄 逐個新增紀錄
+            $agreeAuthRecord = [
+                'reports_id' => $value->id,
+                'reports_num' => $value->reports_num,
+                'authorize_date' => $date_m . '/' . $date_d,
+                'authorize_year' => $authorize_date->year,
+                'car_brand_id' => $value->reports_car_brand,
+                'car_model_id' => $value->reports_car_model,
+                'reports_vin' => $value->reports_vin == null ? '' : $value->reports_vin,
+                'reports_regulations' => json_encode($value->reports_regulations),
+                'licensee' => $auth_input[0],
+                'Invoice_title' => $value->reports_reporter
+            ];
+            AgreeAuthorizeRecords::insert($agreeAuthRecord);
+
+            $caur = [
+                'authorization_serial_number' => $value->reports_authorize_count_current,
+                'reports_id' => $value->id,
+                'reports_num' => $value->reports_num,
+                'applicant' => $value->reports_reporter,
+                'reports_vin' => $value->reports_vin == null ? '' : $value->reports_vin,
+                'quantity' => 1,
+                'authorization_date' => $date_y . '/' . $date_m . '/' . $date_m
+            ];
+            CumulativeAuthorizedUsageRecords::insert($caur);
+
         }
 
         // dd($tb_values);
@@ -309,11 +348,6 @@ class WordServices
         $templateProcessor->setValue('auth_num', $auth_input[4]);
 
         $templateProcessor->cloneRowAndSetValues('reports_regulations', $tb_values);
-
-        $authorize_date = Carbon::today();
-        $date_y = ((int)$authorize_date->year) - 1911;
-        $date_m = str_pad($authorize_date->month, 2, "0", STR_PAD_LEFT);
-        $date_d = str_pad($authorize_date->day, 2, "0", STR_PAD_LEFT);
 
         $templateProcessor->setValue('a_y', $date_y);
         $templateProcessor->setValue('a_m', $date_m);
@@ -348,6 +382,25 @@ class WordServices
         }
 
         $templateProcessor->saveAs($newWordFilePath);
+
+
+        $export_authorize_path = [
+            'authorize_file_name' => '授權書_' . $auth_input[0] . '_' . $fullTime,
+            'word' => $fullWordPath,
+            'pdf' => $fullPdfPath,
+        ];
+        $exportAuthRecord = [
+            'reports_ids' => json_encode($data_id),
+            'export_authorize_num' => $auth_input[4],
+            'export_authorize_com' => $auth_input[0],
+            'export_authorize_brand' => $auth_input[1],
+            'export_authorize_model' => $auth_input[2],
+            'export_authorize_vin' => $auth_input[3],
+            'export_authorize_auth_num_id' => json_encode($export_authorize_auth_num_id), // 授權序號
+            'export_authorize_reports_nums' => json_encode($export_authorize_reports_nums),
+            'export_authorize_path' => json_encode($export_authorize_path),
+        ];
+        ExportAuthorizeRecords::insert($exportAuthRecord);
 
         $ilovepdf = new Ilovepdf('project_public_0972a67458e4dd3ac4561edec19a48ed_pWfxHf7de3bcb072e2b66fc59b5cf8ded47d7', 'secret_key_f428272dfee9a265364aeadf9d895a8a_UMGYM186d525137876fd82fbc8a61f341c725');
         $myTask = $ilovepdf->newTask('officepdf');

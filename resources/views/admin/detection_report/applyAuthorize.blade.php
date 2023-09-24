@@ -75,7 +75,7 @@
         </div>
     </div>
     <div class="col-12 d-flex justify-content-center mt-3">
-        <button type="button" class="btn btn-primary mr-2" id="btn-auth" disabled>開立</button>
+        <button type="button" class="btn btn-primary mr-2" id="btn-auth">開立</button>
         <button type="button" class="btn btn-secondary btn-auth-cancel">取消</button>
     </div>
 </div>

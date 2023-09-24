@@ -651,11 +651,11 @@
         function deleteTempAuth(temp) {
             $('#' + temp).remove();
             reports_data.splice($.inArray(temp, reports_data), 1);
-            if (reports_data.length > 0) {
-                $('#btn-auth').prop('disabled', false);
-            } else {
-                $('#btn-auth').prop('disabled', true);
-            }
+            // if (reports_data.length > 0) {
+            //     $('#btn-auth').prop('disabled', false);
+            // } else {
+            //     $('#btn-auth').prop('disabled', true);
+            // }
         }
         async function applyForAuthorize() {
 
@@ -757,11 +757,11 @@
                             '</tr>');
                     }
 
-                    if (reports_data.length > 0) {
-                        $('#btn-auth').prop('disabled', false);
-                    } else {
-                        $('#btn-auth').prop('disabled', true);
-                    }
+                    // if (reports_data.length > 0) {
+                    //     $('#btn-auth').prop('disabled', false);
+                    // } else {
+                    //     $('#btn-auth').prop('disabled', true);
+                    // }
                 }
             });
 
@@ -829,9 +829,7 @@
             $('#btn-auth').click(function() {
 
                 if ($('#inp_com').val() == '' || $('#car_brand').val() == '' || $('#car_model').val() ==
-                    '' || $('#inp_vin').val() == '' || $('#inp_auth_num').val() == '' || $(
-                        '#reports_regulations').val() == '' || $('#reports_num').val() == '' || $(
-                        '#inputAuthNum').val() == '') {
+                    '' || $('#inp_vin').val() == '' || $('#inp_auth_num').val() == '' || reports_data.length == 0) {
                     if ($('#inp_com').val() == '') {
                         $('#inp_com').addClass('is-invalid');
                     } else {
@@ -862,26 +860,7 @@
                         $('#inp_auth_num').removeClass('is-invalid');
                     }
 
-                    if ($('#reports_regulations').val() == '') {
-                        $('#reports_regulations').parent().addClass('has-error');
-                    } else {
-                        $('#reports_regulations').parent().removeClass('has-error');
-                    }
-
-                    if ($('#reports_num').val() == '') {
-                        $('#reports_num').parent().addClass('has-error');
-                    } else {
-                        $('#reports_num').parent().removeClass('has-error');
-                    }
-
-                    if ($('#inputAuthNum').val() == '') {
-                        $('#inputAuthNum').addClass('is-invalid');
-                    } else {
-                        $('#inputAuthNum').removeClass('is-invalid');
-                    }
-
-
-                    Swal.fire('注意！', '輸入不能為空', 'warning');
+                    Swal.fire('注意！', '輸入不能為空及授權項目至少一項', 'warning');
                 } else {
                     const formValues = [$('#inp_com').val(), $('#car_brand').val(), $('#car_model').val(),
                         $('#inp_vin').val(), $('#inp_auth_num').val()
@@ -960,7 +939,9 @@
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             reports_data = [];
-                            Swal.fire('錯誤！', '程序失敗', 'error');
+                            Swal.fire('錯誤！', '程序失敗', 'error').then(function() {
+                                window.location.reload();
+                            });
                         }
                     });
                 }
