@@ -808,8 +808,6 @@
             });
 
             $('#reports_num').change(function() {
-                console.log($('#reports_num').val());
-                console.log($('#reports_regulations').length);
                 if ($('#reports_num').val() != null && $('#reports_num').val() != ''){
                     let e_date = $(this).find(':selected').data('expirationdate').split('-');
                     let e_date_y = e_date[0] - 1911;

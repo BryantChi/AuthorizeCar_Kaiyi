@@ -69,4 +69,9 @@ class DetectionReport extends Model
     //     return $this->belongsToMany(\App\Models\Admin\Regulations::class, 'regulations_infos', 'id', 'reports_regulations');
     // }
 
+    public function agreeAuthorizeRecords()
+    {   // 擁有AgreeAuthorizeRecords Model, AgreeAuthorizeRecords的reports_id(foreignKey), Reporter的id(localKey)
+        return $this->hasMany(\App\Models\Admin\AgreeAuthorizeRecords::class, 'reports_id', 'id');
+    }
+
 }

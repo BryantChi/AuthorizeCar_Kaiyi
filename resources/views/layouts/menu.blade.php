@@ -94,3 +94,9 @@
 
     </script>
 @endpush
+<li class="nav-item">
+    <a href="{{ route('admin.agreeAuthorizeRecords.index') }}"
+       class="nav-link {{ Request::is('admin/agreeAuthorizeRecords*') ? 'active' : '' }}">
+        <p>Agree Authorize Records</p>
+    </a>
+</li>
