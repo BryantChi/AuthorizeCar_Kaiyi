@@ -2,7 +2,7 @@
 
 namespace App\Models\Admin;
 
-use Eloquent as Model;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
@@ -25,7 +25,7 @@ class CumulativeAuthorizedUsageRecords extends Model
 
 
     public $table = 'cumulative_authorized_usage_records_infos';
-    
+
 
     protected $dates = ['deleted_at'];
 
@@ -63,8 +63,8 @@ class CumulativeAuthorizedUsageRecords extends Model
      * @var array
      */
     public static $rules = [
-        
+
     ];
 
-    
+
 }
