@@ -52,11 +52,15 @@ class ExportAuthorizeRecords extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'reports_ids' => 'json',
         'export_authorize_num' => 'string',
         'export_authorize_com' => 'string',
         'export_authorize_brand' => 'string',
         'export_authorize_model' => 'integer',
-        'export_authorize_vin' => 'string'
+        'export_authorize_vin' => 'string',
+        'export_authorize_auth_num_id' => 'json',
+        'export_authorize_reports_nums' => 'json',
+        'export_authorize_path' => 'json',
     ];
 
     /**

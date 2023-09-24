@@ -97,19 +97,19 @@
 <li class="nav-item">
     <a href="{{ route('admin.agreeAuthorizeRecords.index') }}"
        class="nav-link {{ Request::is('admin/agreeAuthorizeRecords*') ? 'active' : '' }}">
-        <p>Agree Authorize Records</p>
+        <p>同意授權使用證明書記錄</p>
     </a>
 </li>
 <li class="nav-item">
     <a href="{{ route('admin.cumulativeAuthorizedUsageRecords.index') }}"
        class="nav-link {{ Request::is('admin/cumulativeAuthorizedUsageRecords*') ? 'active' : '' }}">
-        <p>Cumulative Authorized Usage Records</p>
+        <p>累計授權使用紀錄</p>
     </a>
 </li>
 <li class="nav-item">
     <a href="{{ route('admin.exportAuthorizeRecords.index') }}"
        class="nav-link {{ Request::is('admin/exportAuthorizeRecords*') ? 'active' : '' }}">
-        <p>Export Authorize Records</p>
+        <p>授權開立紀錄</p>
     </a>
 </li>
 
