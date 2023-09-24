@@ -106,5 +106,11 @@
         <p>Cumulative Authorized Usage Records</p>
     </a>
 </li>
+<li class="nav-item">
+    <a href="{{ route('admin.exportAuthorizeRecords.index') }}"
+       class="nav-link {{ Request::is('admin/exportAuthorizeRecords*') ? 'active' : '' }}">
+        <p>Export Authorize Records</p>
+    </a>
+</li>
 
 
