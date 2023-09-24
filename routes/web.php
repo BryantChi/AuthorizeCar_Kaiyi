@@ -70,6 +70,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('companyInfos', App\Http\Controllers\Admin\CompanyInfoController::class, ["as" => 'admin']);
         Route::resource('deliveryRecords', App\Http\Controllers\Admin\DeliveryRecordController::class, ["as" => 'admin']);
         Route::resource('agreeAuthorizeRecords', App\Http\Controllers\Admin\AgreeAuthorizeRecordsController::class, ["as" => 'admin']);
+        Route::resource('cumulativeAuthorizedUsageRecords', App\Http\Controllers\Admin\CumulativeAuthorizedUsageRecordsController::class, ["as" => 'admin']);
 
         Route::any('detectionReports', [DetectionReportController::class, 'index'])->name('admin.detectionReports.index');
         Route::any('detectionReports/create', [DetectionReportController::class, 'create'])->name('admin.detectionReports.create');
