@@ -29,7 +29,7 @@ class CumulativeAuthorizedUsageRecordsController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $cumulativeAuthorizedUsageRecords = $this->cumulativeAuthorizedUsageRecordsRepository->paginate(10);
+        $cumulativeAuthorizedUsageRecords = $this->cumulativeAuthorizedUsageRecordsRepository->all();
 
         return view('admin.cumulative_authorized_usage_records.index')
             ->with('cumulativeAuthorizedUsageRecords', $cumulativeAuthorizedUsageRecords);
