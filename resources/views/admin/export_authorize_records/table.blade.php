@@ -96,7 +96,7 @@
                 <th>車身碼</th>
                 <th style="width: 20rem !important;">授權使用序號</th>
                 <th style="width: 20rem !important;">檢測報告編號</th>
-                <th>開立授權文件</th>
+                <th class="ft-none">開立授權文件</th>
                 {{-- <th colspan="3">Action</th> --}}
             </tr>
         </tfoot>
