@@ -219,7 +219,7 @@
             setTimeout(function() {
                 table.draw();
                 $('.buttons-excel').removeClass('dt-button buttons-excel buttons-html5').addClass(
-                    'btn btn-outline-info mr-2');
+                    'btn btn-outline-info mr-2').html('匯出Excel');
             }, 1000);
         })
     </script>
