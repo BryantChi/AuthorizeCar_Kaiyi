@@ -29,7 +29,7 @@ class AgreeAuthorizeRecordsController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $agreeAuthorizeRecords = $this->agreeAuthorizeRecordsRepository->paginate(10);
+        $agreeAuthorizeRecords = $this->agreeAuthorizeRecordsRepository->all();
 
         return view('admin.agree_authorize_records.index')
             ->with('agreeAuthorizeRecords', $agreeAuthorizeRecords);
