@@ -88,6 +88,10 @@
                 }
             });
 
+            let scrollX_enable = false;
+            if($(window).width() > 1200) { scrollX_enable = false }
+            else { scrollX_enable = true }
+
             var table = $('#cumulativeAuthorizedUsageRecords-table').DataTable({
                 // initComplete: function() {
                 //     this.api()
@@ -175,7 +179,7 @@
                 ordering: true,
                 // stateSave: true, // 保留狀態
                 scrollCollapse: true,
-                scrollX: true,
+                scrollX: scrollX_enable,
                 scrollY: '60vh',
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/zh_Hant.json"
