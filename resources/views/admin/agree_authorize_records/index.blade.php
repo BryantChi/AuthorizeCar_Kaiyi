@@ -165,11 +165,11 @@
                 lengthChange: true, // 呈現選單
                 lengthMenu: [10, 15, 20, 30, 50], // 選單值設定
                 pageLength: 10, // 不用選單設定也可改用固定每頁列數
-                fixedHeader: true,
-                fixedColumns: {
-                    'left': 1, // 固定左边的1列
-                    // rightColumns: 1 // 固定右边的1列
-                },
+                // fixedHeader: true,
+                // fixedColumns: {
+                //     'left': 1, // 固定左边的1列
+                //     // rightColumns: 1 // 固定右边的1列
+                // },
                 searching: true, // 搜索功能
                 ordering: true,
                 // stateSave: true, // 保留狀態
