@@ -29,7 +29,7 @@ class ExportAuthorizeRecordsController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $exportAuthorizeRecords = $this->exportAuthorizeRecordsRepository->paginate(10);
+        $exportAuthorizeRecords = $this->exportAuthorizeRecordsRepository->all();
 
         return view('admin.export_authorize_records.index')
             ->with('exportAuthorizeRecords', $exportAuthorizeRecords);
