@@ -203,7 +203,9 @@
                             rows: function (idx, data, node) {
                                 return $(node).find('input[name="records[]"]').prop('checked');
                             },
-                            // columns: [1],
+                            columns: columns: function(idx, data, node) {
+                                return idx != 0;
+                            },
                         }
                     }
                 ],
