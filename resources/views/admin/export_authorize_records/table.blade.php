@@ -112,6 +112,11 @@
             white-space: nowrap;
         }
 
+        #exportAuthorizeRecords-table_length label:first-child {
+            margin-top: 4px !important;
+            padding: 0 !important
+        }
+
         .w-40-rem {
             min-width: 15rem !important;
             width: 40rem !important;

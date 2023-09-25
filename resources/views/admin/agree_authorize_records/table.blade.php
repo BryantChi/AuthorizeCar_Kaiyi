@@ -102,5 +102,10 @@
         #agreeAuthorizeRecords-table td {
             white-space: nowrap;
         }
+
+        #agreeAuthorizeRecords-table_length label:first-child {
+            margin-top: 4px !important;
+            padding: 0 !important
+        }
     </style>
 @endpush

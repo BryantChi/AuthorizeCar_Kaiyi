@@ -80,5 +80,10 @@
         #cumulativeAuthorizedUsageRecords-table td {
             white-space: nowrap;
         }
+
+        #cumulativeAuthorizedUsageRecords-table_length label:first-child {
+            margin-top: 4px !important;
+            padding: 0 !important
+        }
     </style>
 @endpush
