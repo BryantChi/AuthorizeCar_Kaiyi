@@ -54,7 +54,7 @@ class CumulativeAuthorizedUsageRecords extends Model
         'applicant' => 'integer',
         'reports_vin' => 'string',
         'quantity' => 'integer',
-        'authorization_date' => 'date'
+        'authorization_date' => 'string'
     ];
 
     /**
