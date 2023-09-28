@@ -146,6 +146,10 @@
     </script>
     <script>
         $(function() {
+            let scrollX_enable = false;
+            if($(window).width() > 1200) { scrollX_enable = false }
+            else { scrollX_enable = true }
+
             var table = $('#deliveryRecords-table').DataTable({
                 lengthChange: true, // 呈現選單
                 lengthMenu: [10, 15, 20, 30, 50], // 選單值設定
@@ -155,7 +159,7 @@
                 ordering: true,
                 // stateSave: true, // 保留狀態
                 scrollCollapse: true,
-                scrollX: true,
+                scrollX: scrollX_enable,
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/zh_Hant.json"
                 },
@@ -188,6 +192,10 @@
                 // ],
             });
         })
+
+        setTimeout(() => {
+            table.draw();
+        }, 600);
 
         function openReport(reportId) {
             Swal.fire({

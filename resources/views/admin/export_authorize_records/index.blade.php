@@ -177,6 +177,9 @@
                 }
             });
 
+            let scrollX_enable = false;
+            if($(window).width() > 1200) { scrollX_enable = false }
+            else { scrollX_enable = true }
             var table = $('#exportAuthorizeRecords-table').DataTable({
                 initComplete: function() {
                     this.api()
@@ -186,7 +189,7 @@
                             var title = column.footer().textContent;
 
                             // Create input element and add event listener
-                            $('<input type="text" placeholder="Search ' + title + '" />')
+                            $('<input type="text" class="form-control" placeholder="Search ' + title + '" />')
                                 .appendTo($(column.footer()).empty())
                                 .on('keyup change clear', function() {
                                     if (column.search() !== this.value) {
@@ -264,7 +267,7 @@
                 ordering: true,
                 // stateSave: true, // 保留狀態
                 scrollCollapse: true,
-                scrollX: true,
+                scrollX: scrollX_enable,
                 scrollY: '60vh',
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/zh_Hant.json"

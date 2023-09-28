@@ -27,7 +27,8 @@
                         {{-- { "id" : "{{ $item->id }}" } --}}
                     </td>
                     {{-- <td>{{ $agreeAuthorizeRecords->reports_id }}</td> --}}
-                    <td>{{ $item->reports_num }}</td>
+                    <td>{{ $item->authorize_num }}</td>
+                    {{-- <td>{{ $item->reports_num }}</td> --}}
                     <td>{{ $item->authorize_date }}</td>
                     <td>{{ $item->authorize_year }}</td>
                     <td>{{ DB::table('car_brand')->whereNull('deleted_at')->where('id', $item->car_brand_id)->value('brand_name') }}

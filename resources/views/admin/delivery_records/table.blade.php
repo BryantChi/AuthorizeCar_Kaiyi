@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th style="width: 40rem !important;">檢測報告編號</th>
+                <th >檢測報告編號</th>
                 <th >申請送文件</th>
                 <th>建立日期</th>
                 <th>Action</th>
@@ -48,7 +48,7 @@
                     <td>
                         {{ $deliveryRecord->id }}
                     </td>
-                    <td class="text-bold" style="min-width: 15rem;">
+                    <td class="text-bold" style="min-width: 15rem;max-width: 40rem;">
                         {!! $num !!}
                     </td>
                     <td>

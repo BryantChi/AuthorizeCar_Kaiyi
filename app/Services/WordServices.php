@@ -312,6 +312,7 @@ class WordServices
             // 同意授權使用證明書記錄 逐個新增紀錄
             $agreeAuthRecord = [
                 'reports_id' => $value->id,
+                'authorize_num' => "TWCAR-$auth_input[4]",
                 'reports_num' => $value->reports_num,
                 'authorize_date' => $date_m . '/' . $date_d,
                 'authorize_year' => $authorize_date->year,

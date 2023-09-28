@@ -36,6 +36,7 @@ class AgreeAuthorizeRecords extends Model
 
     public $fillable = [
         'reports_id',
+        'authorize_num',
         'reports_num',
         'authorize_date',
         'authorize_year',
@@ -54,6 +55,7 @@ class AgreeAuthorizeRecords extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'authorize_num' => 'string',
         'reports_id' => 'integer',
         'reports_num' => 'string',
         'authorize_date' => 'string',

@@ -128,7 +128,7 @@
                             select.select2({
                                 language: 'zh-TW',
                                 width: '100%',
-                                maximumInputLength: 10,
+                                maximumInputLength: 100,
                                 minimumInputLength: 0,
                                 tags: true,
                                 placeholder: '請選擇' + title,
@@ -136,7 +136,7 @@
                             });
 
                             // Add list of options
-                            if (title == '授權項目') {
+                            if (title == '授權項目' || title == '授權日期') {
                                 $('<input type="text" class="form-control" placeholder="Search ' +
                                         title + '" />')
                                     .appendTo($(column.footer()).empty())
