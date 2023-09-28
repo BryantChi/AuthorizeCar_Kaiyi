@@ -27,7 +27,7 @@
                         {{-- { "id" : "{{ $item->id }}" } --}}
                     </td>
                     {{-- <td>{{ $agreeAuthorizeRecords->reports_id }}</td> --}}
-                    <td>{{ $item->authorize_num }}</td>
+                    <td>{{ "TWCAR-$item->authorize_num" }}</td>
                     {{-- <td>{{ $item->reports_num }}</td> --}}
                     <td>{{ $item->authorize_date }}</td>
                     <td>{{ $item->authorize_year }}</td>

@@ -50,7 +50,7 @@
                         </div>
                     </td>
                     {{-- <td>{{ $item->reports_ids }}</td> --}}
-                    <td>{{ $item->export_authorize_num }}</td>
+                    <td>{{ "TWCAR-$item->export_authorize_num" }}</td>
                     <td>{{ $item->export_authorize_com }}</td>
                     <td>{{ DB::table('car_brand')->whereNull('deleted_at')->where('id', $item->export_authorize_brand)->value('brand_name') }}
                     </td>

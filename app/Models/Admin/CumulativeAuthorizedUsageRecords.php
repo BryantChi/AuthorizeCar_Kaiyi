@@ -34,6 +34,7 @@ class CumulativeAuthorizedUsageRecords extends Model
     public $fillable = [
         'authorization_serial_number',
         'reports_id',
+        'authorize_num',
         'reports_num',
         'applicant',
         'reports_vin',
@@ -50,6 +51,7 @@ class CumulativeAuthorizedUsageRecords extends Model
         'id' => 'integer',
         'authorization_serial_number' => 'integer',
         'reports_id' => 'integer',
+        'authorize_num' => 'string',
         'reports_num' => 'string',
         'applicant' => 'integer',
         'reports_vin' => 'string',
