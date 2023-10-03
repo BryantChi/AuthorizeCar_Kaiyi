@@ -88,9 +88,9 @@
                 }
             });
 
-            let scrollX_enable = false;
-            if($(window).width() > 1200) { scrollX_enable = false }
-            else { scrollX_enable = true }
+            let scrollX_enable = "{{ count($cumulativeAuthorizedUsageRecords) > 0 ? '"true"' : '"false"' }}";
+            // if($(window).width() > 1600) { scrollX_enable = false }
+            // else { scrollX_enable = true }
 
             var table = $('#cumulativeAuthorizedUsageRecords-table').DataTable({
                 // initComplete: function() {

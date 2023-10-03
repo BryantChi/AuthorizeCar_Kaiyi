@@ -27,7 +27,7 @@
                         {{-- { "id" : "{{ $item->id }}" } --}}
                     </td>
                     {{-- <td>{{ $agreeAuthorizeRecords->reports_id }}</td> --}}
-                    <td>{{ "TWCAR-$item->authorize_num" }}</td>
+                    <td><a href="{{ url('admin/exportAuthorizeRecords?q='."TWCAR-$item->authorize_num") }}" class="text-secondary">{{ "TWCAR-$item->authorize_num" }}</a></td>
                     {{-- <td>{{ $item->reports_num }}</td> --}}
                     <td>{{ $item->authorize_date }}</td>
                     <td>{{ $item->authorize_year }}</td>

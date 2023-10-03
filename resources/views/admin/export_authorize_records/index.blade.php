@@ -162,6 +162,20 @@
     </script>
     <script>
         $(function() {
+            $.UrlParam = function(name) {
+                //宣告正規表達式
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                /*
+                 * window.location.search 獲取URL ?之後的參數(包含問號)
+                 * substr(1) 獲取第一個字以後的字串(就是去除掉?號)
+                 * match(reg) 用正規表達式檢查是否符合要查詢的參數
+                 */
+                var r = window.location.search.substr(1).match(reg);
+                //如果取出的參數存在則取出參數的值否則回穿null
+                if (r != null) return unescape(r[2]);
+                return null;
+            }
+
             $('#check-all').change(function() {
                 if ($(this).is(':checked')) {
                     var rows = table.rows({
@@ -177,9 +191,12 @@
                 }
             });
 
-            let scrollX_enable = false;
-            if($(window).width() > 1200) { scrollX_enable = false }
-            else { scrollX_enable = true }
+            let scrollX_enable = "{{ count($exportAuthorizeRecords) > 0 ? '"true"' : '"false"' }}";
+            // if ($(window).width() > 1500) {
+            //     scrollX_enable = false
+            // } else {
+            //     scrollX_enable = true
+            // }
             var table = $('#exportAuthorizeRecords-table').DataTable({
                 initComplete: function() {
                     this.api()
@@ -189,7 +206,8 @@
                             var title = column.footer().textContent;
 
                             // Create input element and add event listener
-                            $('<input type="text" class="form-control" placeholder="Search ' + title + '" />')
+                            $('<input type="text" class="form-control" placeholder="Search ' +
+                                    title + '" />')
                                 .appendTo($(column.footer()).empty())
                                 .on('keyup change clear', function() {
                                     if (column.search() !== this.value) {
@@ -305,66 +323,72 @@
             });
 
             setTimeout(function() {
-                table.draw();
+                // if ($.UrlParam("q") != null) {
+                //     table.column(1).search($.UrlParam("q")).draw();
+                // } else {
+                    table.draw();
+                // }
                 $('.buttons-excel').removeClass('dt-button buttons-excel buttons-html5').addClass(
                     'btn btn-outline-info mr-2').html('匯出Excel');
+
+
             }, 1000);
 
         });
 
         function openReport(reportId) {
-                Swal.fire({
-                    title: '載入中...',
-                    allowOutsideClick: false,
-                    showConfirmButton: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
+            Swal.fire({
+                title: '載入中...',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
 
-                $.ajax({
-                    url: "{{ route('showReportModal') }}",
-                    type: 'POST',
-                    data: {
-                        reportId: reportId,
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(res) {
-                        Swal.close();
-                        if (res.status == 'success') {
-                            console.log(res.data);
-                            $('#letter_id').html(res.data.letter_id);
-                            $('#reports_num').html(res.data.reports_num);
-                            $('#reports_expiration_date_end').html(res.data
-                                .reports_expiration_date_end);
-                            $('#reports_reporter').html(res.data.reports_reporter);
-                            $('#reports_car_brand').html(res.data.reports_car_brand);
-                            $('#reports_car_model').html(res.data.reports_car_model);
-                            $('#reports_inspection_institution').html(res.data
-                                .reports_inspection_institution);
-                            $('#reports_regulations').html(res.data.reports_regulations);
-                            $('#reports_car_model_code').html(res.data.reports_car_model_code);
-                            $('#reports_test_date').html(res.data.reports_test_date);
-                            $('#reports_date').html(res.data.reports_date);
-                            $('#reports_vin').html(res.data.reports_vin);
-                            $('#reports_authorize_count_before').html(res.data
-                                .reports_authorize_count_before);
-                            $('#reports_authorize_count_current').html(res.data
-                                .reports_authorize_count_current);
-                            $('#reports_f_e').html(res.data.reports_f_e);
-                            $('#reports_reply').html(res.data.reports_reply);
-                            $('#reports_authorize_status').html(res.data.reports_authorize_status);
-                            $('#reports_note').html(res.data.reports_note);
-                            setTimeout(function() {
-                                $('#reportShowModal').modal('show');
-                            }, 500);
-                        }
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        Swal.fire('錯誤！', '程序失敗', 'error');
+            $.ajax({
+                url: "{{ route('showReportModal') }}",
+                type: 'POST',
+                data: {
+                    reportId: reportId,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(res) {
+                    Swal.close();
+                    if (res.status == 'success') {
+                        console.log(res.data);
+                        $('#letter_id').html(res.data.letter_id);
+                        $('#reports_num').html(res.data.reports_num);
+                        $('#reports_expiration_date_end').html(res.data
+                            .reports_expiration_date_end);
+                        $('#reports_reporter').html(res.data.reports_reporter);
+                        $('#reports_car_brand').html(res.data.reports_car_brand);
+                        $('#reports_car_model').html(res.data.reports_car_model);
+                        $('#reports_inspection_institution').html(res.data
+                            .reports_inspection_institution);
+                        $('#reports_regulations').html(res.data.reports_regulations);
+                        $('#reports_car_model_code').html(res.data.reports_car_model_code);
+                        $('#reports_test_date').html(res.data.reports_test_date);
+                        $('#reports_date').html(res.data.reports_date);
+                        $('#reports_vin').html(res.data.reports_vin);
+                        $('#reports_authorize_count_before').html(res.data
+                            .reports_authorize_count_before);
+                        $('#reports_authorize_count_current').html(res.data
+                            .reports_authorize_count_current);
+                        $('#reports_f_e').html(res.data.reports_f_e);
+                        $('#reports_reply').html(res.data.reports_reply);
+                        $('#reports_authorize_status').html(res.data.reports_authorize_status);
+                        $('#reports_note').html(res.data.reports_note);
+                        setTimeout(function() {
+                            $('#reportShowModal').modal('show');
+                        }, 500);
                     }
-                })
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    Swal.fire('錯誤！', '程序失敗', 'error');
+                }
+            })
 
-            }
+        }
     </script>
 @endpush

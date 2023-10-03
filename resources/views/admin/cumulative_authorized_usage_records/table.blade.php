@@ -24,7 +24,7 @@
                     </td>
                     <td>{{ $item->authorization_serial_number }}</td>
                     {{-- <td>{{ $item->reports_id }}</td> --}}
-                    <td>{{ "TWCAR-$item->authorize_num" }}</td>
+                    <td><a href="{{ url('admin/exportAuthorizeRecords?q='."TWCAR-$item->authorize_num") }}" class="text-secondary">{{ "TWCAR-$item->authorize_num" }}</a></td>
                     <td>{{ $item->reports_num }}</td>
                     {{-- <td>{{ $item->applicant }}</td> --}}
                     <td>{{ DB::table('reporter_infos')->whereNull('deleted_at')->where('id', $item->applicant)->value('reporter_name') }}
