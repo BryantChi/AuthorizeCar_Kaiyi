@@ -5,7 +5,7 @@
                 <th></th>
                 {{-- <th>檢測報告ID</th> --}}
                 <th>授權書編號</th>
-                <th>授權公司</th>
+                <th>授權使用對象</th>
                 <th>廠牌</th>
                 <th>型號</th>
                 <th>車身碼</th>
@@ -90,7 +90,7 @@
                 <th class="ft-none"></th>
                 {{-- <th>檢測報告ID</th> --}}
                 <th>授權書編號</th>
-                <th>授權公司</th>
+                <th>授權使用對象</th>
                 <th>廠牌</th>
                 <th>型號</th>
                 <th>車身碼</th>

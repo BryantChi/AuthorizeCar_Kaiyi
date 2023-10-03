@@ -2,8 +2,8 @@
     <h2 class="text-center mb-5 w-100">開立授權</h2>
     <div class="col-md-3 p-3">
         <div class="form-group">
-            <label for="inp_com">授權公司</label>
-            <input type="text" class="form-control" id="inp_com" placeholder="輸入授權公司">
+            <label for="inp_com">授權使用對象</label>
+            <input type="text" class="form-control" id="inp_com" placeholder="輸入授權使用對象">
         </div>
         <div class="form-group">
             <label class="font-weight-bold" for="car_brand">廠牌</label>
