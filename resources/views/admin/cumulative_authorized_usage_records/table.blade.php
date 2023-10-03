@@ -4,8 +4,8 @@
             <tr>
                 <th></th>
                 <th>已授權序號</th>
-                {{-- <th>檢測報告ID/th> --}}
                 <th>授權書編號</th>
+                <th>檢測報告編號</th>
                 <th>申請者</th>
                 <th>車身號碼</th>
                 <th>數量</th>
@@ -61,8 +61,8 @@
             <tr>
                 <th class="ft-none"></th>
                 <th>已授權序號</th>
-                {{-- <th>檢測報告ID/th> --}}
                 <th>授權書編號</th>
+                <th>檢測報告編號</th>
                 <th>申請者</th>
                 <th>車身號碼</th>
                 <th>數量</th>
