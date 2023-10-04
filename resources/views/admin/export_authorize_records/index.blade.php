@@ -192,11 +192,11 @@
             });
 
             let scrollX_enable = "{{ count($exportAuthorizeRecords) > 0 ? '"true"' : '"false"' }}";
-            // if ($(window).width() > 1500) {
-            //     scrollX_enable = false
-            // } else {
-            //     scrollX_enable = true
-            // }
+            if ($(window).width() > 1500) {
+                scrollX_enable = false;
+            } else {
+                scrollX_enable = "{{ count($exportAuthorizeRecords) > 0 ? '"true"' : '"false"' }}";
+            }
             var table = $('#exportAuthorizeRecords-table').DataTable({
                 initComplete: function() {
                     this.api()
