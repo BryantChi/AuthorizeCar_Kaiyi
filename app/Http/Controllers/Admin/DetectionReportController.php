@@ -274,7 +274,7 @@ class DetectionReportController extends Controller
                     File::delete(public_path('uploads/' . $detectionReport->reports_pdf));
                 }
             }
-            $input['reports_pdf'] = 'images/reporter_info/'.$detectionReport->reports_num.'/' . $filename;
+            $input['reports_pdf'] = 'images/reports_pdf/'.$detectionReport->reports_num.'/' . $filename;
         } else {
             $input['reports_pdf'] = $detectionReport->reports_pdf;
         }
