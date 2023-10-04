@@ -323,11 +323,11 @@
             });
 
             setTimeout(function() {
-                // if ($.UrlParam("q") != null) {
-                //     table.column(1).search($.UrlParam("q")).draw();
-                // } else {
+                if ($.UrlParam("q") != null && $.UrlParam("q") != '') {
+                    table.column(1).search($.UrlParam("q")).draw();
+                } else {
                     table.draw();
-                // }
+                }
                 $('.buttons-excel').removeClass('dt-button buttons-excel buttons-html5').addClass(
                     'btn btn-outline-info mr-2').html('匯出Excel');
 
