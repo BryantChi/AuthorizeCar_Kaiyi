@@ -27,7 +27,7 @@
                 </div>
             </div>
 
-            {!! Form::model($detectionReport, ['route' => ['admin.detectionReports.update', $detectionReport->id], 'method' => 'patch']) !!}
+            {!! Form::model($detectionReport, ['route' => ['admin.detectionReports.update', $detectionReport->id], 'method' => 'patch', 'files'=>'true']) !!}
 
             <div class="card-body">
                 <div class="row">

@@ -430,8 +430,8 @@
             });
 
             $(".fancybox").fancybox({
-                // width  : 600,
-                // height : 300,
+                width  : "60vh",
+                height : "100vh",
                 type   :'iframe'
             });
         });
