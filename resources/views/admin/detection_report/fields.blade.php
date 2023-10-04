@@ -108,6 +108,15 @@
         {!! Form::label('reports_note', '說明') !!}
         <textarea class="form-control" name="reports_note" id="reports_note" rows="5">{{ $detectionReport->reports_note ?? ''}}</textarea>
     </div>
+    <div class="form-group">
+        {!! Form::label('reports_pdf', '檢測報告PDF') !!}
+
+        <div class="custom-file">
+            {!! Form::file('reports_pdf', null, ['class' => 'custom-file-input', 'required' => true]) !!}
+            {{-- <input type="file" class="custom-file-input" id="reports_pdf" name="reports_pdf" accept="image/*"> --}}
+            <label class="custom-file-label" for="reports_pdf">Choose file</label>
+        </div>
+    </div>
 </div>
 @push('page_css')
     <style>

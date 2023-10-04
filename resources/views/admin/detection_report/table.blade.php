@@ -37,7 +37,7 @@
                         </div> --}}
                         { "id" : "{{ $item->id }}", "letter_id" : "{{ $item->letter_id }}", "reports_authorize_status" : "{{ $item->reports_authorize_status }}" }
                     </td>
-                    <td>{{ $item->reports_num }}</td>
+                    <td><a class="fancybox iframe" href="{{ env("APP_URL") . '/uploads/' . $item->reports_pdf }}">{{ $item->reports_num }}</a></td>
                     <td>{{ $item->letter_id }}</td>
                     <td>{{ DB::table('authorize_status')->whereNull('deleted_at')->where('id', $item->reports_authorize_status)->value('status_name') }}
                     </td>

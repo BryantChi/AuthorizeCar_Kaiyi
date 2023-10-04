@@ -38,12 +38,14 @@ class DetectionReport extends Model
         'reports_reply',
         'reports_note',
         'reports_photo',
+        'reports_pdf',
         'reports_authorize_status'
     ];
 
     protected $casts = [
         'reports_regulations' => 'json',
         'reports_photo' => 'json',
+        'reports_pdf' => 'json',
     ];
 
     // public function carModel() {

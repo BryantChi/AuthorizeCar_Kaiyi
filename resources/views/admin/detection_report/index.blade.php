@@ -133,6 +133,28 @@
             </div>
         </div>
     </div>
+
+    <!-- PdfModal -->
+    <div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    {{-- <h5 class="modal-title" id="pdfModalLabel">Modal title</h5> --}}
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{-- {{ env('APP_URL') . '/uploads/' }} --}}
+                    <iframe id="pdf-data" src="" width="100%" style="height: 100vh;" seamless scrolling="yes" type="application/pdf" frameborder="0"></iframe>
+                </div>
+                {{-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div> --}}
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('page_css')
@@ -405,6 +427,12 @@
                     $('#reports_car_model').empty();
                     $('#reports_car_model').append('<option value="">請先選擇廠牌</option>');
                 }
+            });
+
+            $(".fancybox").fancybox({
+                // width  : 600,
+                // height : 300,
+                type   :'iframe'
             });
         });
 
@@ -808,7 +836,7 @@
             });
 
             $('#reports_num').change(function() {
-                if ($('#reports_num').val() != null && $('#reports_num').val() != ''){
+                if ($('#reports_num').val() != null && $('#reports_num').val() != '') {
                     let e_date = $(this).find(':selected').data('expirationdate').split('-');
                     let e_date_y = e_date[0] - 1911;
                     let e_date_m = padZero(e_date[1], 2);
@@ -829,7 +857,8 @@
             $('#btn-auth').click(function() {
 
                 if ($('#inp_com').val() == '' || $('#car_brand').val() == '' || $('#car_model').val() ==
-                    '' || $('#inp_vin').val() == '' || $('#inp_auth_num').val() == '' || reports_data.length == 0) {
+                    '' || $('#inp_vin').val() == '' || $('#inp_auth_num').val() == '' || reports_data.length ==
+                    0) {
                     if ($('#inp_com').val() == '') {
                         $('#inp_com').addClass('is-invalid');
                     } else {

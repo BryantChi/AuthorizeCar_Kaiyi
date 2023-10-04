@@ -102,6 +102,17 @@ class DetectionReportController extends Controller
         // }
         $input['reports_authorize_status'] = '2';
 
+        $image = $request->file('reports_pdf');
+
+        if ($image) {
+            $filename = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('uploads/images/reports_pdf/'.$input['reports_num']), $filename);
+
+            $input['reports_pdf'] = 'images/reports_pdf/'.$input['reports_num'].'/' . $filename;
+        } else {
+            $input['reports_pdf'] = '';
+        }
+
         $detectionReport = DetectionReport::create($input);
 
         // Flash::error('功能開發中!!!');
@@ -250,6 +261,23 @@ class DetectionReportController extends Controller
                 break;
         }
 
+
+        $image = $request->file('reports_pdf');
+
+        if ($image) {
+            $filename = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('uploads/images/reports_pdf/'.$detectionReport->reports_num), $filename);
+
+            if ($detectionReport->reports_pdf != null) {
+                // 若已存在，則覆蓋原有圖片
+                if (File::exists(public_path('uploads/' . $detectionReport->reports_pdf))) {
+                    File::delete(public_path('uploads/' . $detectionReport->reports_pdf));
+                }
+            }
+            $input['reports_pdf'] = 'images/reporter_info/'.$detectionReport->reports_num.'/' . $filename;
+        } else {
+            $input['reports_pdf'] = $detectionReport->reports_pdf;
+        }
 
         $detectionReport->update($input);
 
