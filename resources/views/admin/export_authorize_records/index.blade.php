@@ -223,7 +223,7 @@
             // if ($(window).width() > 1500) {
             //     scrollX_enable = false;
             // } else {
-            //     scrollX_enable = "{{ count($exportAuthorizeRecords) > 0 ? 1 : 0 }}";
+            //     scrollX_enable = "{{ count($exportAuthorizeRecords) > 0 ? 1 : 0 }}" == true;
             // }
             console.log(scrollX_enable);
             var table = $('#exportAuthorizeRecords-table').DataTable({

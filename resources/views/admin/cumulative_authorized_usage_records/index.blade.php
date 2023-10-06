@@ -89,8 +89,8 @@
             });
 
             let scrollX_enable = "{{ count($cumulativeAuthorizedUsageRecords) > 0 ? 1 : 0 }}" == true;
-            // if($(window).width() > 1500) { scrollX_enable = false }
-            // else { scrollX_enable = "{{ count($cumulativeAuthorizedUsageRecords) > 0 ? '"true"' : '"false"' }}" }
+            if($(window).width() > 1500) { scrollX_enable = false }
+            else { scrollX_enable = "{{ count($cumulativeAuthorizedUsageRecords) > 0 ? 1 : 0 }}" == true; }
 
             var table = $('#cumulativeAuthorizedUsageRecords-table').DataTable({
                 // initComplete: function() {
