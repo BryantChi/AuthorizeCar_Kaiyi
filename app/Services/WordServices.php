@@ -285,7 +285,7 @@ class WordServices
             $exports = ExportAuthorizeRecords::find($export_id);
             AgreeAuthorizeRecords::where('export_id', $export_id)->delete();
             if ($exports->export_authorize_num != $auth_input[4]) {
-                CumulativeAuthorizedUsageRecords::where('export_id', $export_id)->update(['quantity' => 0, 'export_authorize_num' => $exports->export_authorize_num . ' => ' . $auth_input[4]]);
+                CumulativeAuthorizedUsageRecords::where('export_id', $export_id)->update(['quantity' => 0, 'authorize_num' => $exports->export_authorize_num . ' => ' . $auth_input[4]]);
             } else {
                 CumulativeAuthorizedUsageRecords::where('export_id', $export_id)->update(['quantity' => 0]);
             }

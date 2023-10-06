@@ -24,7 +24,18 @@
                     </td>
                     <td>{{ $item->authorization_serial_number }}</td>
                     {{-- <td>{{ $item->reports_id }}</td> --}}
+                    <?php
+                    $contains = Illuminate\Support\Str::contains($item->authorize_num, '=>');
+                    if ($contains) {
+                        $nums = Illuminate\Support\Str::of($item->authorize_num)->explode(" => ");
+                    }
+                    ?>
+                    @if ($contains)
+                    <td><a href="{{ url('admin/exportAuthorizeRecords?q='."TWCAR-$nums[1]") }}" class="text-secondary">{{ "TWCAR-$nums[0] => TWCAR-$num[1]" }}</a></td>
+                    @else
                     <td><a href="{{ url('admin/exportAuthorizeRecords?q='."TWCAR-$item->authorize_num") }}" class="text-secondary">{{ "TWCAR-$item->authorize_num" }}</a></td>
+                    @endif
+
                     <td>{{ $item->reports_num }}</td>
                     {{-- <td>{{ $item->applicant }}</td> --}}
                     <td>{{ DB::table('reporter_infos')->whereNull('deleted_at')->where('id', $item->applicant)->value('reporter_name') }}
