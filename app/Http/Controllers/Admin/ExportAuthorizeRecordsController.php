@@ -6,6 +6,8 @@ use App\Http\Requests\Admin\CreateExportAuthorizeRecordsRequest;
 use App\Http\Requests\Admin\UpdateExportAuthorizeRecordsRequest;
 use App\Repositories\Admin\ExportAuthorizeRecordsRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Admin\CarBrand;
+use App\Models\Admin\Regulations;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
@@ -31,8 +33,14 @@ class ExportAuthorizeRecordsController extends AppBaseController
     {
         $exportAuthorizeRecords = $this->exportAuthorizeRecordsRepository->all();
 
+        $carBrand = CarBrand::all();
+
+        $regulations = Regulations::all();
+
         return view('admin.export_authorize_records.index')
-            ->with('exportAuthorizeRecords', $exportAuthorizeRecords);
+            ->with('exportAuthorizeRecords', $exportAuthorizeRecords)
+            ->with('brand', $carBrand)
+            ->with('regulations', $regulations);
     }
 
     /**

@@ -5,6 +5,7 @@
                 <th></th>
                 {{-- <th>檢測報告ID</th> --}}
                 <th>授權證明書編號</th>
+                <th>檢測報告編號</th>
                 <th>授權日期</th>
                 <th>年份</th>
                 <th>廠牌</th>
@@ -28,7 +29,7 @@
                     </td>
                     {{-- <td>{{ $agreeAuthorizeRecords->reports_id }}</td> --}}
                     <td><a href="{{ url('admin/exportAuthorizeRecords?q='."TWCAR-$item->authorize_num") }}" class="text-secondary">{{ "TWCAR-$item->authorize_num" }}</a></td>
-                    {{-- <td>{{ $item->reports_num }}</td> --}}
+                    <td>{{ $item->reports_num }}</td>
                     <td>{{ $item->authorize_date }}</td>
                     <td>{{ $item->authorize_year }}</td>
                     <td>{{ DB::table('car_brand')->whereNull('deleted_at')->where('id', $item->car_brand_id)->value('brand_name') }}
@@ -81,6 +82,7 @@
                 <th class="ft-none"></th>
                 {{-- <th>檢測報告ID</th> --}}
                 <th>授權證明書編號</th>
+                <th>檢測報告編號</th>
                 <th>授權日期</th>
                 <th>年份</th>
                 <th>廠牌</th>

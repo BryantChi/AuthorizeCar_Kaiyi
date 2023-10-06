@@ -9,7 +9,7 @@
             <label class="font-weight-bold" for="car_brand">廠牌</label>
             <select class="form-control custom-select bg-white" name="car_brand" id="car_brand">
                 <option value="">請選擇</option>
-                @foreach ($brand as $item)
+                @foreach ($brand ?? [] as $item)
                     <option value="{{ $item->id }}">{{ $item->brand_name }}</option>
                 @endforeach
             </select>
@@ -33,10 +33,10 @@
         <div class="form-row justify-content-center">
             <div class="form-group col-md-4 col-6">
                 <label class="font-weight-bold" for="reports_regulations">法規項目</label>
-                <select class="form-control custom-select bg-white"
-                    name="reports_regulations[]" id="reports_regulations" multiple="multiple" placeholder="請選擇">
+                <select class="form-control custom-select bg-white" name="reports_regulations[]"
+                    id="reports_regulations" multiple="multiple" placeholder="請選擇">
                     <option value="">請選擇</option>
-                    @foreach ($regulations as $item)
+                    @foreach ($regulations ?? [] as $item)
                         <option
                             {{ in_array($item->regulations_num, $detectionReport->reports_regulations ?? []) ? ' selected="selected"' : '' }}
                             value="{{ $item->regulations_num }}">
@@ -58,7 +58,7 @@
             </div>
         </div>
         <div style="border-bottom: 1px dashed #444444bf"></div>
-        <div class="table-responsive">
+        <div class="table-responsive" style="height: 23rem;overflow-y: auto;">
             <table class="table table-hover" id="authorize-data-temp-table">
                 <thead>
                     <tr>

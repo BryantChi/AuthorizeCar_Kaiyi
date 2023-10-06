@@ -10,7 +10,7 @@
                 <th>車身號碼</th>
                 <th>數量</th>
                 <th>授權日期</th>
-                {{-- <th colspan="3">Action</th> --}}
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -54,20 +54,28 @@
                         </div>
                         {!! Form::close() !!}
                     </td> --}}
+                    <td>
+                        <div class='btn-group'>
+                            <a href="{{ route('admin.cumulativeAuthorizedUsageRecords.edit', [$item->id]) }}"
+                                class='btn btn-default btn-sm'>
+                                <i class="far fa-edit"></i>
+                            </a>
+                        </div>
+                    </td>
                 </tr>
             @endforeach
         </tbody>
         <tfoot>
             <tr>
                 <th class="ft-none"></th>
-                <th>已授權序號</th>
+                <th class="ft-none">已授權序號</th>
                 <th>授權書編號</th>
                 <th>檢測報告編號</th>
                 <th>申請者</th>
                 <th>車身號碼</th>
                 <th>數量</th>
                 <th>授權日期</th>
-                {{-- <th colspan="3">Action</th> --}}
+                <th>Action</th>
             </tr>
         </tfoot>
     </table>

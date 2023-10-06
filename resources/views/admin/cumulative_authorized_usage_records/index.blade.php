@@ -89,8 +89,8 @@
             });
 
             let scrollX_enable = "{{ count($cumulativeAuthorizedUsageRecords) > 0 ? '"true"' : '"false"' }}";
-            if($(window).width() > 1500) { scrollX_enable = false }
-            else { scrollX_enable = "{{ count($cumulativeAuthorizedUsageRecords) > 0 ? '"true"' : '"false"' }}" }
+            // if($(window).width() > 1500) { scrollX_enable = false }
+            // else { scrollX_enable = "{{ count($cumulativeAuthorizedUsageRecords) > 0 ? '"true"' : '"false"' }}" }
 
             var table = $('#cumulativeAuthorizedUsageRecords-table').DataTable({
                 // initComplete: function() {
@@ -141,7 +141,7 @@
                             });
 
                             // Add list of options
-                            if (title == '授權項目') {
+                            if (title == '授權書編號') {
                                 $('<input type="text" class="form-control" placeholder="Search ' +
                                         title + '" />')
                                     .appendTo($(column.footer()).empty())

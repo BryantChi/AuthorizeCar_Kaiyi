@@ -61,6 +61,10 @@
     </style>
 @endpush
 
+@push('third_party_stylesheets')
+    <link href="https://cdn.datatables.net/v/dt/fc-4.3.0/datatables.min.css" rel="stylesheet">
+@endpush
+
 @push('page_scripts')
     <script type="text/javascript" charset="utf8"
         src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
@@ -136,7 +140,7 @@
                             });
 
                             // Add list of options
-                            if (title == '授權項目' || title == '授權日期') {
+                            if (title == '授權證明書編號' || title == '授權項目' || title == '授權日期') {
                                 $('<input type="text" class="form-control" placeholder="Search ' +
                                         title + '" />')
                                     .appendTo($(column.footer()).empty())
@@ -165,11 +169,11 @@
                 lengthChange: true, // 呈現選單
                 lengthMenu: [10, 15, 20, 30, 50], // 選單值設定
                 pageLength: 10, // 不用選單設定也可改用固定每頁列數
-                // fixedHeader: true,
-                // fixedColumns: {
-                //     'left': 1, // 固定左边的1列
-                //     // rightColumns: 1 // 固定右边的1列
-                // },
+                fixedHeader: true,
+                fixedColumns: {
+                    'left': 2, // 固定左边的1列
+                    // rightColumns: 1 // 固定右边的1列
+                },
                 searching: true, // 搜索功能
                 ordering: true,
                 // stateSave: true, // 保留狀態
@@ -204,7 +208,7 @@
                                 return $(node).find('input[name="records[]"]').prop('checked');
                             },
                             columns: function(idx, data, node) {
-                                return idx != 0;
+                                return idx != 0 && idx != 2;
                             },
                         }
                     }

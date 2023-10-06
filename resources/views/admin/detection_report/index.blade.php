@@ -430,9 +430,15 @@
             });
 
             $(".fancybox").fancybox({
-                width  : "60vh",
-                height : "100vh",
-                type   :'iframe'
+                // width  : "60vh",
+                // height : "100vh",
+                type   :'iframe',
+                iframe : {
+                    css : {
+                        width : '100vh',
+                        height : "90vh",
+                    }
+                }
             });
         });
 
@@ -582,6 +588,8 @@
                     data: {
                         data_ids: reports_id,
                         typer: 'delivery',
+                        mode: null,
+                        auth_export_id: null,
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(res) {
@@ -911,6 +919,8 @@
                         data: {
                             data_ids: reports_data,
                             typer: 'authorize',
+                            mode: 'create',
+                            auth_export_id: null,
                             auth_input: formValues,
                             _token: '{{ csrf_token() }}'
                         },

@@ -331,6 +331,8 @@ class DetectionReportController extends Controller
 
         $type = $input['typer'];
         $data_ids = $input['data_ids'];
+        $mode = $input['mode'];
+        $auth_export_id = $input['auth_export_id'];
 
         if ($type == 'delivery') { // 申請送件階段 - 只有一個發函文號
             // 檢測報告移入協會合約書 - 因多個報告原有人有多份合約書
@@ -357,7 +359,7 @@ class DetectionReportController extends Controller
         if ($type == 'authorize') { // 開立授權
             $auth_input = $input['auth_input'];
 
-            $authorize_file_res = $wordService->updateWordDocument(WordServices::POWER_OF_ATTORNEY, $data_ids, ['auth_input' => $auth_input]);
+            $authorize_file_res = $wordService->updateWordDocument(WordServices::POWER_OF_ATTORNEY, $data_ids, ['auth_input' => $auth_input, 'mode' => $mode, 'auth_export_id' => $auth_export_id]);
 
             return \Response::json(['status' => 'success', 'authorize_data' => $authorize_file_res->original]);
 
@@ -449,6 +451,22 @@ class DetectionReportController extends Controller
             ->get(['id', 'reports_num', 'reports_expiration_date_end', 'reports_f_e', 'reports_authorize_count_before', 'reports_authorize_count_current']);
 
         return response()->json($reports);
+    }
+
+    public function getReportsData(Request $request)
+    {
+        $input = $request->all();
+        $data_ids = $input['data_ids'];
+
+        $reports = DetectionReport::whereIn('id', $data_ids)->get();
+
+        $regulations = [];
+        foreach($reports as $report){
+            $regs = Regulations::whereIn('regulations_num', $report->reports_regulations)->get(['regulations_num', 'regulations_name']);
+            $regulations[$report->id] = $regs;
+        }
+
+        return \Response::json(['status' => 'success', 'reports' => $reports, 'regulations' => $regulations]);
     }
 
     private function containsOnly($arr, $validValues)

@@ -12,7 +12,7 @@
                 <th style="width: 20rem !important;">授權使用序號</th>
                 <th style="width: 20rem !important;">檢測報告編號</th>
                 <th>開立授權文件</th>
-                {{-- <th colspan="3">Action</th> --}}
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -82,6 +82,18 @@
                         </div>
                         {!! Form::close() !!}
                     </td> --}}
+                    <td>
+                        <div class='btn-group'>
+                            <a href="javascript:void(0)" onclick="copy('{{ json_encode($item) }}')"
+                                class='btn btn-default btn-lg2'>
+                                <i class="far fa-copy"></i>
+                            </a>
+                            <a href="javascript:void(0)" onclick="edit('{{ json_encode($item) }}')"
+                                class='btn btn-default btn-lg2'>
+                                <i class="far fa-edit"></i>
+                            </a>
+                        </div>
+                    </td>
                 </tr>
             @endforeach
         </tbody>
@@ -97,7 +109,7 @@
                 <th style="width: 20rem !important;">授權使用序號</th>
                 <th style="width: 20rem !important;">檢測報告編號</th>
                 <th class="ft-none">開立授權文件</th>
-                {{-- <th colspan="3">Action</th> --}}
+                <th class="ft-none">Action</th>
             </tr>
         </tfoot>
     </table>

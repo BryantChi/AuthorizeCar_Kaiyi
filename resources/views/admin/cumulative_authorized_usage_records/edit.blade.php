@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-12">
-                    <h1>Edit Cumulative Authorized Usage Records</h1>
+                    <h1>修改累計授權使用紀錄</h1>
                 </div>
             </div>
         </div>
@@ -26,8 +26,8 @@
             </div>
 
             <div class="card-footer">
-                {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('admin.cumulativeAuthorizedUsageRecords.index') }}" class="btn btn-default">Cancel</a>
+                {!! Form::submit('儲存', ['class' => 'btn btn-primary']) !!}
+                <a href="{{ route('admin.cumulativeAuthorizedUsageRecords.index') }}" class="btn btn-default">取消</a>
             </div>
 
             {!! Form::close() !!}

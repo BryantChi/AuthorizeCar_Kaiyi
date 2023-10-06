@@ -89,6 +89,7 @@ Route::any('get-status-by-letter', [DetectionReportController::class, 'getStatus
 Route::any('exportDocument', [DetectionReportController::class, 'exportDocument'])->name('exportDocument');
 Route::any('showReportModal', [DetectionReportController::class, 'showReportModal'])->name('showReportModal');
 Route::any('getReportsByRegs', [DetectionReportController::class, 'getReportsByRegs'])->name('getReportsByRegs');
+Route::any('getReportsData', [DetectionReportController::class, 'getReportsData'])->name('getReportsData');
 // Route::any('exportExcelTest', [DetectionReportController::class, 'exportExcelTest'])->name('exportExcelTest');
 // Route::any('convertToPdf', [DetectionReportController::class, 'convertToPdf'])->name('convertToPdf');
 
