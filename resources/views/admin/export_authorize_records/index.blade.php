@@ -166,7 +166,8 @@
 @endsection
 
 @push('page_css')
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
     <style>
         .select2-container {
             width: 100% !important;
@@ -240,13 +241,12 @@
                 }
             });
 
-            let scrollX_enable =  "{{ count($exportAuthorizeRecords) > 0 ? 1 : 0 }}" == true;
+            let scrollX_enable = "{{ count($exportAuthorizeRecords) > 0 ? 1 : 0 }}" == true;
             // if ($(window).width() > 1500) {
             //     scrollX_enable = false;
             // } else {
             //     scrollX_enable = "{{ count($exportAuthorizeRecords) > 0 ? 1 : 0 }}" == true;
             // }
-            console.log(scrollX_enable);
             var table = $('#exportAuthorizeRecords-table').DataTable({
                 initComplete: function() {
                     this.api()
@@ -498,16 +498,7 @@
 
             $('.btn-auth-cancel').click(function() {
                 reports_data = [];
-                $('#inp_com').val('');
-                $('#car_brand').val(null).trigger('change');
-                $('#car_model').val(null).trigger('change');
-                $('#inp_vin').val('');
-                $('#inp_auth_num').val('');
-
-                $('#reports_regulations').val([]).trigger('change');
-                $('#reports_num').val(null).trigger('change');
-                $('#inputAuthNum').val('');
-                $('#authorize-data-temp-table tbody').empty();
+                inputEmpty();
                 $('#card-authorize').slideUp(750);
             });
 
@@ -758,6 +749,19 @@
             });
         }
 
+        async function inputEmpty() {
+            $('#inp_com').val('');
+            $('#car_brand').val(null).trigger('change');
+            $('#car_model').val(null).trigger('change');
+            $('#inp_vin').val('');
+            $('#inp_auth_num').val('');
+
+            $('#reports_regulations').val([]).trigger('change');
+            $('#reports_num').val(null).trigger('change');
+            $('#inputAuthNum').val('');
+            $('#authorize-data-temp-table tbody').empty();
+        }
+
         function padZero(number, length) {
             // 將 number 轉換為字符串
             var str = number.toString();
@@ -808,9 +812,11 @@
 
                             $.each(res.regulations[report.id], function(i, val) {
                                 if (i == 0) {
-                                    regs_txt_temp += val.regulations_num + ' ' + val.regulations_name;
+                                    regs_txt_temp += val.regulations_num + ' ' + val
+                                        .regulations_name;
                                 } else {
-                                    regs_txt_temp += ',' + val.regulations_num + ' ' + val.regulations_name;
+                                    regs_txt_temp += ',' + val.regulations_num + ' ' + val
+                                        .regulations_name;
                                 }
 
                             });
@@ -819,16 +825,21 @@
                             let e_date_y = e_date[0] - 1911;
                             let e_date_m = padZero(e_date[1], 2);
                             let e_date_d = padZero(e_date[2], 2);
-                            if (report.reports_authorize_count_current < report.reports_authorize_count_before) {
-                                auth_count = padZero((report.reports_authorize_count_before + 1), 3);
+                            if (report.reports_authorize_count_current < report
+                                .reports_authorize_count_before) {
+                                auth_count = padZero((report.reports_authorize_count_before + 1),
+                                    3);
                             } else {
                                 if (mode == 'edit') {
-                                    auth_count = padZero((report.reports_authorize_count_current), 3);
+                                    auth_count = padZero((report.reports_authorize_count_current),
+                                        3);
                                 } else {
-                                    auth_count = padZero((report.reports_authorize_count_current + 1), 3);
+                                    auth_count = padZero((report.reports_authorize_count_current +
+                                        1), 3);
                                 }
                             }
-                            let auth_num_temp = report.reports_num + '-Y' + report.reports_f_e + e_date_y + e_date_m + e_date_d + '-' + auth_count;
+                            let auth_num_temp = report.reports_num + '-Y' + report.reports_f_e +
+                                e_date_y + e_date_m + e_date_d + '-' + auth_count;
 
                             $('#authorize-data-temp-table tbody').append('<tr id="' + report.id +
                                 '">' +
