@@ -49,6 +49,51 @@
         </div>
     </div>
 
+    <div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">檔案下載</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row justify-content-center file-container">
+                        {{-- <div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">
+                            <a href="javascript:void(0)" download>
+                                <p class="file-name"></p>
+                                <img src="{{ asset('assets/img/word-icon.png') }}" class="img-fluid" width="80"
+                                    alt="">
+                                <p class="text-secondary font-weight-lighter">點擊即可下載</p>
+                            </a>
+                        </div>
+                        <div class="col-auto d-block pdf-download-content text-center mx-3">
+                            <a href="javascript:void(0)" download>
+                                <p class="file-name"></p>
+                                <img src="{{ asset('assets/img/pdf-icon.png') }}" class="img-fluid" width="80"
+                                    alt="">
+                                <p class="text-secondary font-weight-lighter">點擊即可下載</p>
+                            </a>
+                        </div>
+                        <div class="col-auto d-block pdf-download-content text-center mx-3">
+                            <a href="javascript:void(0)" download>
+                                <p class="file-name"></p>
+                                <img src="{{ asset('assets/img/excel-icon.png') }}" class="img-fluid" width="80"
+                                    alt="">
+                                <p class="text-secondary font-weight-lighter">點擊即可下載</p>
+                            </a>
+                        </div> --}}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-close" data-dismiss="modal">關閉</button>
+                    {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="reportShowModal" tabindex="-1" aria-labelledby="reportShowModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
