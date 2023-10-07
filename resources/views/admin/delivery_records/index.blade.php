@@ -146,9 +146,9 @@
     </script>
     <script>
         $(function() {
-            let scrollX_enable = false;
-            if($(window).width() > 1200) { scrollX_enable = false }
-            else { scrollX_enable = true }
+            let scrollX_enable = "{{ count($deliveryRecords) > 0 ? 1 : 0 }}" == true;
+            if($(window).width() > 1500) { scrollX_enable = false }
+            else { scrollX_enable = "{{ count($deliveryRecords) > 0 ? 1 : 0 }}" == true; }
 
             var table = $('#deliveryRecords-table').DataTable({
                 lengthChange: true, // 呈現選單
