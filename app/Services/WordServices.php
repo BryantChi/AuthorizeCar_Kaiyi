@@ -482,8 +482,8 @@ class WordServices
         $templateProcessor->setValue('reporter_address', $reports_reporter->reporter_address);
         $templateProcessor->setValue('reporter_phone', $reports_reporter->reporter_phone);
         $templateProcessor->setValue('reporter_fax', $reports_reporter->reporter_fax);
-        // $templateProcessor->setImageValue('image_sign_reporter', public_path('uploads/'.$reports_reporter->reporter_seal));
-        $templateProcessor->setImageValue('image_sign_reporter', public_path('assets/img/sign_test_icon/sign_com.png'));
+        $templateProcessor->setImageValue('image_sign_reporter', public_path('uploads/'.$reports_reporter->reporter_seal));
+        // $templateProcessor->setImageValue('image_sign_reporter', public_path('assets/img/sign_test_icon/sign_com.png'));
 
         $company = Company::first();
         $templateProcessor->setValue('com_name', $company->com_name);
@@ -491,8 +491,8 @@ class WordServices
         $templateProcessor->setValue('com_address', $company->com_address);
         $templateProcessor->setValue('com_phone', $company->com_phone);
         $templateProcessor->setValue('com_fax', $company->com_fax);
-        // $templateProcessor->setImageValue('image_sign_com', public_path('uploads/'.$company->com_seal));
-        $templateProcessor->setImageValue('image_sign_com', public_path('assets/img/sign_test_icon/sign_com.png'));
+        $templateProcessor->setImageValue('image_sign_com', public_path('uploads/'.$company->com_seal));
+        // $templateProcessor->setImageValue('image_sign_com', public_path('assets/img/sign_test_icon/sign_com.png'));
 
         $reports_date = Carbon::today();
 
