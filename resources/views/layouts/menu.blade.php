@@ -112,5 +112,11 @@
         <p>授權開立紀錄</p>
     </a>
 </li>
+<li class="nav-item">
+    <a href="{{ route('admin.affidavitRecords.index') }}"
+       class="nav-link {{ Request::is('admin/affidavitRecords*') ? 'active' : '' }}">
+        <p>移出紀錄</p>
+    </a>
+</li>
 
 

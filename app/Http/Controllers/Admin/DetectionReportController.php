@@ -17,6 +17,7 @@ use App\Models\Admin\DeliveryRecord;
 use App\Models\Admin\AgreeAuthorizeRecords;
 use App\Models\Admin\CumulativeAuthorizedUsageRecords;
 use App\Models\Admin\ExportAuthorizeRecords;
+use App\Models\Admin\AffidavitRecord;
 use App\Repositories\Admin\DetectionReportRepository as DetectionReportRep;
 use Illuminate\Http\Request;
 use Flash;
@@ -390,6 +391,9 @@ class DetectionReportController extends Controller
 
             // 檢測報告移出函文 - 只有一份 by 發函文號
             $affidavit_letter_file_res = $wordService->updateWordDocument(WordServices::AFFIDAVIT_LETTER, $data_ids);
+
+            AffidavitRecord::create(['report_id' => $data_ids, 'affidavit_path' => [$moveout_file_res, $affidavit_letter_file_res->original]]);
+            DetectionReport::whereIn('id', $data_ids)->update(["reports_authorize_status" => DetectionReportRep::DEACTIVATED]);
 
             return \Response::json(['status' => 'success', 'contract_data' => $moveout_file_res, 'letter_data' => $affidavit_letter_file_res->original]);
         }
