@@ -8,7 +8,7 @@
                 <th>聯絡電話</th>
                 <th>傳真</th>
                 <th>報告原有人印章</th>
-                <th colspan="3">Action</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
