@@ -375,6 +375,25 @@ class DetectionReportController extends Controller
 
         }
 
+        if ($type == 'moveout') { // 移出
+
+            // 檢測報告移出切結書 - 因多個報告原有人有多份切結書
+            $reporters = DetectionReport::whereIn('id', $data_ids)->pluck('reports_reporter')->unique();
+            $moveout_file_res = array();
+            foreach ($reporters as $reporter) {
+                $reports = DetectionReport::whereIn('id', $data_ids)->where('reports_reporter', $reporter)->pluck('id');
+                $res = $wordService->updateWordDocument(WordServices::MOVE_OUT_AFFIDAVIT, $reports);
+                array_push($moveout_file_res, $res->original);
+            }
+
+            // $moveout_file_res = $wordService->updateWordDocument(WordServices::MOVE_OUT_CONTRACT, $data_ids);
+
+            // 檢測報告移出函文 - 只有一份 by 發函文號
+            $affidavit_letter_file_res = $wordService->updateWordDocument(WordServices::AFFIDAVIT_LETTER, $data_ids);
+
+            return \Response::json(['status' => 'success', 'contract_data' => $moveout_file_res, 'letter_data' => $affidavit_letter_file_res->original]);
+        }
+
 
 
         // $file_res = $wordService->updateWordDocument($type, $data_ids);

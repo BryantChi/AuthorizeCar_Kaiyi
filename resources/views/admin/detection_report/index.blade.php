@@ -282,7 +282,7 @@
                             });
 
                             // Add list of options
-                            if (title == '法規項目' || title == '有效期限-迄' || title == '測試日期' || title ==
+                            if (title == '檢測報告編號' || title == '法規項目' || title == '有效期限-迄' || title == '測試日期' || title ==
                                 '報告日期') {
                                 $('<input type="text" class="form-control" placeholder="Search ' +
                                         title + '" />')
@@ -996,7 +996,113 @@
             var reports_id = getReportsCheckboxForStatus('moveout');
 
             if (reports_id.length > 0) {
-                Swal.fire('注意！', '開發中！', 'warning');
+                Swal.fire({
+                    title: '處理中...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                $.ajax({
+                    url: "{{ route('exportDocument') }}",
+                    type: 'POST',
+                    data: {
+                        data_ids: reports_id,
+                        typer: 'moveout',
+                        mode: null,
+                        auth_export_id: null,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(res) {
+                        // var report = JSON.parse(res);
+                        // console.log(res.data[0].original.file_name);
+                        // console.log(window.location.host + report.word);
+                        // if (report.status == 'success') {
+                        //     $('.word-download-content>a').attr('href', window.location.origin + '/' + report
+                        //         .word);
+                        //     $('.word-download-content>a').prop('href', window.location.origin + '/' + report
+                        //         .word);
+                        //     $('.pdf-download-content>a').attr('href', window.location.origin + '/' + report
+                        //         .pdf);
+                        //     $('.pdf-download-content>a').prop('href', window.location.origin + '/' + report
+                        //         .pdf);
+                        //     setTimeout(function() {
+                        //         $('#downloadModal').modal('show');
+                        //         // window.open(window.location.origin + '/' + report.pdf);
+                        //         // window.location.herf = " ('', ['convert' => '" + report.word + "']) ";
+                        //     }, 500);
+                        // }
+                        Swal.close();
+                        if (res.status == 'success') {
+                            $('.file-container').empty();
+                            $('.file-container').append(
+                                '<div class="col-12"></div><div class="col-12"><h5>檢測報告移出切結書</h5></div>');
+                            res.contract_data.forEach(element => {
+                                $('.file-container').append(
+                                    '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
+                                    '<a href="' + window.location.origin + '/' + element
+                                    .word + '" download>' +
+                                    '<p class="text-secondary file-name" style="max-width: 200px;">' +
+                                    element.affidavit_file_name + '</p>' +
+                                    '<img src="{{ asset('assets/img/word-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                                    '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                                    '</a>' +
+                                    '</div>' +
+                                    '<div class="col-auto d-block pdf-download-content text-center mx-3">' +
+                                    '<a href="' + window.location.origin + '/' + element
+                                    .pdf + '" download>' +
+                                    '<p class="text-secondary file-name" style="max-width: 200px;">' +
+                                    element.affidavit_file_name + '</p>' +
+                                    '<img src="{{ asset('assets/img/pdf-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                                    '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                                    '</a>' +
+                                    '</div>');
+                            });
+
+                            $('.file-container').append(
+                                '<div class="col-12"></div><div class="col-12 mt-3"><h5><檢測報告移出函文</h5></div>');
+                            $('.file-container').append(
+                                '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
+                                '<a href="' + window.location.origin + '/' + res.letter_data
+                                .word + '" download>' +
+                                '<p class="text-secondary file-name" style="max-width: 200px;">' + res
+                                .letter_data.affidavit_letter_file_name + '</p>' +
+                                '<img src="{{ asset('assets/img/word-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                                '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                                '</a>' +
+                                '</div>' +
+                                '<div class="col-auto d-block pdf-download-content text-center mx-3">' +
+                                '<a href="' + window.location.origin + '/' + res.letter_data
+                                .pdf + '" download>' +
+                                '<p class="text-secondary file-name" style="max-width: 200px;">' + res
+                                .letter_data.affidavit_letter_file_name + '</p>' +
+                                '<img src="{{ asset('assets/img/pdf-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                                '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                                '</a>' +
+                                '</div>');
+
+                            // $('.file-container').append(
+                            //     '<div class="col-12"></div><div class="col-12 mt-3"><h5>登錄清冊</h5></div>');
+                            // $('.file-container').append(
+                            //     '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
+                            //     '<a href="' + window.location.origin + '/' + res.data_entry_data
+                            //     .excel + '" download>' +
+                            //     '<p class="text-secondary file-name" style="max-width: 200px;">' + res
+                            //     .data_entry_data.data_entry_file_name + '</p>' +
+                            //     '<img src="{{ asset('assets/img/excel-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                            //     '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                            //     '</a>' +
+                            //     '</div>');
+
+                            setTimeout(function() {
+                                $('#downloadModal').modal('show');
+                            }, 500);
+                        }
+
+                    }
+                })
             }
 
         }
