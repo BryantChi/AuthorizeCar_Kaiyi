@@ -1016,24 +1016,6 @@
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(res) {
-                        // var report = JSON.parse(res);
-                        // console.log(res.data[0].original.file_name);
-                        // console.log(window.location.host + report.word);
-                        // if (report.status == 'success') {
-                        //     $('.word-download-content>a').attr('href', window.location.origin + '/' + report
-                        //         .word);
-                        //     $('.word-download-content>a').prop('href', window.location.origin + '/' + report
-                        //         .word);
-                        //     $('.pdf-download-content>a').attr('href', window.location.origin + '/' + report
-                        //         .pdf);
-                        //     $('.pdf-download-content>a').prop('href', window.location.origin + '/' + report
-                        //         .pdf);
-                        //     setTimeout(function() {
-                        //         $('#downloadModal').modal('show');
-                        //         // window.open(window.location.origin + '/' + report.pdf);
-                        //         // window.location.herf = " ('', ['convert' => '" + report.word + "']) ";
-                        //     }, 500);
-                        // }
                         Swal.close();
                         if (res.status == 'success') {
                             $('.file-container').empty();
@@ -1083,18 +1065,18 @@
                                 '</a>' +
                                 '</div>');
 
-                            // $('.file-container').append(
-                            //     '<div class="col-12"></div><div class="col-12 mt-3"><h5>登錄清冊</h5></div>');
-                            // $('.file-container').append(
-                            //     '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
-                            //     '<a href="' + window.location.origin + '/' + res.data_entry_data
-                            //     .excel + '" download>' +
-                            //     '<p class="text-secondary file-name" style="max-width: 200px;">' + res
-                            //     .data_entry_data.data_entry_file_name + '</p>' +
-                            //     '<img src="{{ asset('assets/img/excel-icon.png') }}" class="img-fluid" width="80" alt="">' +
-                            //     '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
-                            //     '</a>' +
-                            //     '</div>');
+                            $('.file-container').append(
+                                '<div class="col-12"></div><div class="col-12 mt-3"><h5>移出清冊</h5></div>');
+                            $('.file-container').append(
+                                '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
+                                '<a href="' + window.location.origin + '/' + res.data_affidavit_data
+                                .excel + '" download>' +
+                                '<p class="text-secondary file-name" style="max-width: 200px;">' + res
+                                .data_affidavit_data.data_affidavit_file_name + '</p>' +
+                                '<img src="{{ asset('assets/img/excel-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                                '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                                '</a>' +
+                                '</div>');
 
                             setTimeout(function() {
                                 $('#downloadModal').modal('show');
@@ -1112,7 +1094,96 @@
             var reports_id = getReportsCheckboxForStatus('postpone');
 
             if (reports_id.length > 0) {
-                Swal.fire('注意！', '開發中！', 'warning');
+                // Swal.fire('注意！', '開發中！', 'warning');
+                Swal.fire({
+                    title: '處理中...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                $.ajax({
+                    url: "{{ route('exportDocument') }}",
+                    type: 'POST',
+                    data: {
+                        data_ids: reports_id,
+                        typer: 'postpone',
+                        mode: null,
+                        auth_export_id: null,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(res) {
+                        Swal.close();
+                        if (res.status == 'success') {
+                            $('.file-container').empty();
+                            $('.file-container').append(
+                                '<div class="col-12"></div><div class="col-12"><h5>合約書</h5></div>');
+                            res.contract_data.forEach(element => {
+                                $('.file-container').append(
+                                    '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
+                                    '<a href="' + window.location.origin + '/' + element
+                                    .word + '" download>' +
+                                    '<p class="text-secondary file-name" style="max-width: 200px;">' +
+                                    element.postpone_contract_file_name + '</p>' +
+                                    '<img src="{{ asset('assets/img/word-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                                    '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                                    '</a>' +
+                                    '</div>' +
+                                    '<div class="col-auto d-block pdf-download-content text-center mx-3">' +
+                                    '<a href="' + window.location.origin + '/' + element
+                                    .pdf + '" download>' +
+                                    '<p class="text-secondary file-name" style="max-width: 200px;">' +
+                                    element.postpone_contract_file_name + '</p>' +
+                                    '<img src="{{ asset('assets/img/pdf-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                                    '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                                    '</a>' +
+                                    '</div>');
+                            });
+
+                            $('.file-container').append(
+                                '<div class="col-12"></div><div class="col-12 mt-3"><h5><申請函/h5></div>');
+                            $('.file-container').append(
+                                '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
+                                '<a href="' + window.location.origin + '/' + res.postpone_apply_letter_data
+                                .word + '" download>' +
+                                '<p class="text-secondary file-name" style="max-width: 200px;">' + res
+                                .postpone_apply_letter_data.postpone_apply_letter_file_name + '</p>' +
+                                '<img src="{{ asset('assets/img/word-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                                '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                                '</a>' +
+                                '</div>' +
+                                '<div class="col-auto d-block pdf-download-content text-center mx-3">' +
+                                '<a href="' + window.location.origin + '/' + res.postpone_apply_letter_data
+                                .pdf + '" download>' +
+                                '<p class="text-secondary file-name" style="max-width: 200px;">' + res
+                                .postpone_apply_letter_data.postpone_apply_letter_file_name + '</p>' +
+                                '<img src="{{ asset('assets/img/pdf-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                                '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                                '</a>' +
+                                '</div>');
+
+                            $('.file-container').append(
+                                '<div class="col-12"></div><div class="col-12 mt-3"><h5>登錄清冊</h5></div>');
+                            $('.file-container').append(
+                                '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
+                                '<a href="' + window.location.origin + '/' + res.data_postpone_data
+                                .excel + '" download>' +
+                                '<p class="text-secondary file-name" style="max-width: 200px;">' + res
+                                .data_postpone_data.data_postpone_file_name + '</p>' +
+                                '<img src="{{ asset('assets/img/excel-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                                '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                                '</a>' +
+                                '</div>');
+
+                            setTimeout(function() {
+                                $('#downloadModal').modal('show');
+                            }, 500);
+                        }
+
+                    }
+                })
             }
 
         }

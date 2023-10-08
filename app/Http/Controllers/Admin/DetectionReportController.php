@@ -387,17 +387,39 @@ class DetectionReportController extends Controller
                 array_push($moveout_file_res, $res->original);
             }
 
-            // $moveout_file_res = $wordService->updateWordDocument(WordServices::MOVE_OUT_CONTRACT, $data_ids);
-
             // 檢測報告移出函文 - 只有一份 by 發函文號
             $affidavit_letter_file_res = $wordService->updateWordDocument(WordServices::AFFIDAVIT_LETTER, $data_ids);
+
+            // 移出清冊 - 只有一份 by 發函文號
+            $data_affidavit_res = $wordService->updateWordDocument(WordServices::DATA_AFFIDAVIT_EXCEL, $data_ids);
 
             AffidavitRecord::create(['report_id' => $data_ids, 'affidavit_path' => [$moveout_file_res, $affidavit_letter_file_res->original]]);
             DetectionReport::whereIn('id', $data_ids)->update(["reports_authorize_status" => DetectionReportRep::DEACTIVATED]);
 
-            return \Response::json(['status' => 'success', 'contract_data' => $moveout_file_res, 'letter_data' => $affidavit_letter_file_res->original]);
+            return \Response::json(['status' => 'success', 'contract_data' => $moveout_file_res, 'letter_data' => $affidavit_letter_file_res->original, 'data_affidavit_data' => $data_affidavit_res->original]);
         }
 
+        if ($type == 'postpone') {
+            // 檢測報告移出切結書 - 因多個報告原有人有多份切結書
+            $reporters = DetectionReport::whereIn('id', $data_ids)->pluck('reports_reporter')->unique();
+            $postpone_file_res = array();
+            foreach ($reporters as $reporter) {
+                $reports = DetectionReport::whereIn('id', $data_ids)->where('reports_reporter', $reporter)->pluck('id');
+                $res = $wordService->updateWordDocument(WordServices::POSTPONE_CONTRACT, $reports);
+                array_push($postpone_file_res, $res->original);
+            }
+
+            // 申請函 - 只有一份 by 發函文號
+            $postpone_apply_letter_file_res = $wordService->updateWordDocument(WordServices::POSTPONE_APPLICATION_LETTER, $data_ids);
+
+            // 登入清冊 - 只有一份 by 發函文號
+            $data_postpone_res = $wordService->updateWordDocument(WordServices::DATA_POSTPONE_EXCEL, $data_ids);
+
+            DeliveryRecord::create(['report_id' => $data_ids, 'delivery_path' => [$postpone_file_res, $postpone_apply_letter_file_res->original, $data_postpone_res->original]]);
+            DetectionReport::whereIn('id', $data_ids)->update(["reports_authorize_status" => DetectionReportRep::DELIVERY, 'reports_authorize_count_before' => 0, 'reports_authorize_count_current' => 0]);
+
+            return \Response::json(['status' => 'success', 'contract_data' => $postpone_file_res, 'postpone_apply_letter_data' => $postpone_apply_letter_file_res->original, 'data_postpone_data' => $data_postpone_res->original]);
+        }
 
 
         // $file_res = $wordService->updateWordDocument($type, $data_ids);
