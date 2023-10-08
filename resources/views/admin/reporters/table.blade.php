@@ -1,4 +1,4 @@
-<div class="table-responsive">
+<div class="table-responsive p-3">
     <table class="table" id="reporters-table">
         <thead>
             <tr>
