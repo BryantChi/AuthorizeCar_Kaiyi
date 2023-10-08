@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\UpdateInspectionInstitutionRequest;
 use App\Repositories\Admin\InspectionInstitutionRepository;
 use App\Http\Controllers\AppBaseController;
 use App\Models\Admin\DetectionReport;
+use App\Models\Admin\InspectionInstitution;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
@@ -30,7 +31,8 @@ class InspectionInstitutionController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $inspectionInstitutions = $this->inspectionInstitutionRepository->paginate(10);
+        // $inspectionInstitutions = $this->inspectionInstitutionRepository->paginate(10);
+        $inspectionInstitutions = InspectionInstitution::orderBy('created_at', 'DESC')->cursor();
 
         return view('admin.inspection_institutions.index')
             ->with('inspectionInstitutions', $inspectionInstitutions);

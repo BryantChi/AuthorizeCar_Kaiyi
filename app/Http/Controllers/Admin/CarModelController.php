@@ -32,7 +32,8 @@ class CarModelController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $carModels = $this->carModelRepository->paginate(10);
+        // $carModels = $this->carModelRepository->paginate(10);
+        $carModels = CarModel::orderBy('created_at', 'DESC')->cursor();
 
         return view('admin.car_models.index')
             ->with('carModels', $carModels);

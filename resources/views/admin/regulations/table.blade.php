@@ -1,10 +1,10 @@
-<div class="table-responsive">
+<div class="table-responsive p-3">
     <table class="table" id="regulations-table">
         <thead>
             <tr>
                 <th>法規編號</th>
                 <th>法規名稱</th>
-                <th colspan="3">Action</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>

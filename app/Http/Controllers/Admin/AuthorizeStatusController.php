@@ -6,6 +6,7 @@ use App\Http\Requests\Admin\CreateAuthorizeStatusRequest;
 use App\Http\Requests\Admin\UpdateAuthorizeStatusRequest;
 use App\Repositories\Admin\AuthorizeStatusRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Admin\AuthorizeStatus;
 use App\Models\Admin\DetectionReport;
 use Illuminate\Http\Request;
 use Flash;
@@ -30,7 +31,9 @@ class AuthorizeStatusController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $authorizeStatuses = $this->authorizeStatusRepository->paginate(10);
+        // $authorizeStatuses = $this->authorizeStatusRepository;
+
+        $authorizeStatuses = AuthorizeStatus::orderBy('created_at', 'DESC')->cursor();
 
         return view('admin.authorize_statuses.index')
             ->with('authorizeStatuses', $authorizeStatuses);

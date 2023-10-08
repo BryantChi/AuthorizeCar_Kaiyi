@@ -6,6 +6,7 @@ use App\Http\Requests\Admin\CreateDeliveryRecordRequest;
 use App\Http\Requests\Admin\UpdateDeliveryRecordRequest;
 use App\Repositories\Admin\DeliveryRecordRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Admin\DeliveryRecord;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
@@ -30,7 +31,8 @@ class DeliveryRecordController extends AppBaseController
     public function index(Request $request)
     {
         // $deliveryRecords = $this->deliveryRecordRepository->paginate(10);
-        $deliveryRecords = $this->deliveryRecordRepository->all();
+        // $deliveryRecords = $this->deliveryRecordRepository->all();
+        $deliveryRecords = DeliveryRecord::orderBy('created_at', 'DESC')->cursor();
 
         return view('admin.delivery_records.index')
             ->with('deliveryRecords', $deliveryRecords);

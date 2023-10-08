@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\UpdateReporterRequest;
 use App\Repositories\Admin\ReporterRepository;
 use App\Models\Admin\DetectionReport;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Admin\Reporter;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
@@ -32,7 +33,8 @@ class ReporterController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $reporters = $this->reporterRepository->paginate(10);
+        // $reporters = $this->reporterRepository->paginate(10);
+        $reporters = Reporter::orderBy('created_at', 'DESC')->cursor();
 
         return view('admin.reporters.index')
             ->with('reporters', $reporters);

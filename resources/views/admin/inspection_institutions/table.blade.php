@@ -1,9 +1,9 @@
-<div class="table-responsive">
+<div class="table-responsive p-3">
     <table class="table" id="inspectionInstitutions-table">
         <thead>
         <tr>
             <th>檢測機構名稱</th>
-            <th colspan="3">Action</th>
+            <th>Action</th>
         </tr>
         </thead>
         <tbody>

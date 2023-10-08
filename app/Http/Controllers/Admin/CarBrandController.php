@@ -32,7 +32,8 @@ class CarBrandController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $carBrands = $this->carBrandRepository->paginate(10);
+        // $carBrands = $this->carBrandRepository->paginate(10);
+        $carBrands = CarBrand::orderBy('created_at', 'DESC')->cursor();
 
         return view('admin.car_brands.index')
             ->with('carBrands', $carBrands);

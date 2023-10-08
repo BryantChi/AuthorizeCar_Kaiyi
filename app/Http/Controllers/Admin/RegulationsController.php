@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\UpdateRegulationsRequest;
 use App\Repositories\Admin\RegulationsRepository;
 use App\Models\Admin\DetectionReport;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Admin\Regulations;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
@@ -31,7 +32,8 @@ class RegulationsController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $regulations = $this->regulationsRepository->paginate(10);
+        // $regulations = $this->regulationsRepository->paginate(10);
+        $regulations = Regulations::orderBy('created_at', 'DESC')->cursor();
 
         return view('admin.regulations.index')
             ->with('regulations', $regulations);

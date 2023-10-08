@@ -148,7 +148,7 @@
     <script>
         $(function() {
             let scrollX_enable = "{{ count($affidavitRecords) > 0 ? 1 : 0 }}" == true;
-            if($(window).width() > 1500) { scrollX_enable = false }
+            if($(window).width() > 1200) { scrollX_enable = false }
             else { scrollX_enable = "{{ count($affidavitRecords) > 0 ? 1 : 0 }}" == true; }
 
             var table = $('#affidavitRecords-table').DataTable({

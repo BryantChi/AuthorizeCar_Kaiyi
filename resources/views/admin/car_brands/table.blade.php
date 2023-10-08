@@ -1,9 +1,9 @@
-<div class="table-responsive">
+<div class="table-responsive p-3">
     <table class="table" id="carBrands-table">
         <thead>
         <tr>
             <th>廠牌名稱</th>
-            <th colspan="3">Action</th>
+            <th>Action</th>
         </tr>
         </thead>
         <tbody>

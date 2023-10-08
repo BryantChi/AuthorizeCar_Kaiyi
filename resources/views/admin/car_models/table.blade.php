@@ -1,10 +1,10 @@
-<div class="table-responsive" style="overflow: scroll;">
+<div class="table-responsive p-3" style="overflow: scroll;">
     <table class="table" id="carModels-table">
         <thead>
         <tr>
             <th>廠牌</th>
             <th>型號名稱</th>
-            <th colspan="3">Action</th>
+            <th>Action</th>
         </tr>
         </thead>
         <tbody>
