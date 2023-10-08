@@ -6,6 +6,7 @@ use App\Http\Requests\Admin\CreateAffidavitRecordRequest;
 use App\Http\Requests\Admin\UpdateAffidavitRecordRequest;
 use App\Repositories\Admin\AffidavitRecordRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Admin\AffidavitRecord;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
@@ -29,7 +30,8 @@ class AffidavitRecordController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $affidavitRecords = $this->affidavitRecordRepository->paginate(10);
+        // $affidavitRecords = $this->affidavitRecordRepository->paginate(10);
+        $affidavitRecords = AffidavitRecord::orderBy('created_at', 'desc')->cursor();
 
         return view('admin.affidavit_records.index')
             ->with('affidavitRecords', $affidavitRecords);

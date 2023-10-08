@@ -118,5 +118,11 @@
         <p>移出紀錄</p>
     </a>
 </li>
+<li class="nav-item">
+    <a href="{{ route('admin.postponeRecords.index') }}"
+       class="nav-link {{ Request::is('admin/postponeRecords*') ? 'active' : '' }}">
+        <p>展延紀錄</p>
+    </a>
+</li>
 
 

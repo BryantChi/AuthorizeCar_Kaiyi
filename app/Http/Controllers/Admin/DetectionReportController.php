@@ -18,6 +18,7 @@ use App\Models\Admin\AgreeAuthorizeRecords;
 use App\Models\Admin\CumulativeAuthorizedUsageRecords;
 use App\Models\Admin\ExportAuthorizeRecords;
 use App\Models\Admin\AffidavitRecord;
+use App\Models\Admin\PostponeRecord;
 use App\Repositories\Admin\DetectionReportRepository as DetectionReportRep;
 use Illuminate\Http\Request;
 use Flash;
@@ -415,7 +416,7 @@ class DetectionReportController extends Controller
             // 登入清冊 - 只有一份 by 發函文號
             $data_postpone_res = $wordService->updateWordDocument(WordServices::DATA_POSTPONE_EXCEL, $data_ids);
 
-            DeliveryRecord::create(['report_id' => $data_ids, 'delivery_path' => [$postpone_file_res, $postpone_apply_letter_file_res->original, $data_postpone_res->original]]);
+            PostponeRecord::create(['report_id' => $data_ids, 'postpone_path' => [$postpone_file_res, $postpone_apply_letter_file_res->original, $data_postpone_res->original]]);
             DetectionReport::whereIn('id', $data_ids)->update(["reports_authorize_status" => DetectionReportRep::DELIVERY, 'reports_authorize_count_before' => 0, 'reports_authorize_count_current' => 0]);
 
             return \Response::json(['status' => 'success', 'contract_data' => $postpone_file_res, 'postpone_apply_letter_data' => $postpone_apply_letter_file_res->original, 'data_postpone_data' => $data_postpone_res->original]);

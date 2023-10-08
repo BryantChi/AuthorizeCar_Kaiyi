@@ -7,19 +7,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 /**
- * Class AffidavitRecord
+ * Class PostponeRecord
  * @package App\Models\Admin
- * @version October 8, 2023, 4:36 am CST
+ * @version October 9, 2023, 1:30 am CST
  *
  * @property string $report_id
- * @property string $affidavit_path
+ * @property string $postpone_path
  */
-class AffidavitRecord extends Model
+class PostponeRecord extends Model
 {
     use SoftDeletes;
 
 
-    public $table = 'affidavit_record_infos';
+    public $table = 'postpone_record_infos';
 
 
     protected $dates = ['deleted_at'];
@@ -28,7 +28,7 @@ class AffidavitRecord extends Model
 
     public $fillable = [
         'report_id',
-        'affidavit_path'
+        'postpone_path'
     ];
 
     /**
@@ -39,7 +39,7 @@ class AffidavitRecord extends Model
     protected $casts = [
         'id' => 'integer',
         'report_id' => 'json',
-        'affidavit_path' => 'json'
+        'postpone_path' => 'json'
     ];
 
     /**

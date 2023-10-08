@@ -26,21 +26,21 @@
                 foreach ($affidavitRecord->affidavit_path as $key => $value) {
                     switch ($key) {
                         case 0:
-                            $files .= '<h5>切結書</h5>';
+                            $files .= '<h5>移出切結書</h5>';
                             foreach ($value as $i => $v) {
-                                $files .= "<a href='" . url($v['word']) . "' download><img src='" . asset('assets/img/word-icon.png') . "'' class='img-fluid mx-2 my-1' width='30' title='" . $v['contract_file_name'] . "' alt=''></a>";
-                                $files .= "<a href='" . url($v['pdf']) . "' download><img src='" . asset('assets/img/pdf-icon.png') . "'' class='img-fluid mx-2 my-1' width='30' title='" . $v['contract_file_name'] . "' alt=''></a>";
+                                $files .= "<a href='" . url($v['word']) . "' download><img src='" . asset('assets/img/word-icon.png') . "'' class='img-fluid mx-2 my-1' width='30' title='" . $v['affidavit_file_name'] . "' alt=''></a>";
+                                $files .= "<a href='" . url($v['pdf']) . "' download><img src='" . asset('assets/img/pdf-icon.png') . "'' class='img-fluid mx-2 my-1' width='30' title='" . $v['affidavit_file_name'] . "' alt=''></a>";
                             }
                             break;
                         case 1:
-                            $files .= "<h5 class='mt-3'>函文</h5>";
-                            $files .= "<a href='" . url($value['word']) . "' download><img src='" . asset('assets/img/word-icon.png') . "'' class='img-fluid mx-2 my-1' width='30' title='" . $value['apply_letter_file_name'] . "' alt=''></a>";
-                            $files .= "<a href='" . url($value['pdf']) . "' download><img src='" . asset('assets/img/pdf-icon.png') . "'' class='img-fluid mx-2 my-1' width='30' title='" . $value['apply_letter_file_name'] . "' alt=''></a><br>";
+                            $files .= "<h5 class='mt-3'>移出函文</h5>";
+                            $files .= "<a href='" . url($value['word']) . "' download><img src='" . asset('assets/img/word-icon.png') . "'' class='img-fluid mx-2 my-1' width='30' title='" . $value['affidavit_letter_file_name'] . "' alt=''></a>";
+                            $files .= "<a href='" . url($value['pdf']) . "' download><img src='" . asset('assets/img/pdf-icon.png') . "'' class='img-fluid mx-2 my-1' width='30' title='" . $value['affidavit_letter_file_name'] . "' alt=''></a><br>";
                             break;
-                        // case 2:
-                        //     $files .= "<h5 class='mt-3'>清冊</h5>";
-                        //     $files .= "<a href='" . url($value['excel']) . "' download><img src='" . asset('assets/img/excel-icon.png') . "'' class='img-fluid mx-2 my-1' width='30' title='" . $value['data_entry_file_name'] . "' alt=''></a>";
-                        //     break;
+                        case 2:
+                            $files .= "<h5 class='mt-3'>移出清冊</h5>";
+                            $files .= "<a href='" . url($value['excel']) . "' download><img src='" . asset('assets/img/excel-icon.png') . "'' class='img-fluid mx-2 my-1' width='30' title='" . $value['data_affidavit_file_name'] . "' alt=''></a>";
+                            break;
                     }
                 }
                 ?>
