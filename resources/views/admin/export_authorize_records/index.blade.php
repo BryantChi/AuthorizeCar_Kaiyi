@@ -680,7 +680,7 @@
                             data_ids: reports_data,
                             typer: 'authorize',
                             mode: mode,
-                            auth_export_id: auth_id,
+                            auth_export_id: auth_export_id,
                             auth_input: formValues,
                             _token: '{{ csrf_token() }}'
                         },
@@ -847,7 +847,7 @@
                                 '<td>' + report.reports_num + '</td>' +
                                 '<td>' + auth_num_temp + '</td>' +
                                 '<td><a herf="javascript:void(0)" class="btn btn-danger" onclick="deleteTempAuth(\'' +
-                                $('#reports_num').val() + '\')" >刪除</a></td>' +
+                                    report.id + '\')" >刪除</a></td>' +
                                 '</tr>');
                         });
 
