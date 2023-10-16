@@ -417,7 +417,7 @@ class DetectionReportController extends Controller
             $data_postpone_res = $wordService->updateWordDocument(WordServices::DATA_POSTPONE_EXCEL, $data_ids);
 
             PostponeRecord::create(['report_id' => $data_ids, 'postpone_path' => [$postpone_file_res, $postpone_apply_letter_file_res->original, $data_postpone_res->original]]);
-            DetectionReport::whereIn('id', $data_ids)->update(["reports_authorize_status" => DetectionReportRep::DELIVERY, 'reports_authorize_count_before' => 0, 'reports_authorize_count_current' => 0]);
+            DetectionReport::whereIn('id', $data_ids)->update(["reports_authorize_status" => DetectionReportRep::MOVE_OUT, 'reports_authorize_count_before' => 0, 'reports_authorize_count_current' => 0]);
 
             return \Response::json(['status' => 'success', 'contract_data' => $postpone_file_res, 'postpone_apply_letter_data' => $postpone_apply_letter_file_res->original, 'data_postpone_data' => $data_postpone_res->original]);
         }
