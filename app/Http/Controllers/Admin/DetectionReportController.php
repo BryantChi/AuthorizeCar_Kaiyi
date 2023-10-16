@@ -394,7 +394,7 @@ class DetectionReportController extends Controller
             // 移出清冊 - 只有一份 by 發函文號
             $data_affidavit_res = $wordService->updateWordDocument(WordServices::DATA_AFFIDAVIT_EXCEL, $data_ids);
 
-            AffidavitRecord::create(['report_id' => $data_ids, 'affidavit_path' => [$moveout_file_res, $affidavit_letter_file_res->original]]);
+            AffidavitRecord::create(['report_id' => $data_ids, 'affidavit_path' => [$moveout_file_res, $affidavit_letter_file_res->original, $data_affidavit_res->original]]);
             DetectionReport::whereIn('id', $data_ids)->update(["reports_authorize_status" => DetectionReportRep::DEACTIVATED]);
 
             return \Response::json(['status' => 'success', 'contract_data' => $moveout_file_res, 'letter_data' => $affidavit_letter_file_res->original, 'data_affidavit_data' => $data_affidavit_res->original]);
