@@ -469,11 +469,11 @@ class WordServices
         ];
         ExportAuthorizeRecords::where('id', $export_id)->update($exportAuthRecord);
 
-        // $ilovepdf = new Ilovepdf('project_public_0972a67458e4dd3ac4561edec19a48ed_pWfxHf7de3bcb072e2b66fc59b5cf8ded47d7', 'secret_key_f428272dfee9a265364aeadf9d895a8a_UMGYM186d525137876fd82fbc8a61f341c725');
-        // $myTask = $ilovepdf->newTask('officepdf');
-        // $file1 = $myTask->addFile($newWordFilePath);
-        // $myTask->execute();
-        // $myTask->download(public_path($folderPdfPath));
+        $ilovepdf = new Ilovepdf('project_public_0972a67458e4dd3ac4561edec19a48ed_pWfxHf7de3bcb072e2b66fc59b5cf8ded47d7', 'secret_key_f428272dfee9a265364aeadf9d895a8a_UMGYM186d525137876fd82fbc8a61f341c725');
+        $myTask = $ilovepdf->newTask('officepdf');
+        $file1 = $myTask->addFile($newWordFilePath);
+        $myTask->execute();
+        $myTask->download(public_path($folderPdfPath));
 
         // return json_encode([
         //     'status' => 'success',
