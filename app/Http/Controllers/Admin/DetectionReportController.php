@@ -198,6 +198,7 @@ class DetectionReportController extends Controller
                 break;
         }
         array_push($status, DetectionReportRep::DEACTIVATED);
+        array_push($status, DetectionReportRep::INVAILD);
 
         $auth_status = AuthStatus::whereIn('id', $status)->get();
         // 暫時的需移除

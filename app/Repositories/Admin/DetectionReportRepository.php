@@ -22,6 +22,7 @@ class DetectionReportRepository {
     const ACTION_FOR_MOVE_OUT = 13; // 移出
     const ACTION_FOR_POSTPONE = 14; // 展延
     const DEACTIVATED = 15; // 已停用
+    const INVAILD = 16; // 作廢
 
 
     public static function getAllDetectionReports() {
