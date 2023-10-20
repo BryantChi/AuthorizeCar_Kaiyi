@@ -198,6 +198,7 @@
                 dom: 'Blfrtip', // 這行代碼是必須的，用於告訴 DataTables 插入哪些按鈕
                 buttons: [{
                     extend: 'excel',
+                    title: '累計授權使用紀錄',
                     // text: '導出已篩選的數據到 Excel',
                     exportOptions: {
                         modifier: {
@@ -208,7 +209,7 @@
                             return $(node).find('input[name="records[]"]').prop('checked');
                         },
                         columns: function(idx, data, node) {
-                            return idx != 0;
+                            return idx != 0 && idx != 8;
                         },
                     }
                 }],

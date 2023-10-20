@@ -198,6 +198,7 @@
                 buttons: [
                     {
                         extend: 'excel',
+                        title: '同意授權使用證明書記錄',
                         // text: '導出已篩選的數據到 Excel',
                         exportOptions: {
                             modifier: {
