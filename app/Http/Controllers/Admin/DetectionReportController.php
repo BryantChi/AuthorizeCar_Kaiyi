@@ -6,6 +6,7 @@ use App\Exports\DetectionReportExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreDetectionReportRequest;
 use App\Http\Requests\Admin\UpdateDetectionReportRequest;
+use App\Imports\DetectionReportsImport;
 use App\Models\Admin\DetectionReport;
 use App\Models\Admin\AuthorizeStatus as AuthStatus;
 use App\Models\Admin\CarBrand;
@@ -25,10 +26,13 @@ use Flash;
 use Response;
 use App\Services\WordServices;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Ilovepdf\Ilovepdf;
 use ImageManager;
 use Maatwebsite\Excel\Facades\Excel;
+// use Yajra\DataTables\DataTables;
+use Yajra\DataTables\Facades\DataTables;
 
 class DetectionReportController extends Controller
 {
@@ -44,19 +48,170 @@ class DetectionReportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->detectionReportRep::autoCheckAuthorizedStatus();
         //
         // $model = DetectionReport::orderBy('updated_at', 'DESC')->paginate(15);
-        $model = DetectionReport::orderBy('updated_at', 'DESC')->cursor();
+        // $model = DetectionReport::select([
+        //     'id',
+        //     'letter_id',
+        //     'reports_num',
+        //     'reports_expiration_date_end',
+        //     'reports_reporter' => DB::table('reporter_infos')->select('reporter_name')->whereNull('deleted_at')->whereColumn('detection_reports.reports_reporter', 'id'),
+        //     'reports_car_brand' => DB::table('car_brand')->select('brand_name')->whereNull('deleted_at')->whereColumn('detection_reports.reports_car_brand', 'id'),
+        //     'reports_car_model' => DB::table('car_model')->select('model_name')->whereNull('deleted_at')->whereColumn('detection_reports.reports_car_model', 'id'),
+        //     'reports_inspection_institution' => DB::table('inspection_institution_infos')->select('ii_name')->whereNull('deleted_at')->whereColumn('detection_reports.reports_inspection_institution', 'id'),
+        //     'reports_regulations',
+        //     'reports_car_model_code',
+        //     'reports_test_date',
+        //     'reports_date',
+        //     'reports_vin',
+        //     'reports_authorize_count_before',
+        //     'reports_authorize_count_current',
+        //     'reports_f_e',
+        //     'reports_reply',
+        //     'reports_note',
+        //     'reports_pdf',
+        //     'reports_authorize_status' => DB::table('authorize_status')->select('status_name')->whereNull('deleted_at')->whereColumn('detection_reports.reports_authorize_status', 'id')
+        // ]);
         // $model = $this->detectionReportRepository->getAllDetectionReports();
 
+        $auth_status = AuthStatus::all();
+
+        $reporters = Reporter::all();
+
         $carBrand = CarBrand::all();
+        $carModel = CarModel::all();
+
+        $ii = InspectionInstitution::all();
 
         $regulations = Regulations::all();
 
-        return view('admin.detection_report.index', ['detectionReports' => $model, 'brand' => $carBrand, 'regulations' => $regulations]);
+        if ($request->ajax()) {
+            $model = DetectionReport::select([
+                'id',
+                'letter_id',
+                'reports_num',
+                'reports_expiration_date_end',
+                'reports_reporter' => DB::table('reporter_infos')->select('reporter_name')->whereNull('deleted_at')->whereColumn('detection_reports.reports_reporter', 'id'),
+                'reports_car_brand' => DB::table('car_brand')->select('brand_name')->whereNull('deleted_at')->whereColumn('detection_reports.reports_car_brand', 'id'),
+                'reports_car_model' => DB::table('car_model')->select('model_name')->whereNull('deleted_at')->whereColumn('detection_reports.reports_car_model', 'id'),
+                'reports_inspection_institution' => DB::table('inspection_institution_infos')->select('ii_name')->whereNull('deleted_at')->whereColumn('detection_reports.reports_inspection_institution', 'id'),
+                'reports_regulations',
+                'reports_car_model_code',
+                'reports_test_date',
+                'reports_date',
+                'reports_vin',
+                'reports_authorize_count_before',
+                'reports_authorize_count_current',
+                'reports_f_e',
+                'reports_reply',
+                'reports_note',
+                'reports_pdf',
+                'reports_authorize_status'
+            ]);
+            $dataTables = DataTables::eloquent($model);
+
+            // $keyword = request('search.value');
+            // if ($keyword) {
+                $dataTables
+                ->filterColumn('letter_id', function ($query, $keyword) {
+                    $query->whereRaw("letter_id like ?", ["%{$keyword}%"]);
+                })
+                ->filterColumn('reports_num', function ($query, $keyword) {
+                    $query->whereRaw("reports_num like ?", ["%{$keyword}%"]);
+                })
+                ->filterColumn('reports_authorize_status', function ($query, $keyword) {
+                    $newKeyword = AuthStatus::where('status_name', 'like', "%{$keyword}%")->get('id');
+                    $query->whereIn("reports_authorize_status", $newKeyword);
+                })
+                ->filterColumn('reports_expiration_date_end', function ($query, $keyword) {
+                    $query->whereRaw("reports_expiration_date_end like ?", ["%{$keyword}%"]);
+                })
+                ->filterColumn('reports_reporter', function($query, $keyword) {
+                    $newKeyword = Reporter::where('reporter_name', 'like', "%$keyword%")->get('id');
+                    $query->whereIn("reports_reporter", $newKeyword);
+                })
+                ->filterColumn('reports_car_brand', function ($query, $keyword) {
+                    $newKeyword = CarBrand::where('brand_name', 'like', "%{$keyword}%")->get('id');
+                    $query->whereIn("reports_car_brand", $newKeyword);
+                })
+                ->filterColumn('reports_car_model', function ($query, $keyword) {
+                    $newKeyword = CarModel::where('model_name', 'like', "%{$keyword}%")->get('id');
+                    $query->whereIn("reports_car_model", $newKeyword);
+                })
+                ->filterColumn('reports_inspection_institution', function ($query, $keyword) {
+                    $newKeyword = InspectionInstitution::where('ii_name', 'like', "%{$keyword}%")->get('id');
+                    $query->whereIn("reports_inspection_institution", $newKeyword);
+                })
+                ->filterColumn('reports_regulations', function ($query, $keyword) {
+                    $query->whereRaw("reports_regulations like ?", ["%{$keyword}%"]);
+                })
+                ->filterColumn('reports_test_date', function ($query, $keyword) {
+                    $query->whereRaw("reports_test_date like ?", ["%{$keyword}%"]);
+                })
+                ->filterColumn('reports_date', function ($query, $keyword) {
+                    $query->whereRaw("reports_date like ?", ["%{$keyword}%"]);
+                })
+                ->filterColumn('reports_f_e', function ($query, $keyword) {
+                    $query->whereRaw("reports_f_e like ?", ["%{$keyword}%"]);
+                });
+            // }
+
+
+            return $dataTables
+                ->addIndexColumn()
+                ->addColumn('checkbox', function(DetectionReport $report) {
+                    return '<input type="checkbox" name="reports[]" style="width: 20px;height: 20px;" value="' . $report->id . '" data-letter="' . $report->letter_id . '" data-status="' . $report->reports_authorize_status . '" >';
+                })
+                ->addColumn('action', function (DetectionReport $report) {
+
+                    $btn_edit = '<a href="' . route('admin.detectionReports.edit', [$report->id]) . '" class="btn btn-default btn-sm"><i class="far fa-edit"></i></a>';
+                    $btn_del = '<button type="button" class="btn btn-danger btn-sm" onclick="return check(this)"><i class="far fa-trash-alt"></i></button>';
+
+                    return '<form action="' . route('admin.detectionReports.destroy', [$report->id]) . '" method="delete"><div class="btn-group">' . $btn_edit . $btn_del . '</div></form>';
+                })
+                ->editColumn('reports_num', function (DetectionReport $report) {
+                    return '<a class="fancybox iframe text-secondary" href="' . env("APP_URL") . '/uploads/' . $report->reports_pdf . '">' . $report->reports_num . '</a>';
+                }, ['searchable' => true])
+                ->editColumn('reports_authorize_status', function(DetectionReport $report) {
+                    return AuthStatus::where('id', $report->reports_authorize_status)->value('status_name');
+                }, ['searchable' => true])
+                ->editColumn('reports_expiration_date_end', function(DetectionReport $report) {
+                    return Carbon::parse($report->reports_expiration_date_end)->format('Y/m/d');
+                }, ['searchable' => true])
+                // ->editColumn('reports_reporter', function(DetectionReport $report) {
+                //     return Reporter::where('id', $report->reports_reporter)->value('reporter_name');
+                // }, ['searchable' => true])
+                // ->editColumn('reports_car_brand', function(DetectionReport $report) {
+                //     return CarBrand::where('id', $report->reports_car_brand)->value('brand_name');
+                // }, ['searchable' => true])
+                // ->editColumn('reports_car_model', function(DetectionReport $report) {
+                //     return CarModel::where('id', $report->reports_car_model)->value('model_name');
+                // }, ['searchable' => true])
+                // ->editColumn('reports_inspection_institution', function(DetectionReport $report) {
+                //     return InspectionInstitution::where('id', $report->reports_inspection_institution)->value('ii_name');
+                // }, ['searchable' => true])
+                ->editColumn('reports_regulations', function(DetectionReport $report) {
+                    $regs = Regulations::whereIn('regulations_num', $report->reports_regulations)->get();
+                    $reg_span = '';
+                    foreach ($regs as $reg) {
+                        $reg_span .= '<span class="rounded mr-1 my-1 py-1 px-2 bg-info d-flex float-left" style="width: max-content;">' . $reg->regulations_num . ' ' . $reg->regulations_name . '</span>';
+                    }
+                    return '<div class="float-left" style="width: 300px;">' . $reg_span . '</div>';
+                }, ['searchable' => true])
+                ->editColumn('reports_test_date', function(DetectionReport $report) {
+                    return Carbon::parse($report->reports_test_date)->format('Y/m/d');
+                }, ['searchable' => true])
+                ->editColumn('reports_date', function(DetectionReport $report) {
+                    return Carbon::parse($report->reports_date)->format('Y/m/d');
+                }, ['searchable' => true])
+                ->rawColumns(['checkbox', 'action', 'reports_num', 'reports_expiration_date_end', 'reports_regulations', 'reports_test_date', 'reports_date'])
+                ->toJson();
+        }
+
+        return view('admin.detection_report.index', ['brand' => $carBrand, 'model' => $carModel, 'regulations' => $regulations, 'auth_status' => $auth_status, 'reporters' => $reporters, 'iis' => $ii]);
     }
 
     /**
@@ -515,6 +670,13 @@ class DetectionReportController extends Controller
         }
 
         return \Response::json(['status' => 'success', 'reports' => $reports, 'regulations' => $regulations]);
+    }
+
+    public function importReport(Request $request)
+    {
+        Excel::import(new DetectionReportsImport, $request->file('dri_file'));
+
+        return redirect(route('admin.detectionReports.index'));
     }
 
     private function containsOnly($arr, $validValues)

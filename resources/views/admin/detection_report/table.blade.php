@@ -26,96 +26,71 @@
                 <th>Action</th>
             </tr>
         </thead>
-        <tbody>
-            @foreach ($detectionReports as $item)
-                <tr>
-                    <td>
-                        {{-- <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" style="width: 20px;height: 20px;"
-                                name="reports[]" id="{{ $item->id }}" value="{{ $item->id }}"
-                                data-letter="{{ $item->letter_id }}" />
-                        </div> --}}
-                        { "id" : "{{ $item->id }}", "letter_id" : "{{ $item->letter_id }}", "reports_authorize_status" : "{{ $item->reports_authorize_status }}" }
-                    </td>
-                    <td><a class="fancybox iframe text-secondary" href="{{ env("APP_URL") . '/uploads/' . $item->reports_pdf }}">{{ $item->reports_num }}</a></td>
-                    <td>{{ $item->letter_id }}</td>
-                    <td>{{ DB::table('authorize_status')->whereNull('deleted_at')->where('id', $item->reports_authorize_status)->value('status_name') }}
-                    </td>
-                    <td>{{ Carbon\Carbon::parse($item->reports_expiration_date_end)->format('Y/m/d') }}</td>
-                    <td>{{ DB::table('reporter_infos')->whereNull('deleted_at')->where('id', $item->reports_reporter)->value('reporter_name') }}
-                    </td>
-                    <td>{{ DB::table('car_brand')->whereNull('deleted_at')->where('id', $item->reports_car_brand)->value('brand_name') }}
-                    </td>
-                    <td>{{ DB::table('car_model')->whereNull('deleted_at')->where('id', $item->reports_car_model)->value('model_name') }}
-                    </td>
-                    <td>{{ App\Models\Admin\InspectionInstitution::where('id', $item->reports_inspection_institution)->value('ii_name') }}
-                    </td>
-                    <td class="float-left" style="width: 300px;">
-                        <?php
-                        $regulations = DB::table('regulations_infos')
-                            ->whereNull('deleted_at')
-                            ->whereIn('regulations_num', $item->reports_regulations)
-                            ->get();
-                        ?>
-                        @foreach (json_decode($regulations) as $info)
-                            <span
-                                class="rounded mr-1 my-1 py-1 px-2 bg-info d-flex float-left" style="width: max-content;">{{ $info->regulations_num . ' ' . $info->regulations_name }}</span>
-                        @endforeach
-                    </td>
-                    <td>{{ $item->reports_car_model_code }}</td>
-                    <td>{{ Carbon\Carbon::parse($item->reports_test_date)->format('Y/m/d') }}</td>
-                    <td>{{ Carbon\Carbon::parse($item->reports_date)->format('Y/m/d') }}</td>
-                    <td>{{ $item->reports_vin }}</td>
-                    <td>{{ $item->reports_authorize_count_before }}</td>
-                    <td>{{ $item->reports_authorize_count_current }}</td>
-                    <td>{{ $item->reports_f_e }}</td>
-                    <td>{{ $item->reports_reply }}</td>
-                    <td>{{ $item->reports_note }}</td>
-                    <td width="120">
-                        {!! Form::open(['route' => ['admin.detectionReports.destroy', $item->id], 'method' => 'delete']) !!}
-                        <div class='btn-group'>
-                            {{-- <a href="{{ route('admin.detectionReports.show', [$item->id]) }}"
-                                class='btn btn-default btn-sm'>
-                                <i class="far fa-eye"></i>
-                            </a> --}}
-                            <a href="{{ route('admin.detectionReports.edit', [$item->id]) }}"
-                                class='btn btn-default btn-sm'>
-                                <i class="far fa-edit"></i>
-                            </a>
-                            {!! Form::button('<i class="far fa-trash-alt"></i>', [
-                                'type' => 'button',
-                                'class' => 'btn btn-danger btn-sm',
-                                'onclick' => 'return check(this)',
-                            ]) !!}
-                        </div>
-                        {!! Form::close() !!}
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
+
         <tfoot>
             <tr>
                 <th class="ft-none">
 
                 </th>
-                <th>檢測報告編號</th>
-                <th>發函文號</th>
-                <th>授權狀態</th>
-                <th>有效期限-迄</th>
-                <th>報告原有人</th>
-                <th>廠牌</th>
-                <th>車型</th>
-                <th>檢測機構</th>
+                <th><input type="text" class="form-control" placeholder="Search 檢測報告編號"/></th>
+                <th><input type="text" class="form-control" placeholder="Search 發函文號"/></th>
+                <th>
+                    <select class="form-control">
+                        <option value="">請選擇 授權狀態</option>
+                        @foreach ($auth_status as $status)
+                            <option value="{{ $status->status_name }}">{{ $status->status_name }}</option>
+                        @endforeach
+                    </select>
+                </th>
+                <th><input type="text" class="form-control" placeholder="Search 有效期限-迄"/></th>
+                <th>
+                    <select class="form-control">
+                        <option value="">請選擇 報告原有人</option>
+                        @foreach ($reporters as $reporter)
+                            <option value="{{ $reporter->reporter_name }}">{{ $reporter->reporter_name }}</option>
+                        @endforeach
+                    </select>
+                </th>
+                <th>
+                    <select class="form-control">
+                        <option value="">請選擇 廠牌</option>
+                        @foreach ($brand as $b)
+                            <option value="{{ $b->brand_name }}">{{ $b->brand_name }}</option>
+                        @endforeach
+                    </select>
+                </th>
+                <th>
+                    <select class="form-control">
+                        <option value="">請選擇 車型</option>
+                        @foreach ($model as $m)
+                            <option value="{{ $m->model_name }}">{{ $m->model_name }}</option>
+                        @endforeach
+                    </select>
+                </th>
+                <th>
+                    <select class="form-control">
+                        <option value="">請選擇 檢測機構</option>
+                        @foreach ($iis as $ii)
+                            <option value="{{ $ii->ii_name }}">{{ $m->ii_name }}</option>
+                        @endforeach
+                    </select>
+                </th>
                 <th style="max-width: 300px;">法規項目</th>
-                <th>車種代號</th>
-                <th>測試日期</th>
-                <th>報告日期</th>
-                <th>代表車車身碼</th>
-                <th>移入前授權使用次數</th>
-                <th>移入後累計授權次數</th>
-                <th>F/E</th>
-                <th>車安回函</th>
-                <th>說明</th>
+                <th><input type="text" class="form-control" placeholder="Search 車種代號"/></th>
+                <th><input type="text" class="form-control" placeholder="Search 測試日期"/></th>
+                <th><input type="text" class="form-control" placeholder="Search 報告日期"/></th>
+                <th><input type="text" class="form-control" placeholder="Search 代表車車身碼"/></th>
+                <th><input type="text" class="form-control" placeholder="Search 移入前授權使用次數"/></th>
+                <th><input type="text" class="form-control" placeholder="Search 移入後累計授權次數"/></th>
+                <th>
+                    <select class="form-control">
+                        <option value="">請選擇 F/E</option>
+                        <option value="f">F</option>
+                        <option value="e">E</option>
+                    </select>
+                </th>
+                <th><input type="text" class="form-control" placeholder="Search 車安回函"/></th>
+                <th><input type="text" class="form-control" placeholder="Search 說明"/></th>
                 <th class="ft-none">Action</th>
             </tr>
         </tfoot>

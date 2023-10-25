@@ -95,3 +95,4 @@ Route::any('getReportsData', [DetectionReportController::class, 'getReportsData'
 // Route::any('exportExcelTest', [DetectionReportController::class, 'exportExcelTest'])->name('exportExcelTest');
 // Route::any('convertToPdf', [DetectionReportController::class, 'convertToPdf'])->name('convertToPdf');
 
+Route::any('importReport', [DetectionReportController::class, 'importReport'])->name('importReport');

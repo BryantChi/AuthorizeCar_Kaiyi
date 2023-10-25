@@ -37,7 +37,7 @@ class DetectionReport extends Model
         'reports_f_e',
         'reports_reply',
         'reports_note',
-        'reports_photo',
+        'reports_photos',
         'reports_pdf',
         'reports_authorize_status'
     ];

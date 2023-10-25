@@ -10,6 +10,7 @@ use App\Models\Admin\DeliveryRecord;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+use Yajra\DataTables\DataTables;
 
 class DeliveryRecordController extends AppBaseController
 {

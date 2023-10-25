@@ -242,13 +242,13 @@
                 //             var title = column.footer().textContent;
 
                 //             // Create input element and add event listener
-                //             $('<input type="text" placeholder="Search ' + title + '" />')
-                //                 .appendTo($(column.footer()).empty())
-                //                 .on('keyup change clear', function() {
-                //                     if (column.search() !== this.value) {
-                //                         column.search(this.value).draw();
-                //                     }
-                //                 });
+                //             $('<input type="text" class="form-control" placeholder="Search ' + title + '" />')
+                //                 .appendTo($(column.footer()).empty());
+                //                 // .on('keyup change clear', function() {
+                //                 //     if (column.search() !== this.value) {
+                //                 //         column.search(this.value).draw();
+                //                 //     }
+                //                 // });
                 //         });
                 // },
                 initComplete: function() {
@@ -259,25 +259,25 @@
                             var title = column.footer().textContent;
 
                             // Create select element and listener
-                            var select = $(
-                                    '<select class="form-control"><option value=""></option></select>'
-                                )
-                                .appendTo($(column.footer()).empty())
-                                .on('change', function() {
-                                    var val = DataTable.util.escapeRegex($(this).val());
+                            // var select = $(
+                            //         '<select class="form-control"><option value=""></option></select>'
+                            //     )
+                            //     .appendTo($(column.footer()).empty());
+                                // .on('change', function() {
+                                //     var val = DataTable.util.escapeRegex($(this).val());
 
-                                    column
-                                        .search(val ? '^' + val + '$' : '', true, false)
-                                        .draw();
-                                });
-
+                                //     column
+                                //         .search(val ? '^' + val + '$' : '', true, false)
+                                //         .draw();
+                                // });
+                            var select = $(column.footer()).find('select');
                             select.select2({
                                 language: 'zh-TW',
                                 width: '100%',
                                 maximumInputLength: 10,
                                 minimumInputLength: 0,
                                 tags: true,
-                                placeholder: '請選擇' + title,
+                                placeholder: '請選擇',
                                 allowClear: true
                             });
 
@@ -285,50 +285,59 @@
                             if (title == '檢測報告編號' || title == '法規項目' || title == '有效期限-迄' || title == '測試日期' || title ==
                                 '報告日期') {
                                 $('<input type="text" class="form-control" placeholder="Search ' +
-                                        title + '" />')
-                                    .appendTo($(column.footer()).empty())
-                                    .on('keyup change clear', function() {
-                                        if (column.search() !== this.value) {
-                                            column.search(this.value).draw();
-                                        }
-                                    });
+                                        title + '"  />')
+                                    .appendTo($(column.footer()).empty());
+                                    // .on('keyup change clear', function() {
+                                    //     if (column.search() !== this.value) {
+                                    //         column.search(this.value).draw();
+                                    //     }
+                                    // });
                             } else {
-                                column
-                                    .data()
-                                    .unique()
-                                    .sort()
-                                    .each(function(d, j) {
-                                        let s = d;
-                                        // if (title == '法規項目') {
-                                        //     // console.log(d);
-                                        //     let charToRemove =
-                                        //         '<span class="rounded mr-1 my-1 py-1 px-2 bg-info d-flex float-left" style="width: max-content;">';
-                                        //     let charToRemove2 = '</span>';
-                                        //     s = d.replace(new RegExp(charToRemove, 'g'), '');
-                                        //     s = s.replace(new RegExp(charToRemove2, 'g'), '');
-                                        //     s = s.replace(new RegExp("\n", 'g'), ' ');
-                                        //     s = s.replace(new RegExp(
-                                        //         "                                                    ",
-                                        //         'g'), '')
-                                        //     console.log(s);
-                                        // }
+                                // column
+                                //     .data()
+                                //     .unique()
+                                //     .sort()
+                                //     .each(function(d, j) {
+                                //         let s = d;
+                                //         // if (title == '法規項目') {
+                                //         //     // console.log(d);
+                                //         //     let charToRemove =
+                                //         //         '<span class="rounded mr-1 my-1 py-1 px-2 bg-info d-flex float-left" style="width: max-content;">';
+                                //         //     let charToRemove2 = '</span>';
+                                //         //     s = d.replace(new RegExp(charToRemove, 'g'), '');
+                                //         //     s = s.replace(new RegExp(charToRemove2, 'g'), '');
+                                //         //     s = s.replace(new RegExp("\n", 'g'), ' ');
+                                //         //     s = s.replace(new RegExp(
+                                //         //         "                                                    ",
+                                //         //         'g'), '')
+                                //         //     console.log(s);
+                                //         // }
 
-                                        select.append(
-                                            '<option value="' + s + '">' + s + '</option>'
-                                        );
-                                    });
+                                //         select.append(
+                                //             '<option value="' + s + '">' + s + '</option>'
+                                //         );
+                                //     });
 
                             }
 
                         });
                 },
+                ajax: {
+                    url: "{{ route('admin.detectionReports.index') }}",
+                    // data: function(d) {
+                    //     d.reports_reporter = $('#drsh-report-reporter').val();
+                    // }
+                },
+                processing: true,
+                serverSide: true,
+                deferRender: true,
                 lengthChange: true, // 呈現選單
                 lengthMenu: [10, 15, 20, 30, 50], // 選單值設定
                 pageLength: 10, // 不用選單設定也可改用固定每頁列數
                 fixedHeader: true,
                 fixedColumns: {
-                    'left': 2, // 固定左边的1列
-                    // rightColumns: 1 // 固定右边的1列
+                    'left': 2, // 固定左边列
+                    // rightColumns: 1 // 固定右边列
                 },
                 searching: true, // 搜索功能
                 ordering: true,
@@ -339,19 +348,46 @@
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/zh_Hant.json"
                 },
-                columnDefs: [{
-                    'targets': 0,
-                    'searchable': false,
-                    'orderable': false,
-                    'className': 'dt-body-center',
-                    'render': function(data, type, full, meta) {
-                        var d = JSON.parse(data);
-                        return '<input type="checkbox" name="reports[]"  style="width: 20px;height: 20px;" value="' +
-                            $('<div/>').text(d.id).html() + '" data-letter="' + $('<div/>')
-                            .text(d.letter_id).html() + '" data-status="' + $('<div/>').text(d
-                                .reports_authorize_status).html() + '">';
-                    }
-                }],
+                // search: {
+                //     "regex": true,
+                //     return: true
+                // },
+                columns: [
+                    // { data: 'DT_RowIndex', name: 'DT_RowIndex' },
+                    {data: 'checkbox', name: 'checkbox', orderable: false, searchable: false},
+                    {data: 'reports_num', name: 'reports_num'},
+                    {data: 'letter_id', name: 'letter_id'},
+                    {data: 'reports_authorize_status', name: 'reports_authorize_status'},
+                    {data: 'reports_expiration_date_end', name: 'reports_expiration_date_end'},
+                    {data: 'reports_reporter', name: 'reports_reporter'},
+                    {data: 'reports_car_brand', name: 'reports_car_brand'},
+                    {data: 'reports_car_model', name: 'reports_car_model'},
+                    {data: 'reports_inspection_institution', name: 'reports_inspection_institution'},
+                    {data: 'reports_regulations', name: 'reports_regulations'},
+                    {data: 'reports_car_model_code', name: 'reports_car_model_code'},
+                    {data: 'reports_test_date', name: 'reports_test_date'},
+                    {data: 'reports_date', name: 'reports_date'},
+                    {data: 'reports_vin', name: 'reports_vin'},
+                    {data: 'reports_authorize_count_before', name: 'reports_authorize_count_before'},
+                    {data: 'reports_authorize_count_current', name: 'reports_authorize_count_current'},
+                    {data: 'reports_f_e', name: 'reports_f_e'},
+                    {data: 'reports_reply', name: 'reports_reply'},
+                    {data: 'reports_note', name: 'reports_note'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false}
+                ],
+                // columnDefs: [{
+                //     'targets': 0,
+                //     'searchable': false,
+                //     'orderable': false,
+                //     'className': 'dt-body-center',
+                //     'render': function(data, type, full, meta) {
+                //         var d = JSON.parse(data);
+                //         return '<input type="checkbox" name="reports[]"  style="width: 20px;height: 20px;" value="' +
+                //             $('<div/>').text(d.id).html() + '" data-letter="' + $('<div/>')
+                //             .text(d.letter_id).html() + '" data-status="' + $('<div/>').text(d
+                //                 .reports_authorize_status).html() + '">';
+                //     }
+                // }],
                 // dom: 'Bfrtip',  // 這行代碼是必須的，用於告訴 DataTables 插入哪些按鈕
                 // buttons: [
                 //     {
@@ -373,9 +409,36 @@
 
             });
 
+
+
             setTimeout(function() {
                 table.draw();
-            }, 1000);
+
+                table.columns().every(function() {
+                    var that = this;
+                    $('input', this.footer()).on('keyup change', function() {
+                        if (that.search() !== this.value) {
+                            that.search(this.value).draw();
+                        }
+                    });
+
+                    $('select', this.footer()).select2({
+                        language: 'zh-TW',
+                        width: '100%',
+                        maximumInputLength: 10,
+                        minimumInputLength: 0,
+                        tags: false,
+                        placeholder: '請選擇',
+                        allowClear: true
+                    });
+
+                    $('select', this.footer()).on('change', function() {
+                        var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                        // that.search(val ? '^' + val + '$' : '', true, false).draw();
+                        that.search($(this).val()).draw();
+                    });
+                });
+            }, 3600);
 
             $('#car_model').empty().select2({
                 data: [],
