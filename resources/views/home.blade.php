@@ -7,7 +7,7 @@
             <a href="{{ route('admin.detectionReports.create') }}" class="btn btn-outline-primary btn-lg">
                 開始新增
             </a>
-            <div class="w-75 mt-5 mx-auto d-none2">
+            <div class="w-75 mt-5 mx-auto d-none">
                 <form action="{{ route('importReport') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
