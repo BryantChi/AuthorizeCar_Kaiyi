@@ -71,7 +71,7 @@
                     <select class="form-control">
                         <option value="">請選擇 檢測機構</option>
                         @foreach ($iis as $ii)
-                            <option value="{{ $ii->ii_name }}">{{ $m->ii_name }}</option>
+                            <option value="{{ $ii->ii_name }}">{{ $ii->ii_name }}</option>
                         @endforeach
                     </select>
                 </th>
