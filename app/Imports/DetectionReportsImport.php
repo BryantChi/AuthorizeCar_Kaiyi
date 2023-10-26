@@ -29,16 +29,56 @@ class DetectionReportsImport implements ToModel, WithHeadingRow, WithColumnForma
 
         // $expiration_date_end = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['reports_expiration_date_end']));
         // if ($this->validateDateTimeWithCarbon($row['reports_expiration_date_end'] ?? '')) {
-        $expiration_date_end = Date::excelToDateTimeObject((int)$row['reports_expiration_date_end']);
+        $expiration_date_end = Carbon::parse(Date::excelToDateTimeObject((int)$row['reports_expiration_date_end']))->format('Y-m-d');
         // }
 
-        $reporter = Reporter::where('reporter_name', 'LIKE', '%'.$row['reports_reporter'] ?? null.'%')->value('id');
+        $reporter_info = Reporter::where('reporter_name', 'LIKE', '%'.$row['reports_reporter'] ?? null.'%')->value('id');
+        if ($reporter_info == null || $reporter_info == '') {
+            if ($row['reports_reporter'] == '') {
+                $reporter = $reporter_info;
+            } else {
+                $createReporter = Reporter::create(['reporter_name' => $row['reports_reporter'], 'reporter_gui_number' => '', 'reporter_address' => '', 'reporter_phone' => '', 'reporter_fax' => '', 'reporter_seal' => '']);
+                $reporter = $createReporter->id;
+            }
+        } else {
+            $reporter = $reporter_info;
+        }
 
-        $brand = CarBrand::where('brand_name', 'LIKE', '%'.$row['reports_car_brand'] ?? null.'%')->value('id');
+        $brand_info = CarBrand::where('brand_name', 'LIKE', '%'.$row['reports_car_brand'] ?? null.'%')->value('id');
+        if ($brand_info == null || $brand_info == '') {
+            if ($row['reports_car_brand'] == '') {
+                $brand = $brand_info;
+            } else {
+                $createBrand = CarBrand::create(['brand_name' => $row['reports_car_brand']]);
+                $brand = $createBrand->id;
+            }
+        } else {
+            $brand = $brand_info;
+        }
 
-        $model = CarModel::where('model_name', 'LIKE', '%'.$row['reports_car_model'] ?? null.'%')->where('car_brand_id', $brand)->value('id');
+        $model_info = CarModel::where('model_name', 'LIKE', '%'.$row['reports_car_model'] ?? null.'%')->where('car_brand_id', $brand)->value('id');
+        if ($model_info == '' || $model_info == null) {
+            if ($row['reports_car_model'] == '') {
+                $model = $model_info;
+            } else {
+                $createModel = CarModel::create(['car_brand_id' => $brand, 'model_name' => $row['reports_car_model']]);
+                $model = $createModel->id;
+            }
+        } else {
+            $model = $model_info;
+        }
 
-        $ii = InspectionInstitution::where('ii_name', 'LIKE', '%'.$row['reports_inspection_institution'] ?? null.'%')->value('id');
+        $ii_info = InspectionInstitution::where('ii_name', 'LIKE', '%'.$row['reports_inspection_institution'] ?? null.'%')->value('id');
+        if ($ii_info == null || $ii_info == '') {
+            if ($row['reports_inspection_institution'] == '') {
+                $ii = $ii_info;
+            } else {
+                $createIi = InspectionInstitution::create(['ii_name' => $row['reports_inspection_institution']]);
+                $ii = $createIi->id;
+            }
+        } else {
+            $ii = $ii_info;
+        }
 
         $test_date = null;
         if (preg_match('/^[0-9]{1,3}\/(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])$/', $row['reports_test_date'])) {
@@ -75,12 +115,18 @@ class DetectionReportsImport implements ToModel, WithHeadingRow, WithColumnForma
 
 
         $reports_regulations = [];
-        $regs = preg_split('/[、]/', $row['reports_regulations']);
+        // $regs = preg_split('/[、]/', $row['reports_regulations']);
+        $regs = explode('、', $row['reports_regulations']);
         foreach ($regs as $reg) {
             $englishAndNumbers = Str::of($reg)->match('/[A-Za-z0-9.]+/');
+            $chinese = Str::of($reg)->match('/[\x{4e00}-\x{9fa5}]+/u');
+            if ($englishAndNumbers == '' && $chinese == '') continue;
             $reg_info = Regulations::where('regulations_num', $englishAndNumbers)->value('regulations_num');
             if ($reg_info != null || $reg_info != '') {
                 array_push($reports_regulations, $reg_info);
+            } else {
+                Regulations::create(['regulations_num' => $englishAndNumbers, 'regulations_name' => $chinese]);
+                array_push($reports_regulations, $englishAndNumbers);
             }
         }
 
