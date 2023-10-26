@@ -118,7 +118,7 @@ class DetectionReportsImport implements ToModel, WithHeadingRow, WithColumnForma
         // $regs = preg_split('/[、]/', $row['reports_regulations']);
         $regs = explode('、', $row['reports_regulations']);
         foreach ($regs as $reg) {
-            $englishAndNumbers = Str::of($reg)->match('/[A-Za-z0-9.]+/');
+            $englishAndNumbers = Str::of($reg)->match('/[A-Za-z0-9.\/]+/');
             $chinese = Str::of($reg)->match('/[\x{4e00}-\x{9fa5}]+/u');
             if ($englishAndNumbers == '' && $chinese == '') continue;
             $reg_info = Regulations::where('regulations_num', $englishAndNumbers)->value('regulations_num');
