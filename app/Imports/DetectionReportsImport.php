@@ -86,9 +86,9 @@ class DetectionReportsImport implements ToModel, WithHeadingRow, WithColumnForma
 
         $reports_authorize_status = DetectionReportRepository::REPLIED;
         if ($row['reports_num'] == '' || $row['letter_id'] == '' || $row['reports_reply'] == '' ||
-        $row['reports_expiration_date_end'] == '' || $row['reports_reporter'] == '' || $row['reports_car_brand'] == '' ||
-        $row['reports_car_model'] == '' || $row['reports_inspection_institution'] == '' || $row['reports_regulations'] == '' ||
-        $row['reports_test_date'] == '' || $row['reports_date'] == '') {
+        $expiration_date_end == '' || $reporter == '' || $brand == '' ||
+        $model == '' || $ii == '' || $row['reports_regulations'] == [] ||
+        $test_date == '' || $report_date == '') {
             $reports_authorize_status = DetectionReportRepository::UNDELIVERY;
         }
 
