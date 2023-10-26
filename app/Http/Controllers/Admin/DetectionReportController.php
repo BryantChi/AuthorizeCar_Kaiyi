@@ -179,7 +179,8 @@ class DetectionReportController extends Controller
                     return AuthStatus::where('id', $report->reports_authorize_status)->value('status_name');
                 }, ['searchable' => true])
                 ->editColumn('reports_expiration_date_end', function(DetectionReport $report) {
-                    return Carbon::parse($report->reports_expiration_date_end)->format('Y/m/d');
+                    $reports_expiration_date_end = $report->reports_expiration_date_end == '' || $report->reports_expiration_date_end == null ? '' : Carbon::parse($report->reports_expiration_date_end)->format('Y/m/d');
+                    return $reports_expiration_date_end;
                 }, ['searchable' => true])
                 // ->editColumn('reports_reporter', function(DetectionReport $report) {
                 //     return Reporter::where('id', $report->reports_reporter)->value('reporter_name');
@@ -202,10 +203,12 @@ class DetectionReportController extends Controller
                     return '<div class="float-left" style="width: 300px;">' . $reg_span . '</div>';
                 }, ['searchable' => true])
                 ->editColumn('reports_test_date', function(DetectionReport $report) {
-                    return Carbon::parse($report->reports_test_date)->format('Y/m/d');
+                    $test_date = $report->reports_test_date == '' || $report->reports_test_date == null ? '' : Carbon::parse($report->reports_test_date)->format('Y/m/d');
+                    return $test_date;
                 }, ['searchable' => true])
                 ->editColumn('reports_date', function(DetectionReport $report) {
-                    return Carbon::parse($report->reports_date)->format('Y/m/d');
+                    $report_date = $report->reports_date == '' || $report->reports_date == null ? '' : Carbon::parse($report->reports_date)->format('Y/m/d');
+                    return $report_date;
                 }, ['searchable' => true])
                 ->rawColumns(['checkbox', 'action', 'reports_num', 'reports_expiration_date_end', 'reports_regulations', 'reports_test_date', 'reports_date'])
                 ->toJson();
