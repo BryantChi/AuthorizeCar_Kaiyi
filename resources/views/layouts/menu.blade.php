@@ -11,7 +11,7 @@
     </a>
 </li>
 <li class="nav-item">
-    <a href="{{ route('admin.detectionReports.index') }}" class="nav-link">
+    <a href="{{ route('admin.detectionReports.index') }}?auth_apply=on" class="nav-link">
         <p  style="font-size: 1.15rem;">開立授權</p>
     </a>
 </li>
