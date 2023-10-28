@@ -453,6 +453,18 @@
                     });
                 });
 
+                $(".fancybox").fancybox({
+                    // width  : "60vh",
+                    // height : "100vh",
+                    type   :'iframe',
+                    iframe : {
+                        css : {
+                            width : '100vh',
+                            height : "90vh",
+                        }
+                    }
+                });
+
                 if ($.UrlParam("auth_apply") != null && $.UrlParam("auth_apply") != '' && $.UrlParam("auth_apply") == 'on') {
                     $('#btn-apply-authorize').click();
                 }
