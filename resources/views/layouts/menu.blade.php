@@ -140,7 +140,7 @@
 
             $('.dropdown-toggle').each(function() {
                 $(this).click(function() {
-                    $(this).parent().find('.dropdown-menus').toggle('1500');
+                    $(this).parent().find('.dropdown-menus').first().toggle('1500');
                 });
 
             });
