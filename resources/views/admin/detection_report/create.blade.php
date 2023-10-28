@@ -40,7 +40,7 @@
                 @csrf
                 <div class="card-footer d-flex justify-content-end">
                     {!! Form::submit('儲存', ['class' => 'btn btn-primary mr-2']) !!}
-                    <a href="{{ route('admin.detectionReports.index') }}" class="btn btn-default">取消</a>
+                    <a href="{{ route('admin.detectionReports.index') }}" onclick="clearSessions()" class="btn btn-default">取消</a>
                 </div>
 
             </Form>
@@ -80,5 +80,38 @@
                 },
             });
         });
+
+        var formSubmitting = false;
+
+        $('Form').on('submit', function() {
+            formSubmitting = true;
+        });
+        window.addEventListener('beforeunload', function (e) {
+            // 防止重複提交
+            if (formSubmitting) {
+                return undefined;
+            }
+
+            var formData = $('Form').serialize();
+            $.ajax({
+                url: "{{ route('saveDraft') }}",
+                type: 'POST',
+                data: formData,
+                // dataType: 'json',
+                success: function(data) {
+                },
+                complete: function(XMLHttpRequest, textStatus) {
+                },
+            });
+
+            // 顯示提示給用戶
+            e.preventDefault();
+            // e.returnValue = '你有未保存的更改，確定離開嗎？';
+        });
+
+        function clearSessions() {
+            formSubmitting = true;
+            var sessionClear = "{{ session()->forget('form_data') }}";
+        }
     </script>
 @endpush

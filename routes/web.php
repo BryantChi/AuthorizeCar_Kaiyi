@@ -96,3 +96,4 @@ Route::any('getReportsData', [DetectionReportController::class, 'getReportsData'
 // Route::any('convertToPdf', [DetectionReportController::class, 'convertToPdf'])->name('convertToPdf');
 
 Route::any('importReport', [DetectionReportController::class, 'importReport'])->name('importReport');
+Route::any('/save-draft', [DetectionReportController::class, 'saveDraft'])->name('saveDraft');

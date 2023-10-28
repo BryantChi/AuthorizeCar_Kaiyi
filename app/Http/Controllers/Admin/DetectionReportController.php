@@ -28,6 +28,7 @@ use App\Services\WordServices;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Session;
 use Ilovepdf\Ilovepdf;
 use ImageManager;
 use Maatwebsite\Excel\Facades\Excel;
@@ -687,5 +688,12 @@ class DetectionReportController extends Controller
         return collect($arr)->every(function ($value) use ($validValues) {
             return in_array($value, $validValues);
         });
+    }
+
+    public function saveDraft(Request $request)
+    {
+        Session::put('form_data', $request->all(), now()->addMinutes(5));
+
+        return \Response::json(['status' => 'success']);
     }
 }

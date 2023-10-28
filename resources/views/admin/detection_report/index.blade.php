@@ -341,7 +341,7 @@
                 },
                 searching: true, // 搜索功能
                 ordering: true,
-                // stateSave: true, // 保留狀態
+                stateSave: true, // 保留狀態
                 scrollCollapse: true,
                 scrollX: true,
                 scrollY: '60vh',
@@ -412,7 +412,7 @@
 
 
             setTimeout(function() {
-                table.draw();
+                // table.draw();
 
                 table.columns().every(function() {
                     var that = this;
