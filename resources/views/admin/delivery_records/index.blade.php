@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>申請送件紀錄</h1>
+                    <h1>送件紀錄</h1>
                 </div>
                 {{-- <div class="col-sm-6">
                     <a class="btn btn-primary float-right"

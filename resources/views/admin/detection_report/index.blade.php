@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2 justify-content-between">
                 <div class="col-sm-auto">
-                    <h1>檢測報告明細列表</h1>
+                    <h1>檢測報告總表</h1>
                 </div>
                 <div class="col-sm-auto ">
                     <a class="btn btn-primary float-right" href="{{ route('admin.detectionReports.create') }}">

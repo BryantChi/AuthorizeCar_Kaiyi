@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>累計授權使用紀錄</h1>
+                    <h1>授權次數明細紀錄</h1>
                 </div>
                 <div class="col-sm-6 d-none">
                     <a class="btn btn-primary float-right"
