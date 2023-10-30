@@ -204,6 +204,15 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             right: 0;
         }
+
+        .recentSearchLink {
+            color: grey;
+            cursor: pointer;
+            margin-bottom: 0;
+        }
+        .recentSearchLink:hover {
+            background-color: #7066e020;
+        }
     </style>
 @endpush
 
@@ -521,7 +530,7 @@
 
             setTimeout(() => {
                 var searchBox = $('div.dataTables_filter input');
-                var recentSearchesDiv = $('<div id="recentSearches" class="text-right border p-2" style="display: none;border-radius: 5px;"></div>').insertAfter(searchBox);
+                var recentSearchesDiv = $('<div id="recentSearches" class="text-right border p-2" style="border-radius: 5px;"></div>').insertAfter(searchBox);
 
                 searchBox.on('focus', function() {
                     displayRecentSearches();
@@ -618,12 +627,12 @@
                 recentSearchesDiv.empty();
 
                 searches.forEach(function(search) {
-                    var searchLink = $('<a class="text-secondary" href="#"></a>').text(search).on('click', function(e) {
+                    var searchLink = $('<p class="mb-0 p-1 recentSearchLink"></p>').text(search).on('click', function(e) {
                         e.preventDefault();
                         table.search(search).draw();
                     });
                     if (search.length > 0) {
-                        recentSearchesDiv.append(searchLink).append('<br>');
+                        recentSearchesDiv.append(searchLink).append('');
                     }
                 });
             }
