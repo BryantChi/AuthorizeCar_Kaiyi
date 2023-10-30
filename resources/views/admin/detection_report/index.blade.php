@@ -370,10 +370,10 @@
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/zh_Hant.json"
                 },
-                // search: {
-                //     "regex": true,
-                //     return: true
-                // },
+                search: {
+                    // "regex": true,
+                    return: true
+                },
                 columns: [
                     // { data: 'DT_RowIndex', name: 'DT_RowIndex' },
                     {
@@ -497,15 +497,30 @@
 
 
             $('#resetTableState').click(function() {
-                // localStorage.removeItem("DataTables_detectionReports-table_/{{route('admin.detectionReports.index')}}");
+                // localStorage.removeItem("DataTables_detectionReports-table_/{{ route('admin.detectionReports.index') }}");
                 table.state.clear();
                 window.location.reload();
                 // setTimeout(function() {
-                    // table.draw();
-                    // table.ajax.reload(null, false);
+                // table.draw();
+                // table.ajax.reload(null, false);
                 // }, 500);
 
             });
+
+            setTimeout(() => {
+                var searchBox = $('div.dataTables_filter input');
+                var recentSearchesDiv = $('<div id="recentSearches" class="text-right border p-2" style="display: none;border-radius: 5px;"></div>').insertAfter(searchBox);
+
+                searchBox.on('focus', function() {
+                    displayRecentSearches();
+                    recentSearchesDiv.show();
+                }).on('blur', function() {
+                    // Use a timeout to allow users to click on the recent searches before hiding them
+                    setTimeout(function() {
+                        recentSearchesDiv.hide();
+                    }, 200);
+                });
+            }, 600);
 
             setTimeout(function() {
                 // table.draw();
@@ -535,6 +550,8 @@
                     });
                 });
 
+                displayRecentSearches();
+
                 $(".fancybox").fancybox({
                     // width  : "60vh",
                     // height : "100vh",
@@ -552,6 +569,54 @@
                     $('#btn-apply-authorize').click();
                 }
             }, 3600);
+
+
+
+            table.on('search.dt', function() {
+                var searchValue = table.search();
+                var searches = JSON.parse(localStorage.getItem('dtSearches') || '[]');
+
+                // Remove the search value if it already exists (to avoid duplicates)
+                var index = searches.indexOf(searchValue);
+                if (index !== -1) {
+                    searches.splice(index, 1);
+                }
+
+                // Add the new search value to the beginning
+                searches.unshift(searchValue);
+
+                // Keep only the last 5 searches
+                if (searches.length > 6) {
+                    searches.pop();
+                }
+
+                localStorage.setItem('dtSearches', JSON.stringify(searches));
+                displayRecentSearches();
+            });
+
+            function displayRecentSearches() {
+                var searches = JSON.parse(localStorage.getItem('dtSearches') || '[]');
+                // var searchBox = $('div.dataTables_filter input');
+                var recentSearchesDiv = $('#recentSearches');
+
+                // if (!recentSearchesDiv.length) {
+                //     recentSearchesDiv = $('<div id="recentSearches"></div>').insertAfter(searchBox);
+                // }
+
+                recentSearchesDiv.empty();
+
+                searches.forEach(function(search) {
+                    var searchLink = $('<a class="text-secondary" href="#"></a>').text(search).on('click', function(e) {
+                        e.preventDefault();
+                        table.search(search).draw();
+                    });
+                    if (search.length > 0) {
+                        recentSearchesDiv.append(searchLink).append('<br>');
+                    }
+                });
+            }
+
+
 
             $('#car_model').empty().select2({
                 data: [],
