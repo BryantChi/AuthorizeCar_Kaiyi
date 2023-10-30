@@ -31,7 +31,7 @@
                     }
                     ?>
                     @if ($contains)
-                    <td><a href="{{ url('admin/exportAuthorizeRecords?q='."TWCAR-$nums[1]") }}" class="text-secondary">{{ "TWCAR-$nums[0] => TWCAR-$num[1]" }}</a></td>
+                    <td><a href="{{ url('admin/exportAuthorizeRecords?q='."TWCAR-$nums[1]") }}" class="text-secondary">{{ "TWCAR-$nums[0] => TWCAR-$nums[1]" }}</a></td>
                     @else
                     <td><a href="{{ url('admin/exportAuthorizeRecords?q='."TWCAR-$item->authorize_num") }}" class="text-secondary">{{ "TWCAR-$item->authorize_num" }}</a></td>
                     @endif
