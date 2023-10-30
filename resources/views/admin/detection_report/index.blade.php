@@ -192,6 +192,17 @@
                 border-top: 1px solid #444444bf;
             }
         }
+
+        #recentSearches {
+            width: 233px;
+            display: none;
+            position: absolute;
+            z-index: 1000;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
     </style>
 @endpush
 
