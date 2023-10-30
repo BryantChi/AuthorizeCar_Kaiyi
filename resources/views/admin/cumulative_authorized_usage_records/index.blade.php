@@ -177,6 +177,7 @@
                 // },
                 searching: true, // 搜索功能
                 ordering: true,
+                order: [[1, 'asc']],
                 // stateSave: true, // 保留狀態
                 scrollCollapse: true,
                 scrollX: scrollX_enable,

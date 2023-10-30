@@ -3,6 +3,7 @@
         <thead>
             <tr>
                 <th></th>
+                <th>Id</th>
                 <th>已授權序號</th>
                 <th>授權書編號</th>
                 <th>檢測報告編號</th>
@@ -22,6 +23,7 @@
                                 name="records[]" id="{{ $item->id }}" value="{{ $item->id }}"/>
                         </div>
                     </td>
+                    <td>{{ $item->id }}</td>
                     <td>{{ $item->authorization_serial_number }}</td>
                     {{-- <td>{{ $item->reports_id }}</td> --}}
                     <?php
@@ -79,6 +81,7 @@
         <tfoot>
             <tr>
                 <th class="ft-none"></th>
+                <th class="ft-none">Id</th>
                 <th class="ft-none">已授權序號</th>
                 <th>授權書編號</th>
                 <th>檢測報告編號</th>
