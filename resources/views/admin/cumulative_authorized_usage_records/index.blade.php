@@ -176,7 +176,7 @@
                 //     // rightColumns: 1 // 固定右边的1列
                 // },
                 searching: true, // 搜索功能
-                ordering: true,
+                ordering: false,
                 order: [[1, 'asc']],
                 // stateSave: true, // 保留狀態
                 scrollCollapse: true,
@@ -214,7 +214,11 @@
                         },
                     }
                 }],
-
+                rowReorder: true,
+                columnDefs: [
+                    { orderable: false, className: 'reorder', targets: 1, visible: false},
+                    { orderable: false, targets: '_all' }
+                ]
 
             });
 
