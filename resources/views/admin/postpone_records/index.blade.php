@@ -219,7 +219,7 @@
                     if (res.status == 'success') {
                         console.log(res.data);
                         $('#letter_id').html(res.data.letter_id);
-                        $('#reports_num').html(res.data.reports_num);
+                        $('p#reports_num').html(res.data.reports_num);
                         $('#reports_expiration_date_end').html(res.data.reports_expiration_date_end);
                         $('#reports_reporter').html(res.data.reports_reporter);
                         $('#reports_car_brand').html(res.data.reports_car_brand);
