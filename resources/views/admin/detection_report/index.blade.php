@@ -69,12 +69,18 @@
 
         <div class="card">
             <div class="card-body overflow-hidden">
-                <div class="form-group form-check mb-3 py-1 d-flex align-items-center btn btn-outline-secondary"
-                    style="width: max-content;">
-                    <input type="checkbox" class="form-check-input check-all mr-1 my-0 ml-1 d-none"
-                        style="width: 20px;height: 20px;" id="check-all" value="" />
-                    <label for="check-all" class="check-all-label px-2 mb-0 ml-42">全選</label>
+                <div class="d-flex">
+                    <div class="form-group form-check mb-3 py-1 d-flex align-items-center btn btn-outline-secondary"
+                        style="width: max-content;">
+                        <input type="checkbox" class="form-check-input check-all mr-1 my-0 ml-1 d-none"
+                            style="width: 20px;height: 20px;" id="check-all" value="" />
+                        <label for="check-all" class="check-all-label px-2 mb-0 ml-42">全選</label>
+                    </div>
+                    <div class="ml-auto mb-3" style="width: max-content;">
+                        <a class="btn btn-outline-secondary" id="resetTableState" href="javascript:void(0)">重新整理</a>
+                    </div>
                 </div>
+
                 @include('admin.detection_report.table')
 
                 {{-- <div class="card-footer clearfix">
@@ -146,7 +152,8 @@
                 </div>
                 <div class="modal-body">
                     {{-- {{ env('APP_URL') . '/uploads/' }} --}}
-                    <iframe id="pdf-data" src="" width="100%" style="height: 100vh;" seamless scrolling="yes" type="application/pdf" frameborder="0"></iframe>
+                    <iframe id="pdf-data" src="" width="100%" style="height: 100vh;" seamless scrolling="yes"
+                        type="application/pdf" frameborder="0"></iframe>
                 </div>
                 {{-- <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -277,13 +284,13 @@
                             //         '<select class="form-control"><option value=""></option></select>'
                             //     )
                             //     .appendTo($(column.footer()).empty());
-                                // .on('change', function() {
-                                //     var val = DataTable.util.escapeRegex($(this).val());
+                            // .on('change', function() {
+                            //     var val = DataTable.util.escapeRegex($(this).val());
 
-                                //     column
-                                //         .search(val ? '^' + val + '$' : '', true, false)
-                                //         .draw();
-                                // });
+                            //     column
+                            //         .search(val ? '^' + val + '$' : '', true, false)
+                            //         .draw();
+                            // });
                             var select = $(column.footer()).find('select');
                             select.select2({
                                 language: 'zh-TW',
@@ -296,16 +303,17 @@
                             });
 
                             // Add list of options
-                            if (title == '檢測報告編號' || title == '法規項目' || title == '有效期限-迄' || title == '測試日期' || title ==
+                            if (title == '檢測報告編號' || title == '法規項目' || title == '有效期限-迄' ||
+                                title == '測試日期' || title ==
                                 '報告日期') {
                                 $('<input type="text" class="form-control" placeholder="Search ' +
                                         title + '"  />')
                                     .appendTo($(column.footer()).empty());
-                                    // .on('keyup change clear', function() {
-                                    //     if (column.search() !== this.value) {
-                                    //         column.search(this.value).draw();
-                                    //     }
-                                    // });
+                                // .on('keyup change clear', function() {
+                                //     if (column.search() !== this.value) {
+                                //         column.search(this.value).draw();
+                                //     }
+                                // });
                             } else {
                                 // column
                                 //     .data()
@@ -368,26 +376,90 @@
                 // },
                 columns: [
                     // { data: 'DT_RowIndex', name: 'DT_RowIndex' },
-                    {data: 'checkbox', name: 'checkbox', orderable: false, searchable: false},
-                    {data: 'reports_num', name: 'reports_num'},
-                    {data: 'letter_id', name: 'letter_id'},
-                    {data: 'reports_authorize_status', name: 'reports_authorize_status'},
-                    {data: 'reports_expiration_date_end', name: 'reports_expiration_date_end'},
-                    {data: 'reports_reporter', name: 'reports_reporter'},
-                    {data: 'reports_car_brand', name: 'reports_car_brand'},
-                    {data: 'reports_car_model', name: 'reports_car_model'},
-                    {data: 'reports_inspection_institution', name: 'reports_inspection_institution'},
-                    {data: 'reports_regulations', name: 'reports_regulations'},
-                    {data: 'reports_car_model_code', name: 'reports_car_model_code'},
-                    {data: 'reports_test_date', name: 'reports_test_date'},
-                    {data: 'reports_date', name: 'reports_date'},
-                    {data: 'reports_vin', name: 'reports_vin'},
-                    {data: 'reports_authorize_count_before', name: 'reports_authorize_count_before'},
-                    {data: 'reports_authorize_count_current', name: 'reports_authorize_count_current'},
-                    {data: 'reports_f_e', name: 'reports_f_e'},
-                    {data: 'reports_reply', name: 'reports_reply'},
-                    {data: 'reports_note', name: 'reports_note'},
-                    {data: 'action', name: 'action', orderable: false, searchable: false}
+                    {
+                        data: 'checkbox',
+                        name: 'checkbox',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'reports_num',
+                        name: 'reports_num'
+                    },
+                    {
+                        data: 'letter_id',
+                        name: 'letter_id'
+                    },
+                    {
+                        data: 'reports_authorize_status',
+                        name: 'reports_authorize_status'
+                    },
+                    {
+                        data: 'reports_expiration_date_end',
+                        name: 'reports_expiration_date_end'
+                    },
+                    {
+                        data: 'reports_reporter',
+                        name: 'reports_reporter'
+                    },
+                    {
+                        data: 'reports_car_brand',
+                        name: 'reports_car_brand'
+                    },
+                    {
+                        data: 'reports_car_model',
+                        name: 'reports_car_model'
+                    },
+                    {
+                        data: 'reports_inspection_institution',
+                        name: 'reports_inspection_institution'
+                    },
+                    {
+                        data: 'reports_regulations',
+                        name: 'reports_regulations'
+                    },
+                    {
+                        data: 'reports_car_model_code',
+                        name: 'reports_car_model_code'
+                    },
+                    {
+                        data: 'reports_test_date',
+                        name: 'reports_test_date'
+                    },
+                    {
+                        data: 'reports_date',
+                        name: 'reports_date'
+                    },
+                    {
+                        data: 'reports_vin',
+                        name: 'reports_vin'
+                    },
+                    {
+                        data: 'reports_authorize_count_before',
+                        name: 'reports_authorize_count_before'
+                    },
+                    {
+                        data: 'reports_authorize_count_current',
+                        name: 'reports_authorize_count_current'
+                    },
+                    {
+                        data: 'reports_f_e',
+                        name: 'reports_f_e'
+                    },
+                    {
+                        data: 'reports_reply',
+                        name: 'reports_reply'
+                    },
+                    {
+                        data: 'reports_note',
+                        name: 'reports_note'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    }
                 ],
                 // columnDefs: [{
                 //     'targets': 0,
@@ -424,6 +496,16 @@
             });
 
 
+            $('#resetTableState').click(function() {
+                // localStorage.removeItem("DataTables_detectionReports-table_/{{route('admin.detectionReports.index')}}");
+                table.state.clear();
+                window.location.reload();
+                // setTimeout(function() {
+                    // table.draw();
+                    // table.ajax.reload(null, false);
+                // }, 500);
+
+            });
 
             setTimeout(function() {
                 // table.draw();
@@ -456,16 +538,17 @@
                 $(".fancybox").fancybox({
                     // width  : "60vh",
                     // height : "100vh",
-                    type   :'iframe',
-                    iframe : {
-                        css : {
-                            width : '100vh',
-                            height : "90vh",
+                    type: 'iframe',
+                    iframe: {
+                        css: {
+                            width: '100vh',
+                            height: "90vh",
                         }
                     }
                 });
 
-                if ($.UrlParam("auth_apply") != null && $.UrlParam("auth_apply") != '' && $.UrlParam("auth_apply") == 'on') {
+                if ($.UrlParam("auth_apply") != null && $.UrlParam("auth_apply") != '' && $.UrlParam(
+                        "auth_apply") == 'on') {
                     $('#btn-apply-authorize').click();
                 }
             }, 3600);
@@ -525,15 +608,17 @@
             $(".fancybox").fancybox({
                 // width  : "60vh",
                 // height : "100vh",
-                type   :'iframe',
-                iframe : {
-                    css : {
-                        width : '100vh',
-                        height : "90vh",
+                type: 'iframe',
+                iframe: {
+                    css: {
+                        width: '100vh',
+                        height: "90vh",
                     }
                 }
             });
         });
+
+
 
         function getReportsCheckbox() { // 申請送件
 
@@ -1137,7 +1222,8 @@
                             });
 
                             $('.file-container').append(
-                                '<div class="col-12"></div><div class="col-12 mt-3"><h5><檢測報告移出函文</h5></div>');
+                                '<div class="col-12"></div><div class="col-12 mt-3"><h5><檢測報告移出函文</h5></div>'
+                            );
                             $('.file-container').append(
                                 '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
                                 '<a href="' + window.location.origin + '/' + res.letter_data
