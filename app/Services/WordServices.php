@@ -398,7 +398,7 @@ class WordServices
                 'applicant' => $value->reports_reporter,
                 'reports_vin' => $auth_input[3],
                 'quantity' => 1,
-                'authorization_date' => $date_y . '/' . $date_m . '/' . $date_m
+                'authorization_date' => $date_y . '/' . $date_m . '/' . $date_d
             ];
             CumulativeAuthorizedUsageRecords::insert($caur);
 
