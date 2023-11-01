@@ -89,7 +89,7 @@
                 <th>車身號碼</th>
                 <th>數量</th>
                 <th>授權日期</th>
-                <th>Action</th>
+                <th class="ft-none">Action</th>
             </tr>
         </tfoot>
     </table>

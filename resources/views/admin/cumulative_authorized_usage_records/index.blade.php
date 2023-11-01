@@ -210,7 +210,7 @@
                             return $(node).find('input[name="records[]"]').prop('checked');
                         },
                         columns: function(idx, data, node) {
-                            return idx != 0 && idx != 8;
+                            return idx != 0 && idx != 1 && idx != 9;
                         },
                     }
                 }],
