@@ -385,7 +385,9 @@ class WordServices
                 'reports_vin' => $auth_input[3],
                 'reports_regulations' => json_encode($value->reports_regulations),
                 'licensee' => $auth_input[0],
-                'Invoice_title' => ''
+                'Invoice_title' => '',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ];
             AgreeAuthorizeRecords::insert($agreeAuthRecord);
 
@@ -398,7 +400,9 @@ class WordServices
                 'applicant' => $value->reports_reporter,
                 'reports_vin' => $auth_input[3],
                 'quantity' => 1,
-                'authorization_date' => $date_y . '/' . $date_m . '/' . $date_d
+                'authorization_date' => $date_y . '/' . $date_m . '/' . $date_d,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ];
             CumulativeAuthorizedUsageRecords::insert($caur);
 
