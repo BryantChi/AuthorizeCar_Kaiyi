@@ -299,8 +299,6 @@ class WordServices
     {
         $templateProcessor = new TemplateProcessor($filePath);
 
-        $detection_reports = DetectionReport::whereIn('id', $data_id)->get();
-
         $authorize_date = Carbon::today();
         $date_y = ((int)$authorize_date->year) - 1911;
         $date_m = str_pad($authorize_date->month, 2, "0", STR_PAD_LEFT);
@@ -323,8 +321,9 @@ class WordServices
 
             $reports_data = DetectionReport::whereIn('id', $exports->reports_ids)->get();
             foreach ($reports_data as $info) {
-                $info->reports_authorize_count_current -= 1;
-                $info->save();
+                $dr = DetectionReport::find($info->id);
+                $dr->reports_authorize_count_current -= 1;
+                $dr->save();
             }
         } else {
             $exportAuthRecord = [
@@ -342,6 +341,7 @@ class WordServices
             $export_id = $exportInsert->id;
         }
 
+        $detection_reports = DetectionReport::whereIn('id', $data_id)->get();
         foreach ($detection_reports as $index => $value) {
             if ($value->reports_authorize_count_current < $value->reports_authorize_count_before) {
                 $value->reports_authorize_count_current = ($value->reports_authorize_count_before + 1);
