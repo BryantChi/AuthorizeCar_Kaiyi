@@ -865,7 +865,7 @@
 
         async function autoInputAuth(jsonObj, mode) {
             reports_data = jsonObj.reports_ids;
-            check_reports_data = jsonObj.reports_ids;
+            check_reports_data = Array.from(reports_data);
 
             $('#inp_com').val(jsonObj.export_authorize_com);
             $('#car_brand').val(jsonObj.export_authorize_brand).trigger('change');
