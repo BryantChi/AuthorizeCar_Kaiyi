@@ -527,12 +527,14 @@
 
 
         let reports_data = [];
+        let check_reports_data = [];
 
         async function applyForAuthorize(mode, auth_export_id = null) {
             $('#card-authorize').slideDown(1500);
 
             $('.btn-auth-cancel').click(function() {
                 reports_data = [];
+                check_reports_data = [];
                 inputEmpty();
                 $('#card-authorize').slideUp(750);
             });
@@ -629,7 +631,7 @@
                 // $('#reports_num').prop('disabled', true);
                 $('#inputAuthNum').val('');
                 let regs = $(this).val();
-                if (regs.length > 0) {
+                // if (regs.length > 0) {
                     $.ajax({
                         url: '{{ route('getReportsByRegs') }}',
                         type: 'GET',
@@ -664,7 +666,7 @@
                             }, 300);
                         },
                     });
-                }
+                // }
 
             });
 
@@ -679,7 +681,12 @@
                             'countbefore')) {
                         auth_count = padZero(($(this).find(':selected').data('countbefore') + 1), 3);
                     } else {
-                        auth_count = padZero(($(this).find(':selected').data('countcurrent') + 1), 3);
+                        if ($.inArray($(this).find(':selected').val(), check_reports_data) == -1 && mode == 'edit') {
+                            auth_count = padZero(($(this).find(':selected').data('countcurrent')), 3);
+                        } else {
+                            auth_count = padZero(($(this).find(':selected').data('countcurrent') + 1), 3);
+                        }
+
                     }
                     let authorize_id = $(this).find(':selected').text() + '-Y' + $(this).find(':selected').data(
                         'fe') + e_date_y + e_date_m + e_date_d + '-' + auth_count;
@@ -791,6 +798,7 @@
                                         event) {
                                         // do something...
                                         reports_data = [];
+                                        check_reports_data = [];
                                         Swal.fire({
                                             title: '載入中...',
                                             allowOutsideClick: false,
@@ -808,6 +816,7 @@
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             reports_data = [];
+                            check_reports_data = [];
                             Swal.fire('錯誤！', '程序失敗', 'error').then(function() {
                                 window.location.reload();
                             });
@@ -856,6 +865,7 @@
 
         async function autoInputAuth(jsonObj, mode) {
             reports_data = jsonObj.reports_ids;
+            check_reports_data = jsonObj.reports_ids;
 
             $('#inp_com').val(jsonObj.export_authorize_com);
             $('#car_brand').val(jsonObj.export_authorize_brand).trigger('change');

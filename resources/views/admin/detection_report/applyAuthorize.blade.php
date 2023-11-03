@@ -31,7 +31,7 @@
     </div>
     <div class="col-md-9 p-3 authorize-temp-conatiner">
         <div class="form-row justify-content-center">
-            <div class="form-group col-md-4 col-6">
+            <div class="form-group col-md-3 col-6">
                 <label class="font-weight-bold" for="reports_regulations">法規項目</label>
                 <select class="form-control custom-select bg-white" name="reports_regulations[]"
                     id="reports_regulations" multiple="multiple" placeholder="請選擇">
@@ -44,7 +44,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="form-group col-md-2 col-6">
+            <div class="form-group col-md-3 col-6">
                 <label for="reports_num">檢測報告編號</label>
                 <select id="reports_num" class="form-control">
                 </select>
