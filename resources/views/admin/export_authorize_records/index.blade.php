@@ -681,7 +681,7 @@
                             'countbefore')) {
                         auth_count = padZero(($(this).find(':selected').data('countbefore') + 1), 3);
                     } else {
-                        if ($.inArray($(this).find(':selected').val(), check_reports_data) == -1 && mode == 'edit') {
+                        if ($.inArray($(this).find(':selected').val(), check_reports_data) != -1 && mode == 'edit') {
                             auth_count = padZero(($(this).find(':selected').data('countcurrent')), 3);
                         } else {
                             auth_count = padZero(($(this).find(':selected').data('countcurrent') + 1), 3);
