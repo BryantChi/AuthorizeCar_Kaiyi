@@ -376,7 +376,7 @@
                         $('select', this.footer()).select2({
                             language: 'zh-TW',
                             width: '100%',
-                            maximumInputLength: 10,
+                            maximumInputLength: 100,
                             minimumInputLength: 0,
                             tags: false,
                             placeholder: '請選擇',
@@ -615,7 +615,7 @@
             //         $('select', this.footer()).select2({
             //             language: 'zh-TW',
             //             width: '100%',
-            //             maximumInputLength: 10,
+            //             maximumInputLength: 100,
             //             minimumInputLength: 0,
             //             tags: false,
             //             placeholder: '請選擇',

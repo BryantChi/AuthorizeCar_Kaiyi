@@ -289,7 +289,7 @@
                 //             select.select2({
                 //                 language: 'zh-TW',
                 //                 width: '100%',
-                //                 maximumInputLength: 10,
+                //                 maximumInputLength: 100,
                 //                 minimumInputLength: 0,
                 //                 tags: true,
                 //                 placeholder: '請選擇' + title,
