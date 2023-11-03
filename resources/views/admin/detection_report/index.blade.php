@@ -559,7 +559,7 @@
                             return $(node).find('input[name="reports[]"]').prop('checked');
                         },
                         columns: function(idx, data, node) {
-                            return idx != 0;
+                            return idx != 0 && idx != 19;
                         },
                     }
                 }],
