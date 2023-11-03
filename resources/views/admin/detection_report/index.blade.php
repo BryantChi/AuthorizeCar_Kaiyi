@@ -210,6 +210,7 @@
             cursor: pointer;
             margin-bottom: 0;
         }
+
         .recentSearchLink:hover {
             background-color: #7066e020;
         }
@@ -364,6 +365,53 @@
                             }
 
                         });
+                    table.columns().every(function() {
+                        var that = this;
+                        $('input', this.footer()).on('keyup change', function() {
+                            if (that.search() !== this.value) {
+                                that.search(this.value).draw();
+                            }
+                        });
+
+                        $('select', this.footer()).select2({
+                            language: 'zh-TW',
+                            width: '100%',
+                            maximumInputLength: 10,
+                            minimumInputLength: 0,
+                            tags: false,
+                            placeholder: '請選擇',
+                            allowClear: true
+                        });
+
+                        $('select', this.footer()).on('change', function() {
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                            // that.search(val ? '^' + val + '$' : '', true, false).draw();
+                            that.search($(this).val()).draw();
+                        });
+                    });
+
+                    displayRecentSearches();
+
+                    $(".fancybox").fancybox({
+                        // width  : "60vh",
+                        // height : "100vh",
+                        type: 'iframe',
+                        iframe: {
+                            css: {
+                                width: '100vh',
+                                height: "90vh",
+                            }
+                        }
+                    });
+
+                    if ($.UrlParam("auth_apply") != null && $.UrlParam("auth_apply") != '' && $
+                        .UrlParam(
+                            "auth_apply") == 'on') {
+                        $('#btn-apply-authorize').click();
+                    }
+
+                    $('.buttons-excel').removeClass('dt-button buttons-excel buttons-html5').addClass(
+                        'btn btn-outline-info mr-2').html('匯出Excel');
                 },
                 ajax: {
                     url: "{{ route('admin.detectionReports.index') }}",
@@ -375,7 +423,10 @@
                 serverSide: true,
                 deferRender: true,
                 lengthChange: true, // 呈現選單
-                lengthMenu: [10, 15, 20, 30, 50], // 選單值設定
+                lengthMenu: [
+                    [10, 15, 20, 30, 50, 100, 500, -1],
+                    [10, 15, 20, 30, 50, 100, 500, "全部"]
+                ], // 選單值設定
                 pageLength: 10, // 不用選單設定也可改用固定每頁列數
                 fixedHeader: true,
                 fixedColumns: {
@@ -495,23 +546,23 @@
                 //                 .reports_authorize_status).html() + '">';
                 //     }
                 // }],
-                // dom: 'Bfrtip',  // 這行代碼是必須的，用於告訴 DataTables 插入哪些按鈕
-                // buttons: [
-                //     {
-                //         extend: 'excel',
-                //         // text: '導出已篩選的數據到 Excel',
-                //         exportOptions: {
-                //             modifier: {
-                //                 search: 'applied',  // 這裡確保只有已篩選的數據會被導出
-                //                 order: 'applied'   // 這裡確保導出的數據與目前的排序方式一致
-                //             },
-                //             rows: function (idx, data, node) {
-                //                 return $(node).find('input[name="reports[]"]').prop('checked');
-                //             },
-                //             columns: [1,2,3,4,5,6,7,8,9,10,11,14,15,17],
-                //         }
-                //     }
-                // ],
+                dom: 'Blfrtip', // 這行代碼是必須的，用於告訴 DataTables 插入哪些按鈕
+                buttons: [{
+                    extend: 'excel',
+                    // text: '導出已篩選的數據到 Excel',
+                    exportOptions: {
+                        modifier: {
+                            search: 'applied', // 這裡確保只有已篩選的數據會被導出
+                            order: 'applied' // 這裡確保導出的數據與目前的排序方式一致
+                        },
+                        rows: function(idx, data, node) {
+                            return $(node).find('input[name="reports[]"]').prop('checked');
+                        },
+                        columns: function(idx, data, node) {
+                            return idx != 0;
+                        },
+                    }
+                }],
 
 
             });
@@ -530,7 +581,9 @@
 
             setTimeout(() => {
                 var searchBox = $('div.dataTables_filter input');
-                var recentSearchesDiv = $('<div id="recentSearches" class="text-right border p-2" style="border-radius: 5px;"></div>').insertAfter(searchBox);
+                var recentSearchesDiv = $(
+                    '<div id="recentSearches" class="text-right border p-2" style="border-radius: 5px;"></div>'
+                    ).insertAfter(searchBox);
 
                 searchBox.on('focus', function() {
                     displayRecentSearches();
@@ -541,55 +594,58 @@
                         recentSearchesDiv.hide();
                     }, 200);
                 });
-            }, 600);
-
-            setTimeout(function() {
-                // table.draw();
-
-                table.columns().every(function() {
-                    var that = this;
-                    $('input', this.footer()).on('keyup change', function() {
-                        if (that.search() !== this.value) {
-                            that.search(this.value).draw();
-                        }
-                    });
-
-                    $('select', this.footer()).select2({
-                        language: 'zh-TW',
-                        width: '100%',
-                        maximumInputLength: 10,
-                        minimumInputLength: 0,
-                        tags: false,
-                        placeholder: '請選擇',
-                        allowClear: true
-                    });
-
-                    $('select', this.footer()).on('change', function() {
-                        var val = $.fn.dataTable.util.escapeRegex($(this).val());
-                        // that.search(val ? '^' + val + '$' : '', true, false).draw();
-                        that.search($(this).val()).draw();
-                    });
-                });
-
-                displayRecentSearches();
-
-                $(".fancybox").fancybox({
-                    // width  : "60vh",
-                    // height : "100vh",
-                    type: 'iframe',
-                    iframe: {
-                        css: {
-                            width: '100vh',
-                            height: "90vh",
-                        }
-                    }
-                });
 
                 if ($.UrlParam("auth_apply") != null && $.UrlParam("auth_apply") != '' && $.UrlParam(
                         "auth_apply") == 'on') {
                     $('#btn-apply-authorize').click();
                 }
-            }, 3600);
+            }, 600);
+
+            // setTimeout(function() {
+            //     // table.draw();
+
+            //     table.columns().every(function() {
+            //         var that = this;
+            //         $('input', this.footer()).on('keyup change', function() {
+            //             if (that.search() !== this.value) {
+            //                 that.search(this.value).draw();
+            //             }
+            //         });
+
+            //         $('select', this.footer()).select2({
+            //             language: 'zh-TW',
+            //             width: '100%',
+            //             maximumInputLength: 10,
+            //             minimumInputLength: 0,
+            //             tags: false,
+            //             placeholder: '請選擇',
+            //             allowClear: true
+            //         });
+
+            //         $('select', this.footer()).on('change', function() {
+            //             var val = $.fn.dataTable.util.escapeRegex($(this).val());
+            //             // that.search(val ? '^' + val + '$' : '', true, false).draw();
+            //             that.search($(this).val()).draw();
+            //         });
+            //     });
+
+            //     displayRecentSearches();
+
+            //     $(".fancybox").fancybox({
+            //         // width  : "60vh",
+            //         // height : "100vh",
+            //         type: 'iframe',
+            //         iframe: {
+            //             css: {
+            //                 width: '100vh',
+            //                 height: "90vh",
+            //             }
+            //         }
+            //     });
+
+            //     $('.buttons-excel').removeClass('dt-button buttons-excel buttons-html5').addClass(
+            //         'btn btn-outline-info mr-2').html('匯出Excel');
+            // }, 3600);
 
 
 
@@ -627,10 +683,11 @@
                 recentSearchesDiv.empty();
 
                 searches.forEach(function(search) {
-                    var searchLink = $('<p class="mb-0 p-1 recentSearchLink"></p>').text(search).on('click', function(e) {
-                        e.preventDefault();
-                        table.search(search).draw();
-                    });
+                    var searchLink = $('<p class="mb-0 p-1 recentSearchLink"></p>').text(search).on('click',
+                        function(e) {
+                            e.preventDefault();
+                            table.search(search).draw();
+                        });
                     if (search.length > 0) {
                         recentSearchesDiv.append(searchLink).append('');
                     }
@@ -689,6 +746,40 @@
                     $('#reports_car_model').empty();
                     $('#reports_car_model').append('<option value="">請先選擇廠牌</option>');
                 }
+            });
+
+            $.ajax({
+                url: '{{ route('getReportsByRegs') }}',
+                type: 'GET',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('#reports_num').empty();
+                    $('#reports_num').append('<option value="">請先選擇法規項目</option>');
+                    $.each(data, function(key, value) {
+                        $('#reports_num').append('<option value="' + value.id +
+                            '" data-expirationdate="' + value
+                            .reports_expiration_date_end + '" data-fe="' +
+                            value.reports_f_e + '" data-countbefore="' +
+                            value.reports_authorize_count_before +
+                            '" data-countcurrent="' + value
+                            .reports_authorize_count_current + '" ' +
+                            'data-regs="' + value.reports_regulations + '">' + value
+                            .reports_num + '</option>');
+                    });
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    setTimeout(function() {
+                        $('#reports_num').prop('disabled', false);
+                    }, 300);
+                },
+                complete: function(XMLHttpRequest, textStatus) {
+                    setTimeout(function() {
+                        $('#reports_num').prop('disabled', false);
+                    }, 300);
+                },
             });
 
             $(".fancybox").fancybox({
@@ -1013,13 +1104,12 @@
 
             $('#addAuth').click(function() {
 
-                if ($('#reports_regulations').val() == '' || $('#reports_num').val() == '' || $(
-                        '#inputAuthNum').val() == '') {
-                    if ($('#reports_regulations').val() == '') {
-                        $('#reports_regulations').parent().addClass('has-error');
-                    } else {
-                        $('#reports_regulations').parent().removeClass('has-error');
-                    }
+                if ($('#reports_num').val() == '' || $('#inputAuthNum').val() == '') {
+                    // if ($('#reports_regulations').val() == '') {
+                    //     $('#reports_regulations').parent().addClass('has-error');
+                    // } else {
+                    //     $('#reports_regulations').parent().removeClass('has-error');
+                    // }
 
                     if ($('#reports_num').val() == '') {
                         $('#reports_num').parent().addClass('has-error');
@@ -1041,20 +1131,56 @@
 
                     if ($.inArray($('#reports_num').val(), reports_data) == -1) {
                         reports_data.push($('#reports_num').val());
-                        let regs_txt_temp = $('#reports_regulations').find(':selected').text()
+                        var regs_txt_temp = $('#reports_regulations').find(':selected').text()
                             .replace(new RegExp('\n', 'g'), ',')
                             .replace(new RegExp('                            ', 'g'), '')
                             .substring(1);
                         let reports_num_temp = $('#reports_num').find(':selected').text();
                         let auth_num_temp = $('#inputAuthNum').val();
-                        $('#authorize-data-temp-table tbody').append('<tr id="' + $('#reports_num').val() +
-                            '">' +
-                            '<td style="max-width: 300px;">' + regs_txt_temp + '</td>' +
-                            '<td>' + reports_num_temp + '</td>' +
-                            '<td>' + auth_num_temp + '</td>' +
-                            '<td><a herf="javascript:void(0)" class="btn btn-danger" onclick="deleteTempAuth(\'' +
-                            $('#reports_num').val() + '\')" >刪除</a></td>' +
-                            '</tr>');
+                        if ($('#reports_regulations').val() == '') {
+                            var regss = [$('#reports_num').find(':selected').data('regs')];
+                            $.ajax({
+                                url: "{{ route('getRegs') }}",
+                                type: 'GET',
+                                data: {
+                                    regs: regss,
+                                    _token: '{{ csrf_token() }}',
+                                },
+                                dataType: 'json',
+                                success: function(data) {
+                                    regs_txt_temp = '';
+                                    $.each(data, function(key, value) {
+                                        if (key == 0) {
+                                            regs_txt_temp += value.regulations_num + ' ' +
+                                                value.regulations_name;
+                                        } else {
+                                            regs_txt_temp += ',' + value.regulations_num +
+                                                ' ' + value.regulations_name;
+                                        }
+                                    });
+                                    $('#authorize-data-temp-table tbody').append('<tr id="' + $(
+                                            '#reports_num').val() +
+                                        '">' +
+                                        '<td style="max-width: 300px;">' + regs_txt_temp +
+                                        '</td>' +
+                                        '<td>' + reports_num_temp + '</td>' +
+                                        '<td>' + auth_num_temp + '</td>' +
+                                        '<td><a herf="javascript:void(0)" class="btn btn-danger" onclick="deleteTempAuth(\'' +
+                                        $('#reports_num').val() + '\')" >刪除</a></td>' +
+                                        '</tr>');
+                                },
+                            });
+                        } else {
+                            $('#authorize-data-temp-table tbody').append('<tr id="' + $('#reports_num').val() +
+                                '">' +
+                                '<td style="max-width: 300px;">' + regs_txt_temp + '</td>' +
+                                '<td>' + reports_num_temp + '</td>' +
+                                '<td>' + auth_num_temp + '</td>' +
+                                '<td><a herf="javascript:void(0)" class="btn btn-danger" onclick="deleteTempAuth(\'' +
+                                $('#reports_num').val() + '\')" >刪除</a></td>' +
+                                '</tr>');
+                        }
+
                     }
 
                     // if (reports_data.length > 0) {
@@ -1066,44 +1192,45 @@
             });
 
             $('#reports_regulations').change(function() {
-                $('#reports_num').prop('disabled', true);
+                // $('#reports_num').prop('disabled', true);
                 $('#inputAuthNum').val('');
                 let regs = $(this).val();
-                if (regs.length > 0) {
-                    $.ajax({
-                        url: '{{ route('getReportsByRegs') }}',
-                        type: 'GET',
-                        data: {
-                            regs: regs,
-                            _token: '{{ csrf_token() }}'
-                        },
-                        dataType: 'json',
-                        success: function(data) {
-                            $('#reports_num').empty();
-                            $('#reports_num').append('<option value="">請先選擇法規項目</option>');
-                            $.each(data, function(key, value) {
-                                $('#reports_num').append('<option value="' + value.id +
-                                    '" data-expirationdate="' + value
-                                    .reports_expiration_date_end + '" data-fe="' +
-                                    value.reports_f_e + '" data-countbefore="' +
-                                    value.reports_authorize_count_before +
-                                    '" data-countcurrent="' + value
-                                    .reports_authorize_count_current + '">' + value
-                                    .reports_num + '</option>');
-                            });
-                        },
-                        error: function(jqXHR, textStatus, errorThrown) {
-                            setTimeout(function() {
-                                $('#reports_num').prop('disabled', false);
-                            }, 300);
-                        },
-                        complete: function(XMLHttpRequest, textStatus) {
-                            setTimeout(function() {
-                                $('#reports_num').prop('disabled', false);
-                            }, 300);
-                        },
-                    });
-                }
+                // if (regs.length > 0) {
+                $.ajax({
+                    url: '{{ route('getReportsByRegs') }}',
+                    type: 'GET',
+                    data: {
+                        regs: regs,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#reports_num').empty();
+                        $('#reports_num').append('<option value="">請先選擇法規項目</option>');
+                        $.each(data, function(key, value) {
+                            $('#reports_num').append('<option value="' + value.id +
+                                '" data-expirationdate="' + value
+                                .reports_expiration_date_end + '" data-fe="' +
+                                value.reports_f_e + '" data-countbefore="' +
+                                value.reports_authorize_count_before +
+                                '" data-countcurrent="' + value
+                                .reports_authorize_count_current + '" ' +
+                                'data-regs="' + value.reports_regulations + '">' + value
+                                .reports_num + '</option>');
+                        });
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        setTimeout(function() {
+                            $('#reports_num').prop('disabled', false);
+                        }, 300);
+                    },
+                    complete: function(XMLHttpRequest, textStatus) {
+                        setTimeout(function() {
+                            $('#reports_num').prop('disabled', false);
+                        }, 300);
+                    },
+                });
+                // }
 
             });
 

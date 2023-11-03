@@ -652,12 +652,25 @@ class DetectionReportController extends Controller
     {
         $regs = $request->input('regs');
         $json_regs = json_encode($regs);
-        // dd($regs);
-        $reports = DetectionReport::whereIn('reports_authorize_status', [DetectionReportRep::AUTHORIZATION, DetectionReportRep::REACH_LIMIT_280, DetectionReportRep::OUT_OF_TIME])
+        // dd($json_regs);
+        if ($regs == '' || $regs == 'null') {
+            $reports = DetectionReport::whereIn('reports_authorize_status', [DetectionReportRep::AUTHORIZATION, DetectionReportRep::REACH_LIMIT_280, DetectionReportRep::OUT_OF_TIME])
+                ->get(['id', 'reports_num', 'reports_regulations', 'reports_expiration_date_end', 'reports_f_e', 'reports_authorize_count_before', 'reports_authorize_count_current']);
+        } else {
+            $reports = DetectionReport::whereIn('reports_authorize_status', [DetectionReportRep::AUTHORIZATION, DetectionReportRep::REACH_LIMIT_280, DetectionReportRep::OUT_OF_TIME])
             ->where('reports_regulations', $json_regs)
-            ->get(['id', 'reports_num', 'reports_expiration_date_end', 'reports_f_e', 'reports_authorize_count_before', 'reports_authorize_count_current']);
+            ->get(['id', 'reports_num', 'reports_regulations', 'reports_expiration_date_end', 'reports_f_e', 'reports_authorize_count_before', 'reports_authorize_count_current']);
+        }
+
 
         return response()->json($reports);
+    }
+
+    public function getRegs(Request $request)
+    {
+        $regs = $request->input('regs');
+        $regulations = Regulations::whereIn('regulations_num', $regs)->get();
+        return response()->json($regulations);
     }
 
     public function getReportsData(Request $request)
