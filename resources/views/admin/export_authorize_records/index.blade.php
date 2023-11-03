@@ -434,6 +434,40 @@
                 }
             });
 
+            $.ajax({
+                url: '{{ route('getReportsByRegs') }}',
+                type: 'GET',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('#reports_num').empty();
+                    $('#reports_num').append('<option value="">請先選擇法規項目</option>');
+                    $.each(data, function(key, value) {
+                        $('#reports_num').append('<option value="' + value.id +
+                            '" data-expirationdate="' + value
+                            .reports_expiration_date_end + '" data-fe="' +
+                            value.reports_f_e + '" data-countbefore="' +
+                            value.reports_authorize_count_before +
+                            '" data-countcurrent="' + value
+                            .reports_authorize_count_current + '" ' +
+                            'data-regs="' + value.reports_regulations + '">' + value
+                            .reports_num + '</option>');
+                    });
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    setTimeout(function() {
+                        $('#reports_num').prop('disabled', false);
+                    }, 300);
+                },
+                complete: function(XMLHttpRequest, textStatus) {
+                    setTimeout(function() {
+                        $('#reports_num').prop('disabled', false);
+                    }, 300);
+                },
+            });
+
         });
 
         function openReport(reportId) {
@@ -505,13 +539,12 @@
 
             $('#addAuth').click(function() {
 
-                if ($('#reports_regulations').val() == '' || $('#reports_num').val() == '' || $(
-                        '#inputAuthNum').val() == '') {
-                    if ($('#reports_regulations').val() == '') {
-                        $('#reports_regulations').parent().addClass('has-error');
-                    } else {
-                        $('#reports_regulations').parent().removeClass('has-error');
-                    }
+                if ($('#reports_num').val() == '' || $('#inputAuthNum').val() == '') {
+                    // if ($('#reports_regulations').val() == '') {
+                    //     $('#reports_regulations').parent().addClass('has-error');
+                    // } else {
+                    //     $('#reports_regulations').parent().removeClass('has-error');
+                    // }
 
                     if ($('#reports_num').val() == '') {
                         $('#reports_num').parent().addClass('has-error');
@@ -539,16 +572,51 @@
                             .substring(1);
                         let reports_num_temp = $('#reports_num').find(':selected').text();
                         let auth_num_temp = $('#inputAuthNum').val();
-                        $('#authorize-data-temp-table tbody').append('<tr id="' + $('#reports_num').val() +
-                            '">' +
-                            '<td style="max-width: 300px;">' + regs_txt_temp + '</td>' +
-                            '<td>' + reports_num_temp + '</td>' +
-                            '<td>' + auth_num_temp + '</td>' +
-                            '<td><a herf="javascript:void(0)" class="btn btn-danger" onclick="deleteTempAuth(\'' +
-                            $('#reports_num').val() + '\')" >刪除</a></td>' +
-                            '</tr>');
+                        if ($('#reports_regulations').val() == '') {
+                            var regss = [$('#reports_num').find(':selected').data('regs')];
+                            $.ajax({
+                                url: "{{ route('getRegs') }}",
+                                type: 'GET',
+                                data: {
+                                    regs: regss,
+                                    _token: '{{ csrf_token() }}',
+                                },
+                                dataType: 'json',
+                                success: function(data) {
+                                    regs_txt_temp = '';
+                                    $.each(data, function(key, value) {
+                                        if (key == 0) {
+                                            regs_txt_temp += value.regulations_num + ' ' +
+                                                value.regulations_name;
+                                        } else {
+                                            regs_txt_temp += ',' + value.regulations_num +
+                                                ' ' + value.regulations_name;
+                                        }
+                                    });
+                                    $('#authorize-data-temp-table tbody').append('<tr id="' + $(
+                                            '#reports_num').val() +
+                                        '">' +
+                                        '<td style="max-width: 300px;">' + regs_txt_temp +
+                                        '</td>' +
+                                        '<td>' + reports_num_temp + '</td>' +
+                                        '<td>' + auth_num_temp + '</td>' +
+                                        '<td><a herf="javascript:void(0)" class="btn btn-danger" onclick="deleteTempAuth(\'' +
+                                        $('#reports_num').val() + '\')" >刪除</a></td>' +
+                                        '</tr>');
+                                },
+                            });
+                        } else {
+                            $('#authorize-data-temp-table tbody').append('<tr id="' + $('#reports_num').val() +
+                                '">' +
+                                '<td style="max-width: 300px;">' + regs_txt_temp + '</td>' +
+                                '<td>' + reports_num_temp + '</td>' +
+                                '<td>' + auth_num_temp + '</td>' +
+                                '<td><a herf="javascript:void(0)" class="btn btn-danger" onclick="deleteTempAuth(\'' +
+                                $('#reports_num').val() + '\')" >刪除</a></td>' +
+                                '</tr>');
+                        }
                     }
-                    console.log(reports_data);
+                    // console.log(reports_data);
                     // if (reports_data.length > 0) {
                     //     $('#btn-auth').prop('disabled', false);
                     // } else {
@@ -558,7 +626,7 @@
             });
 
             $('#reports_regulations').change(function() {
-                $('#reports_num').prop('disabled', true);
+                // $('#reports_num').prop('disabled', true);
                 $('#inputAuthNum').val('');
                 let regs = $(this).val();
                 if (regs.length > 0) {
@@ -580,7 +648,8 @@
                                     value.reports_f_e + '" data-countbefore="' +
                                     value.reports_authorize_count_before +
                                     '" data-countcurrent="' + value
-                                    .reports_authorize_count_current + '">' + value
+                                    .reports_authorize_count_current + '" ' +
+                                    'data-regs="' + value.reports_regulations + '">' + value
                                     .reports_num + '</option>');
                             });
                         },
