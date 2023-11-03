@@ -669,7 +669,8 @@ class DetectionReportController extends Controller
     public function getRegs(Request $request)
     {
         $regs = $request->input('regs');
-        $regulations = Regulations::whereIn('regulations_num', $regs)->get();
+        $json_regs = json_decode($regs);
+        $regulations = Regulations::whereIn('regulations_num', $json_regs)->get();
         return response()->json($regulations);
     }
 
