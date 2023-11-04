@@ -575,7 +575,7 @@
                         let reports_num_temp = $('#reports_num').find(':selected').text();
                         let auth_num_temp = $('#inputAuthNum').val();
                         if ($('#reports_regulations').val() == '') {
-                            var regss = '[' + $('#reports_num').find(':selected').data('regs') + ']';
+                            var regss = $('#reports_num').find(':selected').data('regs');
                             $.ajax({
                                 url: "{{ route('getRegs') }}",
                                 type: 'GET',
