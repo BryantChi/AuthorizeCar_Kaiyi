@@ -116,12 +116,13 @@ class DetectionReportController extends Controller
 
             // $keyword = request('search.value');
             // if ($keyword) {
-                $dataTables
+            $dataTables
                 ->filterColumn('letter_id', function ($query, $keyword) {
                     $query->whereRaw("letter_id like ?", ["%{$keyword}%"]);
                 })
                 ->filterColumn('reports_num', function ($query, $keyword) {
-                    $query->whereRaw("reports_num like ?", ["%{$keyword}%"]);
+                    $newKeyword = DetectionReport::where('reports_num', 'like', "%{$keyword}%")->get('reports_num');
+                    $query->whereIn("reports_num", $newKeyword);
                 })
                 ->filterColumn('reports_authorize_status', function ($query, $keyword) {
                     $newKeyword = AuthStatus::where('status_name', 'like', "%{$keyword}%")->get('id');
@@ -130,7 +131,7 @@ class DetectionReportController extends Controller
                 ->filterColumn('reports_expiration_date_end', function ($query, $keyword) {
                     $query->whereRaw("reports_expiration_date_end like ?", ["%{$keyword}%"]);
                 })
-                ->filterColumn('reports_reporter', function($query, $keyword) {
+                ->filterColumn('reports_reporter', function ($query, $keyword) {
                     $newKeyword = Reporter::where('reporter_name', 'like', "%$keyword%")->get('id');
                     $query->whereIn("reports_reporter", $newKeyword);
                 })
@@ -163,7 +164,7 @@ class DetectionReportController extends Controller
 
             return $dataTables
                 ->addIndexColumn()
-                ->addColumn('checkbox', function(DetectionReport $report) {
+                ->addColumn('checkbox', function (DetectionReport $report) {
                     return '<input type="checkbox" name="reports[]" style="width: 20px;height: 20px;" value="' . $report->id . '" data-letter="' . $report->letter_id . '" data-status="' . $report->reports_authorize_status . '" >';
                 })
                 ->addColumn('action', function (DetectionReport $report) {
@@ -174,12 +175,21 @@ class DetectionReportController extends Controller
                     return '<form action="' . route('admin.detectionReports.destroy', [$report->id]) . '" method="delete"><div class="btn-group">' . $btn_edit . $btn_del . '</div></form>';
                 })
                 ->editColumn('reports_num', function (DetectionReport $report) {
-                    return '<a class="fancybox iframe text-secondary" href="' . env("APP_URL") . '/uploads/' . $report->reports_pdf . '">' . $report->reports_num . '</a>';
+                    $num_content = '<div class="">
+                        <a class="text-secondary" data-toggle="collapse" href="#collapse' . $report->id . '" role="button" aria-expanded="false" aria-controls="collapse' . $report->id . '">' . $report->reports_num . ' ▼</a>
+                        <div class="collapse" id="collapse' . $report->id . '">
+                            <div class="rounded px-3 py-2 text-center d-inline-block" style="background-color: #ffffff !important;">
+                                <a class="fancybox iframe text-p px-1 text-danger" href="' . env("APP_URL") . '/uploads/' . $report->reports_pdf . '">PDF</a>
+                                <a class="text-danger px-1" href="' . url('admin/cumulativeAuthorizedUsageRecords?q=' . $report->reports_num) . '">次數明細</a>
+                            </div>
+                        </div>
+                    </div>';
+                    return $num_content;
                 }, ['searchable' => true])
-                ->editColumn('reports_authorize_status', function(DetectionReport $report) {
+                ->editColumn('reports_authorize_status', function (DetectionReport $report) {
                     return AuthStatus::where('id', $report->reports_authorize_status)->value('status_name');
                 }, ['searchable' => true])
-                ->editColumn('reports_expiration_date_end', function(DetectionReport $report) {
+                ->editColumn('reports_expiration_date_end', function (DetectionReport $report) {
                     $reports_expiration_date_end = $report->reports_expiration_date_end == '' || $report->reports_expiration_date_end == null ? '' : Carbon::parse($report->reports_expiration_date_end)->format('Y/m/d');
                     return $reports_expiration_date_end;
                 }, ['searchable' => true])
@@ -195,7 +205,7 @@ class DetectionReportController extends Controller
                 // ->editColumn('reports_inspection_institution', function(DetectionReport $report) {
                 //     return InspectionInstitution::where('id', $report->reports_inspection_institution)->value('ii_name');
                 // }, ['searchable' => true])
-                ->editColumn('reports_regulations', function(DetectionReport $report) {
+                ->editColumn('reports_regulations', function (DetectionReport $report) {
                     $regs = Regulations::whereIn('regulations_num', $report->reports_regulations)->get();
                     $reg_span = '';
                     foreach ($regs as $reg) {
@@ -203,11 +213,11 @@ class DetectionReportController extends Controller
                     }
                     return '<div class="float-left" style="width: 300px;">' . $reg_span . '</div>';
                 }, ['searchable' => true])
-                ->editColumn('reports_test_date', function(DetectionReport $report) {
+                ->editColumn('reports_test_date', function (DetectionReport $report) {
                     $test_date = $report->reports_test_date == '' || $report->reports_test_date == null ? '' : Carbon::parse($report->reports_test_date)->format('Y/m/d');
                     return $test_date;
                 }, ['searchable' => true])
-                ->editColumn('reports_date', function(DetectionReport $report) {
+                ->editColumn('reports_date', function (DetectionReport $report) {
                     $report_date = $report->reports_date == '' || $report->reports_date == null ? '' : Carbon::parse($report->reports_date)->format('Y/m/d');
                     return $report_date;
                 }, ['searchable' => true])
@@ -267,9 +277,9 @@ class DetectionReportController extends Controller
 
         if ($image) {
             $filename = time() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('uploads/images/reports_pdf/'.$input['reports_num']), $filename);
+            $image->move(public_path('uploads/images/reports_pdf/' . $input['reports_num']), $filename);
 
-            $input['reports_pdf'] = 'images/reports_pdf/'.$input['reports_num'].'/' . $filename;
+            $input['reports_pdf'] = 'images/reports_pdf/' . $input['reports_num'] . '/' . $filename;
         } else {
             $input['reports_pdf'] = '';
         }
@@ -429,7 +439,7 @@ class DetectionReportController extends Controller
 
         if ($image) {
             $filename = time() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('uploads/images/reports_pdf/'.$detectionReport->reports_num), $filename);
+            $image->move(public_path('uploads/images/reports_pdf/' . $detectionReport->reports_num), $filename);
 
             if ($detectionReport->reports_pdf != null) {
                 // 若已存在，則覆蓋原有圖片
@@ -437,7 +447,7 @@ class DetectionReportController extends Controller
                     File::delete(public_path('uploads/' . $detectionReport->reports_pdf));
                 }
             }
-            $input['reports_pdf'] = 'images/reports_pdf/'.$detectionReport->reports_num.'/' . $filename;
+            $input['reports_pdf'] = 'images/reports_pdf/' . $detectionReport->reports_num . '/' . $filename;
         } else {
             $input['reports_pdf'] = $detectionReport->reports_pdf;
         }
@@ -658,8 +668,8 @@ class DetectionReportController extends Controller
                 ->get(['id', 'reports_num', 'reports_regulations', 'reports_expiration_date_end', 'reports_f_e', 'reports_authorize_count_before', 'reports_authorize_count_current']);
         } else {
             $reports = DetectionReport::whereIn('reports_authorize_status', [DetectionReportRep::AUTHORIZATION, DetectionReportRep::REACH_LIMIT_280, DetectionReportRep::OUT_OF_TIME])
-            ->where('reports_regulations', $json_regs)
-            ->get(['id', 'reports_num', 'reports_regulations', 'reports_expiration_date_end', 'reports_f_e', 'reports_authorize_count_before', 'reports_authorize_count_current']);
+                ->where('reports_regulations', $json_regs)
+                ->get(['id', 'reports_num', 'reports_regulations', 'reports_expiration_date_end', 'reports_f_e', 'reports_authorize_count_before', 'reports_authorize_count_current']);
         }
 
 
@@ -682,7 +692,7 @@ class DetectionReportController extends Controller
         $reports = DetectionReport::whereIn('id', $data_ids)->get();
 
         $regulations = [];
-        foreach($reports as $report){
+        foreach ($reports as $report) {
             $regs = Regulations::whereIn('regulations_num', $report->reports_regulations)->get(['regulations_num', 'regulations_name']);
             $regulations[$report->id] = $regs;
         }
