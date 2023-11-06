@@ -6,7 +6,11 @@ use App\Http\Requests\Admin\CreateExportAuthorizeRecordsRequest;
 use App\Http\Requests\Admin\UpdateExportAuthorizeRecordsRequest;
 use App\Repositories\Admin\ExportAuthorizeRecordsRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Admin\AgreeAuthorizeRecords;
 use App\Models\Admin\CarBrand;
+use App\Models\Admin\CumulativeAuthorizedUsageRecords;
+use App\Models\Admin\DetectionReport;
+use App\Models\Admin\ExportAuthorizeRecords;
 use App\Models\Admin\Regulations;
 use Illuminate\Http\Request;
 use Flash;
@@ -147,7 +151,8 @@ class ExportAuthorizeRecordsController extends AppBaseController
      */
     public function destroy($id)
     {
-        $exportAuthorizeRecords = $this->exportAuthorizeRecordsRepository->find($id);
+        // $exportAuthorizeRecords = $this->exportAuthorizeRecordsRepository->find($id);
+        $exportAuthorizeRecords = ExportAuthorizeRecords::find($id);
 
         if (empty($exportAuthorizeRecords)) {
             Flash::error('Export Authorize Records not found');
@@ -155,7 +160,18 @@ class ExportAuthorizeRecordsController extends AppBaseController
             return redirect(route('admin.exportAuthorizeRecords.index'));
         }
 
-        $this->exportAuthorizeRecordsRepository->delete($id);
+        AgreeAuthorizeRecords::where('export_id', $id)->delete();
+        // CumulativeAuthorizedUsageRecords::where('export_id', $id)->delete();
+        CumulativeAuthorizedUsageRecords::where('export_id', $id)->update(['authorization_serial_number' => 0, 'quantity' => 0]);
+
+        $reports_data = DetectionReport::whereIn('id', $exportAuthorizeRecords->reports_ids)->get();
+        foreach ($reports_data as $info) {
+            $dr = DetectionReport::find($info->id);
+            $dr->reports_authorize_count_current -= 1;
+            $dr->save();
+        }
+
+        $exportAuthorizeRecords->delete($id);
 
         Flash::success('Export Authorize Records deleted successfully.');
 

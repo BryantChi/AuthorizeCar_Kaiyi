@@ -83,6 +83,10 @@
                         {!! Form::close() !!}
                     </td> --}}
                     <td>
+                        {!! Form::open([
+                            'route' => ['admin.exportAuthorizeRecords.destroy', $item->id],
+                            'method' => 'delete',
+                        ]) !!}
                         <div class='btn-group'>
                             <a href="javascript:void(0)" onclick="copy('{{ json_encode($item) }}')"
                                 class='btn btn-default btn-lg2'>
@@ -92,7 +96,13 @@
                                 class='btn btn-default btn-lg2'>
                                 <i class="far fa-edit"></i>
                             </a>
+                            {!! Form::button('<i class="far fa-trash-alt"></i>', [
+                                'type' => 'button',
+                                'class' => 'btn btn-danger btn-lg2',
+                                'onclick' => "return check(this)",
+                            ]) !!}
                         </div>
+                        {!! Form::close() !!}
                     </td>
                 </tr>
             @endforeach
