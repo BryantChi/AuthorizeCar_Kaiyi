@@ -361,7 +361,9 @@ class WordServices
             $expiration_date_y = ((int)$expiration_date->year) - 1911;
             $expiration_date_m = str_pad($expiration_date->month, 2, "0", STR_PAD_LEFT);
             $expiration_date_d = str_pad($expiration_date->day, 2, "0", STR_PAD_LEFT);
-            $authorize_sid = $value->reports_num . '-Y' . $value->reports_f_e . $expiration_date_y . $expiration_date_m . $expiration_date_d . '-' . str_pad($value->reports_authorize_count_current, 3, "0", STR_PAD_LEFT);
+            $fe = '';
+            if ($value->reports_f_e != null) $fe = $value->reports_f_e;
+            $authorize_sid = $value->reports_num . '-Y' . $fe . $expiration_date_y . $expiration_date_m . $expiration_date_d . '-' . str_pad($value->reports_authorize_count_current, 3, "0", STR_PAD_LEFT);
             array_push($tb_values, [
                 'reports_regulations' => $reports_regulations,
                 'reports_num' => $value->reports_num,

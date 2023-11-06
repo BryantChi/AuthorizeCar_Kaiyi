@@ -688,8 +688,9 @@
                         }
 
                     }
-                    let authorize_id = $(this).find(':selected').text() + '-Y' + $(this).find(':selected').data(
-                        'fe') + e_date_y + e_date_m + e_date_d + '-' + auth_count;
+                    let fe = '';
+                    if ($(this).find(':selected').data('fe') != null) fe = $(this).find(':selected').data('fe');
+                    let authorize_id = $(this).find(':selected').text() + '-Y' + fe + e_date_y + e_date_m + e_date_d + '-' + auth_count;
                     $('#inputAuthNum').val(authorize_id);
                 }
             });
@@ -918,7 +919,9 @@
                                         1), 3);
                                 }
                             }
-                            let auth_num_temp = report.reports_num + '-Y' + report.reports_f_e +
+                            let fe0 = '';
+                            if (report.reports_f_e != null) fe0 = report.reports_f_e;
+                            let auth_num_temp = report.reports_num + '-Y' + fe0 +
                                 e_date_y + e_date_m + e_date_d + '-' + auth_count;
 
                             $('#authorize-data-temp-table tbody').append('<tr id="' + report.id +

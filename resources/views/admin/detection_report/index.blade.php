@@ -1247,8 +1247,9 @@
                     } else {
                         auth_count = padZero(($(this).find(':selected').data('countcurrent') + 1), 3);
                     }
-                    let authorize_id = $(this).find(':selected').text() + '-Y' + $(this).find(':selected').data(
-                        'fe') + e_date_y + e_date_m + e_date_d + '-' + auth_count;
+                    let fe = '';
+                    if ($(this).find(':selected').data('fe') != null) fe = $(this).find(':selected').data('fe');
+                    let authorize_id = $(this).find(':selected').text() + '-Y' + fe + e_date_y + e_date_m + e_date_d + '-' + auth_count;
                     $('#inputAuthNum').val(authorize_id);
                 }
             });
