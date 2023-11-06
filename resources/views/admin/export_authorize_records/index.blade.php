@@ -528,6 +528,7 @@
 
         let reports_data = [];
         let check_reports_data = [];
+        var isProcess = false;
 
         async function applyForAuthorize(mode, auth_export_id = null) {
             $('#card-authorize').slideDown(1500);
@@ -701,7 +702,7 @@
                 $('#btn-auth').html('開立');
             }
             $('#btn-auth').click(function() {
-
+                prevent_reloading();
                 $('#btn-auth').prop('disabled', true);
 
                 if ($('#inp_com').val() == '' || $('#car_brand').val() == '' || $('#car_model').val() ==
@@ -737,6 +738,10 @@
                         $('#inp_auth_num').removeClass('is-invalid');
                     }
 
+                    if (isProcess == true) {
+                        isProcess = false;
+                    }
+
                     Swal.fire('注意！', '輸入不能為空及授權項目至少一項', 'warning').then(function () {
                         $('#btn-auth').prop('disabled', false);
                     });
@@ -744,7 +749,13 @@
                     const formValues = [$('#inp_com').val(), $('#car_brand').val(), $('#car_model').val(),
                         $('#inp_vin').val(), $('#inp_auth_num').val()
                     ];
-                    $('#btn-auth').prop('disabled', true);
+
+                    if (isProcess == false) {
+                        isProcess = true;
+                    } else {
+                        return;
+                    }
+
                     // $('#authorizationModal').modal('hide');
                     Swal.fire({
                         title: '處理中...',
@@ -963,6 +974,27 @@
             await autoInputAuth(jsonObj, 'edit');
 
             await applyForAuthorize('edit', jsonObj.id);
+        }
+
+        function prevent_reloading(){
+            var pendingRequests = {};
+                jQuery.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+                    var key = options.url;
+                    console.log(key);
+                    if (!pendingRequests[key]) {
+                        pendingRequests[key] = jqXHR;
+                    }else{
+                        //jqXHR.abort();    //放棄後觸發的提交
+                        pendingRequests[key].abort();   // 放棄先觸發的提交
+                    }
+                    var complete = options.complete;
+                    options.complete = function(jqXHR, textStatus) {
+                        pendingRequests[key] = null;
+                        if (jQuery.isFunction(complete)) {
+                        complete.apply(this, arguments);
+                        }
+                    };
+                });
         }
     </script>
 @endpush
