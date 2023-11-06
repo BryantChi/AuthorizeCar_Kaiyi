@@ -1255,6 +1255,7 @@
             });
 
             $('#btn-auth').click(function() {
+                $('#btn-auth').prop('disabled', true);
 
                 if ($('#inp_com').val() == '' || $('#car_brand').val() == '' || $('#car_model').val() ==
                     '' || $('#inp_vin').val() == '' || $('#inp_auth_num').val() == '' || reports_data.length ==
@@ -1289,7 +1290,9 @@
                         $('#inp_auth_num').removeClass('is-invalid');
                     }
 
-                    Swal.fire('注意！', '輸入不能為空及授權項目至少一項', 'warning');
+                    Swal.fire('注意！', '輸入不能為空及授權項目至少一項', 'warning').then(function () {
+                        $('#btn-auth').prop('disabled', false);
+                    });
                 } else {
                     const formValues = [$('#inp_com').val(), $('#car_brand').val(), $('#car_model').val(),
                         $('#inp_vin').val(), $('#inp_auth_num').val()
