@@ -702,7 +702,7 @@
                 $('#btn-auth').html('開立');
             }
             $('#btn-auth').click(function() {
-                prevent_reloading();
+                // prevent_reloading();
                 $('#btn-auth').prop('disabled', true);
 
                 if ($('#inp_com').val() == '' || $('#car_brand').val() == '' || $('#car_model').val() ==
@@ -976,25 +976,25 @@
             await applyForAuthorize('edit', jsonObj.id);
         }
 
-        function prevent_reloading(){
-            var pendingRequests = {};
-                jQuery.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
-                    var key = options.url;
-                    console.log(key);
-                    if (!pendingRequests[key]) {
-                        pendingRequests[key] = jqXHR;
-                    }else{
-                        //jqXHR.abort();    //放棄後觸發的提交
-                        pendingRequests[key].abort();   // 放棄先觸發的提交
-                    }
-                    var complete = options.complete;
-                    options.complete = function(jqXHR, textStatus) {
-                        pendingRequests[key] = null;
-                        if (jQuery.isFunction(complete)) {
-                        complete.apply(this, arguments);
-                        }
-                    };
-                });
-        }
+        // function prevent_reloading(){
+        //     var pendingRequests = {};
+        //         jQuery.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+        //             var key = options.url;
+        //             console.log(key);
+        //             if (!pendingRequests[key]) {
+        //                 pendingRequests[key] = jqXHR;
+        //             }else{
+        //                 //jqXHR.abort();    //放棄後觸發的提交
+        //                 pendingRequests[key].abort();   // 放棄先觸發的提交
+        //             }
+        //             var complete = options.complete;
+        //             options.complete = function(jqXHR, textStatus) {
+        //                 pendingRequests[key] = null;
+        //                 if (jQuery.isFunction(complete)) {
+        //                 complete.apply(this, arguments);
+        //                 }
+        //             };
+        //         });
+        // }
     </script>
 @endpush
