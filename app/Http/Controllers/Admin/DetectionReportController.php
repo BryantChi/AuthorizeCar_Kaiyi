@@ -700,6 +700,17 @@ class DetectionReportController extends Controller
         return \Response::json(['status' => 'success', 'reports' => $reports, 'regulations' => $regulations]);
     }
 
+    public function getReportByNum(Request $request)
+    {
+        $input = $request->all();
+
+        $num = $input['num'];
+
+        $report = DetectionReport::where('reports_num', $num)->first();
+
+        return \Response::json(['status' => 'success', 'report_data' => $report]);
+    }
+
     public function importReport(Request $request)
     {
         Excel::import(new DetectionReportsImport, $request->file('dri_file'));
