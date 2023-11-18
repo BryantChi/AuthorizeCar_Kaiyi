@@ -1266,7 +1266,6 @@
                         },
                         dataType: 'json',
                         success: function(data) {
-                            console.log(data.report_data);
                             let e_date = data.report_data.reports_expiration_date_end.split('-');
                             let e_date_y = e_date[0] - 1911;
                             let e_date_m = padZero(e_date[1], 2);
