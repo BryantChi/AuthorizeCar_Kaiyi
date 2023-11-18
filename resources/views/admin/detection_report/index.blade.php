@@ -1236,22 +1236,57 @@
             });
 
             $('#reports_num').change(function() {
+                // if ($('#reports_num').val() != null && $('#reports_num').val() != '') {
+                //     let e_date = $(this).find(':selected').data('expirationdate').split('-');
+                //     let e_date_y = e_date[0] - 1911;
+                //     let e_date_m = padZero(e_date[1], 2);
+                //     let e_date_d = padZero(e_date[2], 2);
+                //     let auth_count = 0;
+                //     if ($(this).find(':selected').data('countcurrent') < $(this).find(':selected').data(
+                //             'countbefore')) {
+                //         auth_count = padZero(($(this).find(':selected').data('countbefore') + 1), 3);
+                //     } else {
+                //         auth_count = padZero(($(this).find(':selected').data('countcurrent') + 1), 3);
+                //     }
+                //     let fe = '';
+                //     if ($(this).find(':selected').data('fe') != null) fe = $(this).find(':selected').data('fe');
+                //     let authorize_id = $(this).find(':selected').text() + '-Y' + fe + e_date_y + e_date_m + e_date_d + '-' + auth_count;
+                //     $('#inputAuthNum').val(authorize_id);
+                // }
+
                 if ($('#reports_num').val() != null && $('#reports_num').val() != '') {
-                    let e_date = $(this).find(':selected').data('expirationdate').split('-');
-                    let e_date_y = e_date[0] - 1911;
-                    let e_date_m = padZero(e_date[1], 2);
-                    let e_date_d = padZero(e_date[2], 2);
-                    let auth_count = 0;
-                    if ($(this).find(':selected').data('countcurrent') < $(this).find(':selected').data(
-                            'countbefore')) {
-                        auth_count = padZero(($(this).find(':selected').data('countbefore') + 1), 3);
-                    } else {
-                        auth_count = padZero(($(this).find(':selected').data('countcurrent') + 1), 3);
-                    }
-                    let fe = '';
-                    if ($(this).find(':selected').data('fe') != null) fe = $(this).find(':selected').data('fe');
-                    let authorize_id = $(this).find(':selected').text() + '-Y' + fe + e_date_y + e_date_m + e_date_d + '-' + auth_count;
-                    $('#inputAuthNum').val(authorize_id);
+                    let num = $(this).find(':selected').text();
+                    let url = "{{ route('getReportByNum') }}";
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        data: {
+                            num: num,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            console.log(data.report_data);
+                            let e_date = data.report_data.reports_expiration_date_end.split('-');
+                            let e_date_y = e_date[0] - 1911;
+                            let e_date_m = padZero(e_date[1], 2);
+                            let e_date_d = padZero(e_date[2], 2);
+                            let auth_count = 0;
+                            if (data.report_data.reports_authorize_count_current < data.report_data.reports_authorize_count_before) {
+                                auth_count = padZero((data.report_data.reports_authorize_count_before + 1), 3);
+                            } else {
+                                auth_count = padZero((data.report_data.reports_authorize_count_current + 1), 3);
+                            }
+                            let fe = '';
+                            if (data.report_data.reports_f_e != null) fe = data.report_data.reports_f_e;
+                            let authorize_id = data.report_data.reports_num + '-Y' + fe + e_date_y + e_date_m + e_date_d + '-' + auth_count;
+                            $('#inputAuthNum').val(authorize_id);
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                        },
+                        complete: function(XMLHttpRequest, textStatus) {
+                        },
+                    })
                 }
             });
 

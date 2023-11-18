@@ -93,6 +93,7 @@ Route::any('showReportModal', [DetectionReportController::class, 'showReportModa
 Route::any('getReportsByRegs', [DetectionReportController::class, 'getReportsByRegs'])->name('getReportsByRegs');
 Route::any('getRegs', [DetectionReportController::class, 'getRegs'])->name('getRegs');
 Route::any('getReportsData', [DetectionReportController::class, 'getReportsData'])->name('getReportsData');
+Route::any('getReportByNum', [DetectionReportController::class, 'getReportByNum'])->name('getReportByNum');
 // Route::any('exportExcelTest', [DetectionReportController::class, 'exportExcelTest'])->name('exportExcelTest');
 // Route::any('convertToPdf', [DetectionReportController::class, 'convertToPdf'])->name('convertToPdf');
 
