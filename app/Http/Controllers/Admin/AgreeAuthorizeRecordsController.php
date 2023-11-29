@@ -6,6 +6,7 @@ use App\Http\Requests\Admin\CreateAgreeAuthorizeRecordsRequest;
 use App\Http\Requests\Admin\UpdateAgreeAuthorizeRecordsRequest;
 use App\Repositories\Admin\AgreeAuthorizeRecordsRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Admin\AgreeAuthorizeRecords;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
@@ -29,7 +30,11 @@ class AgreeAuthorizeRecordsController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $agreeAuthorizeRecords = $this->agreeAuthorizeRecordsRepository->all();
+        // $agreeAuthorizeRecords = $this->agreeAuthorizeRecordsRepository->all();
+        // $agreeAuthorizeRecords = AgreeAuthorizeRecords::select('export_id', 'authorize_num', 'reports_id', 'reports_num', 'authorize_date', 'authorize_year', 'car_brand_id', 'car_model_id', 'reports_vin', 'reports_regulations', 'licensee', 'Invoice_title')->groupBy('export_id')->get();
+        $agreeAuthorizeRecords = AgreeAuthorizeRecords::groupBy('export_id')->get();
+        // $agreeAuthorizeRecords = AgreeAuthorizeRecords::distinct()->get(['export_id']);
+        // dd($agreeAuthorizeRecords);
 
         return view('admin.agree_authorize_records.index')
             ->with('agreeAuthorizeRecords', $agreeAuthorizeRecords);

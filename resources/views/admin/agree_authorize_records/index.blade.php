@@ -167,7 +167,10 @@
                         });
                 },
                 lengthChange: true, // 呈現選單
-                lengthMenu: [10, 15, 20, 30, 50], // 選單值設定
+                lengthMenu: [
+                    [10, 15, 20, 30, 50, 100, 500, -1],
+                    [10, 15, 20, 30, 50, 100, 500, "全部"]
+                ], // 選單值設定
                 pageLength: 10, // 不用選單設定也可改用固定每頁列數
                 fixedHeader: true,
                 fixedColumns: {
@@ -209,7 +212,7 @@
                                 return $(node).find('input[name="records[]"]').prop('checked');
                             },
                             columns: function(idx, data, node) {
-                                return idx != 0 && idx != 2;
+                                return idx != 0;
                             },
                         }
                     }

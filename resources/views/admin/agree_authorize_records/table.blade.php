@@ -5,7 +5,7 @@
                 <th></th>
                 {{-- <th>檢測報告ID</th> --}}
                 <th>授權證明書編號</th>
-                <th>檢測報告編號</th>
+                {{-- <th>檢測報告編號</th> --}}
                 <th>授權日期</th>
                 <th>年份</th>
                 <th>廠牌</th>
@@ -29,7 +29,7 @@
                     </td>
                     {{-- <td>{{ $agreeAuthorizeRecords->reports_id }}</td> --}}
                     <td><a href="{{ url('admin/exportAuthorizeRecords?q='."TWCAR-$item->authorize_num") }}" class="text-secondary">{{ "TWCAR-$item->authorize_num" }}</a></td>
-                    <td>{{ $item->reports_num }}</td>
+                    {{-- <td>{{ $item->reports_num }}</td> --}}
                     <td>{{ $item->authorize_date }}</td>
                     <td>{{ $item->authorize_year }}</td>
                     <td>{{ DB::table('car_brand')->whereNull('deleted_at')->where('id', $item->car_brand_id)->value('brand_name') }}
@@ -37,7 +37,7 @@
                     <td>{{ DB::table('car_model')->whereNull('deleted_at')->where('id', $item->car_model_id)->value('model_name') }}
                     </td>
                     <td>{{ $item->reports_vin }}</td>
-                    <td class="float-left" style="width: 300px;">
+                    {{-- <td class="float-left" style="width: 300px;">
                         <?php
                         $regulations = DB::table('regulations_infos')
                             ->whereNull('deleted_at')
@@ -48,7 +48,8 @@
                             <span
                                 class="rounded mr-1 my-1 py-1 px-2 bg-info d-flex float-left" style="width: max-content;">{{ $info->regulations_num . ' ' . $info->regulations_name }}</span>
                         @endforeach
-                    </td>
+                    </td> --}}
+                    <td>全套</td>
                     <td>{{ $item->licensee }}</td>
                     <td>{{ DB::table('reporter_infos')->whereNull('deleted_at')->where('id', $item->Invoice_title)->value('reporter_name') }}
                     </td>
@@ -82,7 +83,7 @@
                 <th class="ft-none"></th>
                 {{-- <th>檢測報告ID</th> --}}
                 <th>授權證明書編號</th>
-                <th>檢測報告編號</th>
+                {{-- <th>檢測報告編號</th> --}}
                 <th>授權日期</th>
                 <th>年份</th>
                 <th>廠牌</th>
