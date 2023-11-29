@@ -226,7 +226,7 @@
                         // columns: function(idx, data, node) {
                         //     return idx != 0 && idx != 1 && idx != 9;
                         // },
-                        columns: [3,1,2,4,5,6,7],
+                        columns: [4,2,3,5,6,7,8],
                     }
                 }],
                 rowReorder: true,
