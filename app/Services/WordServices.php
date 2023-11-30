@@ -184,13 +184,38 @@ class WordServices
 
         $templateProcessor->saveAs($newWordFilePath);
 
-        // $ilovepdf = new Ilovepdf('project_public_0972a67458e4dd3ac4561edec19a48ed_pWfxHf7de3bcb072e2b66fc59b5cf8ded47d7', 'secret_key_f428272dfee9a265364aeadf9d895a8a_UMGYM186d525137876fd82fbc8a61f341c725');
-        // $ilovepdf = new Ilovepdf('project_public_f836502ed5f152f32db3c629ea4e5e82_MGHoj609fd77dc53495844616498db7ad600c', 'secret_key_aa4949f7e3438233c7616c9d2dc9aed9_B1lHnd6b086e1d99ace45e9cec81f8b2c8d97');
-        $ilovepdf = new Ilovepdf('project_public_a2b3acf35565b86653184bfb72cbe84f_OA2Umd21be5a86ceee9d663ccd7719e1133cf', 'secret_key_cc3a4552e6a37a60ed0ad49fe054ff57_ccgD2bc2e2820e351f8f860332455148ce8e0');
-        $myTask = $ilovepdf->newTask('officepdf');
-        $file1 = $myTask->addFile($newWordFilePath);
-        $myTask->execute();
-        $myTask->download(public_path($folderPdfPath));
+        $key2 = ['publicKey' => 'project_public_0972a67458e4dd3ac4561edec19a48ed_pWfxHf7de3bcb072e2b66fc59b5cf8ded47d7', 'secretKey' => 'secret_key_f428272dfee9a265364aeadf9d895a8a_UMGYM186d525137876fd82fbc8a61f341c725'];
+        $key0 = ['publicKey' => 'project_public_f836502ed5f152f32db3c629ea4e5e82_MGHoj609fd77dc53495844616498db7ad600c', 'secretKey' => 'secret_key_aa4949f7e3438233c7616c9d2dc9aed9_B1lHnd6b086e1d99ace45e9cec81f8b2c8d97'];
+        $key1 = ['publicKey' => 'project_public_a2b3acf35565b86653184bfb72cbe84f_OA2Umd21be5a86ceee9d663ccd7719e1133cf', 'secretKey' => 'secret_key_cc3a4552e6a37a60ed0ad49fe054ff57_ccgD2bc2e2820e351f8f860332455148ce8e0'];
+
+        $pdfKey = [$key0, $key1, $key2];
+
+        $maxAttempts = 3; // 最大重試次數
+        $attempts = 0; // 目前的嘗試次數
+
+        while ($attempts < $maxAttempts) {
+
+            $ilovepdf = new Ilovepdf($pdfKey[$attempts]['publicKey'], $pdfKey[$attempts]['secretKey']);
+            try {
+                // 嘗試要執行的操作
+                // 例如：資料庫查詢、外部API調用等
+                $myTask = $ilovepdf->newTask('officepdf');
+                $file1 = $myTask->addFile($newWordFilePath);
+                $myTask->execute();
+                $myTask->download(public_path($folderPdfPath));
+
+                break; // 如果操作成功，跳出循環
+            } catch (\Exception $e) {
+                $attempts++; // 增加嘗試次數
+                if ($attempts == $maxAttempts) {
+                    // 如果達到最大嘗試次數，可以選擇拋出異常或者處理錯誤
+                    throw $e;
+                }
+
+                // 可選：在重試之前暫停一段時間
+                sleep(1); // 休息1秒
+            }
+        }
 
         // return json_encode([
         //     'status' => 'success',
@@ -251,13 +276,38 @@ class WordServices
 
         $templateProcessor->saveAs($newWordFilePath);
 
-        // $ilovepdf = new Ilovepdf('project_public_0972a67458e4dd3ac4561edec19a48ed_pWfxHf7de3bcb072e2b66fc59b5cf8ded47d7', 'secret_key_f428272dfee9a265364aeadf9d895a8a_UMGYM186d525137876fd82fbc8a61f341c725');
-        $ilovepdf = new Ilovepdf('project_public_f836502ed5f152f32db3c629ea4e5e82_MGHoj609fd77dc53495844616498db7ad600c', 'secret_key_aa4949f7e3438233c7616c9d2dc9aed9_B1lHnd6b086e1d99ace45e9cec81f8b2c8d97');
-        // $ilovepdf = new Ilovepdf('project_public_a2b3acf35565b86653184bfb72cbe84f_OA2Umd21be5a86ceee9d663ccd7719e1133cf', 'secret_key_cc3a4552e6a37a60ed0ad49fe054ff57_ccgD2bc2e2820e351f8f860332455148ce8e0');
-        $myTask = $ilovepdf->newTask('officepdf');
-        $file1 = $myTask->addFile($newWordFilePath);
-        $myTask->execute();
-        $myTask->download(public_path($folderPdfPath));
+        $key2 = ['publicKey' => 'project_public_0972a67458e4dd3ac4561edec19a48ed_pWfxHf7de3bcb072e2b66fc59b5cf8ded47d7', 'secretKey' => 'secret_key_f428272dfee9a265364aeadf9d895a8a_UMGYM186d525137876fd82fbc8a61f341c725'];
+        $key0 = ['publicKey' => 'project_public_f836502ed5f152f32db3c629ea4e5e82_MGHoj609fd77dc53495844616498db7ad600c', 'secretKey' => 'secret_key_aa4949f7e3438233c7616c9d2dc9aed9_B1lHnd6b086e1d99ace45e9cec81f8b2c8d97'];
+        $key1 = ['publicKey' => 'project_public_a2b3acf35565b86653184bfb72cbe84f_OA2Umd21be5a86ceee9d663ccd7719e1133cf', 'secretKey' => 'secret_key_cc3a4552e6a37a60ed0ad49fe054ff57_ccgD2bc2e2820e351f8f860332455148ce8e0'];
+
+        $pdfKey = [$key0, $key1, $key2];
+
+        $maxAttempts = 3; // 最大重試次數
+        $attempts = 0; // 目前的嘗試次數
+
+        while ($attempts < $maxAttempts) {
+
+            $ilovepdf = new Ilovepdf($pdfKey[$attempts]['publicKey'], $pdfKey[$attempts]['secretKey']);
+            try {
+                // 嘗試要執行的操作
+                // 例如：資料庫查詢、外部API調用等
+                $myTask = $ilovepdf->newTask('officepdf');
+                $file1 = $myTask->addFile($newWordFilePath);
+                $myTask->execute();
+                $myTask->download(public_path($folderPdfPath));
+
+                break; // 如果操作成功，跳出循環
+            } catch (\Exception $e) {
+                $attempts++; // 增加嘗試次數
+                if ($attempts == $maxAttempts) {
+                    // 如果達到最大嘗試次數，可以選擇拋出異常或者處理錯誤
+                    throw $e;
+                }
+
+                // 可選：在重試之前暫停一段時間
+                sleep(1); // 休息1秒
+            }
+        }
 
         // return json_encode([
         //     'status' => 'success',
@@ -479,13 +529,39 @@ class WordServices
         ];
         ExportAuthorizeRecords::where('id', $export_id)->update($exportAuthRecord);
 
-        // $ilovepdf = new Ilovepdf('project_public_0972a67458e4dd3ac4561edec19a48ed_pWfxHf7de3bcb072e2b66fc59b5cf8ded47d7', 'secret_key_f428272dfee9a265364aeadf9d895a8a_UMGYM186d525137876fd82fbc8a61f341c725');
-        $ilovepdf = new Ilovepdf('project_public_f836502ed5f152f32db3c629ea4e5e82_MGHoj609fd77dc53495844616498db7ad600c', 'secret_key_aa4949f7e3438233c7616c9d2dc9aed9_B1lHnd6b086e1d99ace45e9cec81f8b2c8d97');
-        // $ilovepdf = new Ilovepdf('project_public_a2b3acf35565b86653184bfb72cbe84f_OA2Umd21be5a86ceee9d663ccd7719e1133cf', 'secret_key_cc3a4552e6a37a60ed0ad49fe054ff57_ccgD2bc2e2820e351f8f860332455148ce8e0');
-        $myTask = $ilovepdf->newTask('officepdf');
-        $file1 = $myTask->addFile($newWordFilePath);
-        $myTask->execute();
-        $myTask->download(public_path($folderPdfPath));
+        $key2 = ['publicKey' => 'project_public_0972a67458e4dd3ac4561edec19a48ed_pWfxHf7de3bcb072e2b66fc59b5cf8ded47d7', 'secretKey' => 'secret_key_f428272dfee9a265364aeadf9d895a8a_UMGYM186d525137876fd82fbc8a61f341c725'];
+        $key0 = ['publicKey' => 'project_public_f836502ed5f152f32db3c629ea4e5e82_MGHoj609fd77dc53495844616498db7ad600c', 'secretKey' => 'secret_key_aa4949f7e3438233c7616c9d2dc9aed9_B1lHnd6b086e1d99ace45e9cec81f8b2c8d97'];
+        $key1 = ['publicKey' => 'project_public_a2b3acf35565b86653184bfb72cbe84f_OA2Umd21be5a86ceee9d663ccd7719e1133cf', 'secretKey' => 'secret_key_cc3a4552e6a37a60ed0ad49fe054ff57_ccgD2bc2e2820e351f8f860332455148ce8e0'];
+
+        $pdfKey = [$key0, $key1, $key2];
+
+        $maxAttempts = 3; // 最大重試次數
+        $attempts = 0; // 目前的嘗試次數
+
+        while ($attempts < $maxAttempts) {
+
+            $ilovepdf = new Ilovepdf($pdfKey[$attempts]['publicKey'], $pdfKey[$attempts]['secretKey']);
+            try {
+                // 嘗試要執行的操作
+                // 例如：資料庫查詢、外部API調用等
+                $myTask = $ilovepdf->newTask('officepdf');
+                $file1 = $myTask->addFile($newWordFilePath);
+                $myTask->execute();
+                $myTask->download(public_path($folderPdfPath));
+
+                break; // 如果操作成功，跳出循環
+            } catch (\Exception $e) {
+                $attempts++; // 增加嘗試次數
+                if ($attempts == $maxAttempts) {
+                    // 如果達到最大嘗試次數，可以選擇拋出異常或者處理錯誤
+                    throw $e;
+                }
+
+                // 可選：在重試之前暫停一段時間
+                sleep(1); // 休息1秒
+            }
+        }
+
 
         // return json_encode([
         //     'status' => 'success',
@@ -594,13 +670,38 @@ class WordServices
 
         $templateProcessor->saveAs($newWordFilePath);
 
-        // $ilovepdf = new Ilovepdf('project_public_0972a67458e4dd3ac4561edec19a48ed_pWfxHf7de3bcb072e2b66fc59b5cf8ded47d7', 'secret_key_f428272dfee9a265364aeadf9d895a8a_UMGYM186d525137876fd82fbc8a61f341c725');
-        // $ilovepdf = new Ilovepdf('project_public_f836502ed5f152f32db3c629ea4e5e82_MGHoj609fd77dc53495844616498db7ad600c', 'secret_key_aa4949f7e3438233c7616c9d2dc9aed9_B1lHnd6b086e1d99ace45e9cec81f8b2c8d97');
-        $ilovepdf = new Ilovepdf('project_public_a2b3acf35565b86653184bfb72cbe84f_OA2Umd21be5a86ceee9d663ccd7719e1133cf', 'secret_key_cc3a4552e6a37a60ed0ad49fe054ff57_ccgD2bc2e2820e351f8f860332455148ce8e0');
-        $myTask = $ilovepdf->newTask('officepdf');
-        $file1 = $myTask->addFile($newWordFilePath);
-        $myTask->execute();
-        $myTask->download(public_path($folderPdfPath));
+        $key2 = ['publicKey' => 'project_public_0972a67458e4dd3ac4561edec19a48ed_pWfxHf7de3bcb072e2b66fc59b5cf8ded47d7', 'secretKey' => 'secret_key_f428272dfee9a265364aeadf9d895a8a_UMGYM186d525137876fd82fbc8a61f341c725'];
+        $key0 = ['publicKey' => 'project_public_f836502ed5f152f32db3c629ea4e5e82_MGHoj609fd77dc53495844616498db7ad600c', 'secretKey' => 'secret_key_aa4949f7e3438233c7616c9d2dc9aed9_B1lHnd6b086e1d99ace45e9cec81f8b2c8d97'];
+        $key1 = ['publicKey' => 'project_public_a2b3acf35565b86653184bfb72cbe84f_OA2Umd21be5a86ceee9d663ccd7719e1133cf', 'secretKey' => 'secret_key_cc3a4552e6a37a60ed0ad49fe054ff57_ccgD2bc2e2820e351f8f860332455148ce8e0'];
+
+        $pdfKey = [$key0, $key1, $key2];
+
+        $maxAttempts = 3; // 最大重試次數
+        $attempts = 0; // 目前的嘗試次數
+
+        while ($attempts < $maxAttempts) {
+
+            $ilovepdf = new Ilovepdf($pdfKey[$attempts]['publicKey'], $pdfKey[$attempts]['secretKey']);
+            try {
+                // 嘗試要執行的操作
+                // 例如：資料庫查詢、外部API調用等
+                $myTask = $ilovepdf->newTask('officepdf');
+                $file1 = $myTask->addFile($newWordFilePath);
+                $myTask->execute();
+                $myTask->download(public_path($folderPdfPath));
+
+                break; // 如果操作成功，跳出循環
+            } catch (\Exception $e) {
+                $attempts++; // 增加嘗試次數
+                if ($attempts == $maxAttempts) {
+                    // 如果達到最大嘗試次數，可以選擇拋出異常或者處理錯誤
+                    throw $e;
+                }
+
+                // 可選：在重試之前暫停一段時間
+                sleep(1); // 休息1秒
+            }
+        }
 
         // return json_encode([
         //     'status' => 'success',
@@ -660,13 +761,38 @@ class WordServices
 
         $templateProcessor->saveAs($newWordFilePath);
 
-        // $ilovepdf = new Ilovepdf('project_public_0972a67458e4dd3ac4561edec19a48ed_pWfxHf7de3bcb072e2b66fc59b5cf8ded47d7', 'secret_key_f428272dfee9a265364aeadf9d895a8a_UMGYM186d525137876fd82fbc8a61f341c725');
-        // $ilovepdf = new Ilovepdf('project_public_f836502ed5f152f32db3c629ea4e5e82_MGHoj609fd77dc53495844616498db7ad600c', 'secret_key_aa4949f7e3438233c7616c9d2dc9aed9_B1lHnd6b086e1d99ace45e9cec81f8b2c8d97');
-        $ilovepdf = new Ilovepdf('project_public_a2b3acf35565b86653184bfb72cbe84f_OA2Umd21be5a86ceee9d663ccd7719e1133cf', 'secret_key_cc3a4552e6a37a60ed0ad49fe054ff57_ccgD2bc2e2820e351f8f860332455148ce8e0');
-        $myTask = $ilovepdf->newTask('officepdf');
-        $file1 = $myTask->addFile($newWordFilePath);
-        $myTask->execute();
-        $myTask->download(public_path($folderPdfPath));
+        $key2 = ['publicKey' => 'project_public_0972a67458e4dd3ac4561edec19a48ed_pWfxHf7de3bcb072e2b66fc59b5cf8ded47d7', 'secretKey' => 'secret_key_f428272dfee9a265364aeadf9d895a8a_UMGYM186d525137876fd82fbc8a61f341c725'];
+        $key0 = ['publicKey' => 'project_public_f836502ed5f152f32db3c629ea4e5e82_MGHoj609fd77dc53495844616498db7ad600c', 'secretKey' => 'secret_key_aa4949f7e3438233c7616c9d2dc9aed9_B1lHnd6b086e1d99ace45e9cec81f8b2c8d97'];
+        $key1 = ['publicKey' => 'project_public_a2b3acf35565b86653184bfb72cbe84f_OA2Umd21be5a86ceee9d663ccd7719e1133cf', 'secretKey' => 'secret_key_cc3a4552e6a37a60ed0ad49fe054ff57_ccgD2bc2e2820e351f8f860332455148ce8e0'];
+
+        $pdfKey = [$key0, $key1, $key2];
+
+        $maxAttempts = 3; // 最大重試次數
+        $attempts = 0; // 目前的嘗試次數
+
+        while ($attempts < $maxAttempts) {
+
+            $ilovepdf = new Ilovepdf($pdfKey[$attempts]['publicKey'], $pdfKey[$attempts]['secretKey']);
+            try {
+                // 嘗試要執行的操作
+                // 例如：資料庫查詢、外部API調用等
+                $myTask = $ilovepdf->newTask('officepdf');
+                $file1 = $myTask->addFile($newWordFilePath);
+                $myTask->execute();
+                $myTask->download(public_path($folderPdfPath));
+
+                break; // 如果操作成功，跳出循環
+            } catch (\Exception $e) {
+                $attempts++; // 增加嘗試次數
+                if ($attempts == $maxAttempts) {
+                    // 如果達到最大嘗試次數，可以選擇拋出異常或者處理錯誤
+                    throw $e;
+                }
+
+                // 可選：在重試之前暫停一段時間
+                sleep(1); // 休息1秒
+            }
+        }
 
         // return json_encode([
         //     'status' => 'success',
@@ -802,13 +928,38 @@ class WordServices
 
         $templateProcessor->saveAs($newWordFilePath);
 
-        // $ilovepdf = new Ilovepdf('project_public_0972a67458e4dd3ac4561edec19a48ed_pWfxHf7de3bcb072e2b66fc59b5cf8ded47d7', 'secret_key_f428272dfee9a265364aeadf9d895a8a_UMGYM186d525137876fd82fbc8a61f341c725');
-        // $ilovepdf = new Ilovepdf('project_public_f836502ed5f152f32db3c629ea4e5e82_MGHoj609fd77dc53495844616498db7ad600c', 'secret_key_aa4949f7e3438233c7616c9d2dc9aed9_B1lHnd6b086e1d99ace45e9cec81f8b2c8d97');
-        $ilovepdf = new Ilovepdf('project_public_a2b3acf35565b86653184bfb72cbe84f_OA2Umd21be5a86ceee9d663ccd7719e1133cf', 'secret_key_cc3a4552e6a37a60ed0ad49fe054ff57_ccgD2bc2e2820e351f8f860332455148ce8e0');
-        $myTask = $ilovepdf->newTask('officepdf');
-        $file1 = $myTask->addFile($newWordFilePath);
-        $myTask->execute();
-        $myTask->download(public_path($folderPdfPath));
+        $key2 = ['publicKey' => 'project_public_0972a67458e4dd3ac4561edec19a48ed_pWfxHf7de3bcb072e2b66fc59b5cf8ded47d7', 'secretKey' => 'secret_key_f428272dfee9a265364aeadf9d895a8a_UMGYM186d525137876fd82fbc8a61f341c725'];
+        $key0 = ['publicKey' => 'project_public_f836502ed5f152f32db3c629ea4e5e82_MGHoj609fd77dc53495844616498db7ad600c', 'secretKey' => 'secret_key_aa4949f7e3438233c7616c9d2dc9aed9_B1lHnd6b086e1d99ace45e9cec81f8b2c8d97'];
+        $key1 = ['publicKey' => 'project_public_a2b3acf35565b86653184bfb72cbe84f_OA2Umd21be5a86ceee9d663ccd7719e1133cf', 'secretKey' => 'secret_key_cc3a4552e6a37a60ed0ad49fe054ff57_ccgD2bc2e2820e351f8f860332455148ce8e0'];
+
+        $pdfKey = [$key0, $key1, $key2];
+
+        $maxAttempts = 3; // 最大重試次數
+        $attempts = 0; // 目前的嘗試次數
+
+        while ($attempts < $maxAttempts) {
+
+            $ilovepdf = new Ilovepdf($pdfKey[$attempts]['publicKey'], $pdfKey[$attempts]['secretKey']);
+            try {
+                // 嘗試要執行的操作
+                // 例如：資料庫查詢、外部API調用等
+                $myTask = $ilovepdf->newTask('officepdf');
+                $file1 = $myTask->addFile($newWordFilePath);
+                $myTask->execute();
+                $myTask->download(public_path($folderPdfPath));
+
+                break; // 如果操作成功，跳出循環
+            } catch (\Exception $e) {
+                $attempts++; // 增加嘗試次數
+                if ($attempts == $maxAttempts) {
+                    // 如果達到最大嘗試次數，可以選擇拋出異常或者處理錯誤
+                    throw $e;
+                }
+
+                // 可選：在重試之前暫停一段時間
+                sleep(1); // 休息1秒
+            }
+        }
 
         // return json_encode([
         //     'status' => 'success',
@@ -869,13 +1020,38 @@ class WordServices
 
         $templateProcessor->saveAs($newWordFilePath);
 
-        // $ilovepdf = new Ilovepdf('project_public_0972a67458e4dd3ac4561edec19a48ed_pWfxHf7de3bcb072e2b66fc59b5cf8ded47d7', 'secret_key_f428272dfee9a265364aeadf9d895a8a_UMGYM186d525137876fd82fbc8a61f341c725');
-        $ilovepdf = new Ilovepdf('project_public_f836502ed5f152f32db3c629ea4e5e82_MGHoj609fd77dc53495844616498db7ad600c', 'secret_key_aa4949f7e3438233c7616c9d2dc9aed9_B1lHnd6b086e1d99ace45e9cec81f8b2c8d97');
-        // $ilovepdf = new Ilovepdf('project_public_a2b3acf35565b86653184bfb72cbe84f_OA2Umd21be5a86ceee9d663ccd7719e1133cf', 'secret_key_cc3a4552e6a37a60ed0ad49fe054ff57_ccgD2bc2e2820e351f8f860332455148ce8e0');
-        $myTask = $ilovepdf->newTask('officepdf');
-        $file1 = $myTask->addFile($newWordFilePath);
-        $myTask->execute();
-        $myTask->download(public_path($folderPdfPath));
+        $key2 = ['publicKey' => 'project_public_0972a67458e4dd3ac4561edec19a48ed_pWfxHf7de3bcb072e2b66fc59b5cf8ded47d7', 'secretKey' => 'secret_key_f428272dfee9a265364aeadf9d895a8a_UMGYM186d525137876fd82fbc8a61f341c725'];
+        $key0 = ['publicKey' => 'project_public_f836502ed5f152f32db3c629ea4e5e82_MGHoj609fd77dc53495844616498db7ad600c', 'secretKey' => 'secret_key_aa4949f7e3438233c7616c9d2dc9aed9_B1lHnd6b086e1d99ace45e9cec81f8b2c8d97'];
+        $key1 = ['publicKey' => 'project_public_a2b3acf35565b86653184bfb72cbe84f_OA2Umd21be5a86ceee9d663ccd7719e1133cf', 'secretKey' => 'secret_key_cc3a4552e6a37a60ed0ad49fe054ff57_ccgD2bc2e2820e351f8f860332455148ce8e0'];
+
+        $pdfKey = [$key0, $key1, $key2];
+
+        $maxAttempts = 3; // 最大重試次數
+        $attempts = 0; // 目前的嘗試次數
+
+        while ($attempts < $maxAttempts) {
+
+            $ilovepdf = new Ilovepdf($pdfKey[$attempts]['publicKey'], $pdfKey[$attempts]['secretKey']);
+            try {
+                // 嘗試要執行的操作
+                // 例如：資料庫查詢、外部API調用等
+                $myTask = $ilovepdf->newTask('officepdf');
+                $file1 = $myTask->addFile($newWordFilePath);
+                $myTask->execute();
+                $myTask->download(public_path($folderPdfPath));
+
+                break; // 如果操作成功，跳出循環
+            } catch (\Exception $e) {
+                $attempts++; // 增加嘗試次數
+                if ($attempts == $maxAttempts) {
+                    // 如果達到最大嘗試次數，可以選擇拋出異常或者處理錯誤
+                    throw $e;
+                }
+
+                // 可選：在重試之前暫停一段時間
+                sleep(1); // 休息1秒
+            }
+        }
 
         // return json_encode([
         //     'status' => 'success',
