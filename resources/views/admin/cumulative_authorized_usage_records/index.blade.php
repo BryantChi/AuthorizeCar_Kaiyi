@@ -62,15 +62,19 @@
     </style>
 @endpush
 
+@push('third_party_stylesheets')
+    <link href="https://cdn.datatables.net/v/dt/fc-4.3.0/datatables.min.css" rel="stylesheet">
+@endpush
+
 @push('page_scripts')
-    <script type="text/javascript" charset="utf8"
+        <script type="text/javascript" charset="utf8"
         src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js">
-    </script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js">
-    </script>
-    <script src="https://cdn.datatables.net/v/dt/fc-4.3.0/datatables.min.js"></script>
-    <script>
+        <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js">
+        </script>
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js">
+        </script>
+        <script src="https://cdn.datatables.net/v/dt/fc-4.3.0/datatables.min.js"></script>
+        <script>
         $(function() {
 
             $.UrlParam = function(name) {
@@ -102,9 +106,9 @@
                 }
             });
 
-            let scrollX_enable = "{{ count($cumulativeAuthorizedUsageRecords) > 0 ? 1 : 0 }}" == true;
+            let scrollX_enable = "{{ count($caRecords) > 0 ? 1 : 0 }}" == true;
             if($(window).width() > 1500) { scrollX_enable = false }
-            else { scrollX_enable = "{{ count($cumulativeAuthorizedUsageRecords) > 0 ? 1 : 0 }}" == true; }
+            else { scrollX_enable = "{{ count($caRecords) > 0 ? 1 : 0 }}" == true; }
 
             var table = $('#cumulativeAuthorizedUsageRecords-table').DataTable({
                 // initComplete: function() {
@@ -132,18 +136,18 @@
                             var title = column.footer().textContent;
 
                             // Create select element and listener
-                            var select = $(
-                                    '<select class="form-control"><option value=""></option></select>'
-                                )
-                                .appendTo($(column.footer()).empty())
-                                .on('change', function() {
-                                    var val = DataTable.util.escapeRegex($(this).val());
+                            // var select = $(
+                            //         '<select class="form-control"><option value=""></option></select>'
+                            //     )
+                            //     .appendTo($(column.footer()).empty())
+                            //     .on('change', function() {
+                            //         var val = DataTable.util.escapeRegex($(this).val());
 
-                                    column
-                                        .search(val ? '^' + val + '$' : '', true, false)
-                                        .draw();
-                                });
-
+                            //         column
+                            //             .search(val ? '^' + val + '$' : '', true, false)
+                            //             .draw();
+                            //     });
+                            var select = $(column.footer()).find('select');
                             select.select2({
                                 language: 'zh-TW',
                                 width: '100%',
@@ -155,32 +159,75 @@
                             });
 
                             // Add list of options
-                            if (title == '授權書編號') {
+                            if (title == '授權書編號' || title == '檢測報告編號' || title == '車身號碼' || title == '授權日期') {
                                 $('<input type="text" class="form-control" placeholder="Search ' +
                                         title + '" />')
-                                    .appendTo($(column.footer()).empty())
-                                    .on('keyup change clear', function() {
-                                        if (column.search() !== this.value) {
-                                            column.search(this.value).draw();
-                                        }
-                                    });
+                                    .appendTo($(column.footer()).empty());
+                                    // .on('keyup change clear', function() {
+                                    //     if (column.search() !== this.value) {
+                                    //         column.search(this.value).draw();
+                                    //     }
+                                    // });
                             } else {
-                                column
-                                    .data()
-                                    .unique()
-                                    .sort()
-                                    .each(function(d, j) {
-                                        let s = d;
+                                // column
+                                //     .data()
+                                //     .unique()
+                                //     .sort()
+                                //     .each(function(d, j) {
+                                //         let s = d;
 
-                                        select.append(
-                                            '<option value="' + s + '">' + s + '</option>'
-                                        );
-                                    });
+                                //         select.append(
+                                //             '<option value="' + s + '">' + s + '</option>'
+                                //         );
+                                //     });
 
                             }
 
                         });
+                    table.columns().every(function() {
+                        var that = this;
+                        var title = that.header().textContent;
+                        $('input', this.footer()).on('keyup change', function() {
+                            if (that.search() !== this.value) {
+                                that.search(this.value).draw();
+                            }
+                        });
+
+                        $('select', this.footer()).select2({
+                            language: 'zh-TW',
+                            width: '100%',
+                            maximumInputLength: 100,
+                            minimumInputLength: 0,
+                            tags: false,
+                            placeholder: '請選擇 ' + title,
+                            allowClear: true
+                        });
+
+                        $('select', this.footer()).on('change', function() {
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                            // that.search(val ? '^' + val + '$' : '', true, false).draw();
+                            that.search($(this).val()).draw();
+                        });
+                    });
+
+                    $('.buttons-excel').removeClass('dt-button buttons-excel buttons-html5').addClass(
+                        'btn btn-outline-info mr-2').html('匯出Excel');
+
+                    if ($.UrlParam("q") != null && $.UrlParam("q") != '') {
+                        table.column(4).search($.UrlParam("q")).draw();
+                    } else {
+                        table.draw();
+                    }
                 },
+                ajax: {
+                    url: "{{ route('admin.cumulativeAuthorizedUsageRecords.index') }}",
+                    // data: function(d) {
+                    //     d.reports_reporter = $('#drsh-report-reporter').val();
+                    // }
+                },
+                processing: true,
+                serverSide: true,
+                deferRender: true,
                 lengthChange: true, // 呈現選單
                 lengthMenu: [10, 15, 20, 30, 50, 100, 500, 1000], // 選單值設定
                 pageLength: 10, // 不用選單設定也可改用固定每頁列數
@@ -192,6 +239,8 @@
                 searching: true, // 搜索功能
                 ordering: false,
                 order: [[1, 'asc']],
+                searching: true, // 搜索功能
+                ordering: true,
                 // stateSave: true, // 保留狀態
                 scrollCollapse: true,
                 scrollX: scrollX_enable,
@@ -210,6 +259,53 @@
                 //             $('<div/>').text(d.id).html() + '" >';
                 //     }
                 // }],
+                columns: [
+                    // { data: 'DT_RowIndex', name: 'DT_RowIndex' },
+                    {
+                        data: 'checkbox',
+                        name: 'checkbox',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'id',
+                        name: 'id'
+                    },
+                    {
+                        data: 'authorization_serial_number',
+                        name: 'authorization_serial_number'
+                    },
+                    {
+                        data: 'authorize_num',
+                        name: 'authorize_num'
+                    },
+                    {
+                        data: 'reports_num',
+                        name: 'reports_num'
+                    },
+                    {
+                        data: 'applicant',
+                        name: 'applicant'
+                    },
+                    {
+                        data: 'reports_vin',
+                        name: 'reports_vin'
+                    },
+                    {
+                        data: 'quantity',
+                        name: 'quantity'
+                    },
+                    {
+                        data: 'authorization_date',
+                        name: 'authorization_date'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
                 dom: 'Blfrtip', // 這行代碼是必須的，用於告訴 DataTables 插入哪些按鈕
                 buttons: [{
                     extend: 'excel',
@@ -237,18 +333,18 @@
 
             });
 
-            setTimeout(function() {
-                table.draw();
-                $('.buttons-excel').removeClass('dt-button buttons-excel buttons-html5').addClass(
-                    'btn btn-outline-info mr-2').html('匯出Excel');
+            // setTimeout(function() {
+            //     table.draw();
+            //     $('.buttons-excel').removeClass('dt-button buttons-excel buttons-html5').addClass(
+            //         'btn btn-outline-info mr-2').html('匯出Excel');
 
 
-                if ($.UrlParam("q") != null && $.UrlParam("q") != '') {
-                    table.column(4).search($.UrlParam("q")).draw();
-                } else {
-                    table.draw();
-                }
-            }, 1000);
+            //     if ($.UrlParam("q") != null && $.UrlParam("q") != '') {
+            //         table.column(4).search($.UrlParam("q")).draw();
+            //     } else {
+            //         table.draw();
+            //     }
+            // }, 1000);
         })
     </script>
 @endpush

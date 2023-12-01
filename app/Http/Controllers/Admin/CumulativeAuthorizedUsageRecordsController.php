@@ -6,9 +6,14 @@ use App\Http\Requests\Admin\CreateCumulativeAuthorizedUsageRecordsRequest;
 use App\Http\Requests\Admin\UpdateCumulativeAuthorizedUsageRecordsRequest;
 use App\Repositories\Admin\CumulativeAuthorizedUsageRecordsRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Admin\CumulativeAuthorizedUsageRecords;
+use App\Models\Admin\Reporter;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Str;
 
 class CumulativeAuthorizedUsageRecordsController extends AppBaseController
 {
@@ -29,10 +34,78 @@ class CumulativeAuthorizedUsageRecordsController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $cumulativeAuthorizedUsageRecords = $this->cumulativeAuthorizedUsageRecordsRepository->all();
+        $records = $this->cumulativeAuthorizedUsageRecordsRepository->all();
+
+        if ($request->ajax()) {
+            $cumulativeAuthorizedUsageRecords = CumulativeAuthorizedUsageRecords::select([
+                'id',
+                'export_id',
+                'authorization_serial_number',
+                'authorize_num',
+                'reports_num',
+                'applicant',
+                'reports_vin',
+                'quantity',
+                'authorization_date'
+            ]);
+
+            $dataTables = DataTables::eloquent($cumulativeAuthorizedUsageRecords);
+
+            $dataTables
+                ->filterColumn('authorize_num', function ($query, $keyword) {
+                    $query->whereRaw("authorize_num like ?", ["%{$keyword}%"]);
+                })
+                ->filterColumn('applicant', function ($query, $keyword) {
+                    $newKeyword = Reporter::where('reporter_name', 'like', "%$keyword%")->get('id');
+                    $query->whereIn("applicant", $newKeyword);
+                })
+                ->filterColumn('authorization_date', function ($query, $keyword) {
+                    $query->whereRaw("authorization_date like ?", ["%{$keyword}%"]);
+                });
+
+            return $dataTables
+                ->addIndexColumn()
+                ->addColumn('checkbox', function (CumulativeAuthorizedUsageRecords $record) {
+                    return '<div class="form-group form-check"><input type="checkbox" name="records[]" class="form-check-input" style="width: 20px;height: 20px;" value="' . $record->id . '" id="' . $record->id . '" ></div>';
+                })
+                ->addColumn('action', function (CumulativeAuthorizedUsageRecords $record) {
+
+                    $btn_edit = '<a href="' . route('admin.cumulativeAuthorizedUsageRecords.edit', [$record->id]) . '" class="btn btn-default btn-sm"><i class="far fa-edit"></i></a>';
+                    $btn_del = '<button type="button" class="btn btn-danger btn-sm" onclick="return check(this)"><i class="far fa-trash-alt"></i></button>';
+
+                    return '<form action="' . route('admin.cumulativeAuthorizedUsageRecords.destroy', [$record->id]) . '" method="delete"><div class="btn-group">' . $btn_edit . $btn_del . '</div></form>';
+                })
+                ->editColumn('authorize_num', function (CumulativeAuthorizedUsageRecords $record) {
+                    $contains = Str::contains($record->authorize_num, '=>');
+                    if ($contains) {
+                        $nums = Str::of($record->authorize_num)->explode(" => ");
+                    }
+
+                    if ($contains) {
+                        $nums_content = '<a href="'. url('admin/exportAuthorizeRecords?q='."TWCAR-$nums[1]") .'" class="text-secondary">TWCAR-'. $nums[0].' => TWCAR-'. $nums[1].'</a>';
+                    } else {
+                        $nums_content = '<a href="'. url('admin/exportAuthorizeRecords?q='."TWCAR-$record->authorize_num") .'" class="text-secondary">TWCAR-'. $record->authorize_num .'</a>';
+                    }
+                    return $nums_content;
+                }, ['searchable' => true])
+                ->editColumn('applicant', function(CumulativeAuthorizedUsageRecords $record) {
+                    return Reporter::where('id', $record->applicant)->value('reporter_name');
+                }, ['searchable' => true])
+                // ->editColumn('authorization_date', function (CumulativeAuthorizedUsageRecords $record) {
+                //     $authorization_date = $record->authorization_date == '' || $record->authorization_date == null ? '' : Carbon::parse($record->authorization_date)->format('Y/m/d');
+                //     return $authorization_date;
+                // }, ['searchable' => true])
+                ->rawColumns(['checkbox', 'action', 'authorize_num', 'applicant', 'authorization_date'])
+                ->toJson();
+
+        }
+
+        $reporters = Reporter::all();
 
         return view('admin.cumulative_authorized_usage_records.index')
-            ->with('cumulativeAuthorizedUsageRecords', $cumulativeAuthorizedUsageRecords);
+            ->with('caRecords', $records)
+            ->with('reporters', $reporters);
+
     }
 
     /**

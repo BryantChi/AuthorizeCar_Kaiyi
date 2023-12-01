@@ -14,82 +14,32 @@
                 <th>Action</th>
             </tr>
         </thead>
-        <tbody>
-            @foreach ($cumulativeAuthorizedUsageRecords as $item)
-                <tr>
-                    <td>
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" style="width: 20px;height: 20px;"
-                                name="records[]" id="{{ $item->id }}" value="{{ $item->id }}"/>
-                        </div>
-                    </td>
-                    <td>{{ $item->id }}</td>
-                    <td>{{ $item->authorization_serial_number }}</td>
-                    {{-- <td>{{ $item->reports_id }}</td> --}}
-                    <?php
-                    $contains = Illuminate\Support\Str::contains($item->authorize_num, '=>');
-                    if ($contains) {
-                        $nums = Illuminate\Support\Str::of($item->authorize_num)->explode(" => ");
-                    }
-                    ?>
-                    @if ($contains)
-                    <td><a href="{{ url('admin/exportAuthorizeRecords?q='."TWCAR-$nums[1]") }}" class="text-secondary">{{ "TWCAR-$nums[0] => TWCAR-$nums[1]" }}</a></td>
-                    @else
-                    <td><a href="{{ url('admin/exportAuthorizeRecords?q='."TWCAR-$item->authorize_num") }}" class="text-secondary">{{ "TWCAR-$item->authorize_num" }}</a></td>
-                    @endif
 
-                    <td>{{ $item->reports_num }}</td>
-                    {{-- <td>{{ $item->applicant }}</td> --}}
-                    <td>{{ DB::table('reporter_infos')->whereNull('deleted_at')->where('id', $item->applicant)->value('reporter_name') }}
-                    </td>
-                    <td>{{ $item->reports_vin }}</td>
-                    <td>{{ $item->quantity }}</td>
-                    <td>{{ $item->authorization_date }}</td>
-                    {{-- <td width="120">
-                        {!! Form::open([
-                            'route' => ['admin.cumulativeAuthorizedUsageRecords.destroy', $item->id],
-                            'method' => 'delete',
-                        ]) !!}
-                        <div class='btn-group'>
-                            <a href="{{ route('admin.cumulativeAuthorizedUsageRecords.show', [$item->id]) }}"
-                                class='btn btn-default btn-sm'>
-                                <i class="far fa-eye"></i>
-                            </a>
-                            <a href="{{ route('admin.cumulativeAuthorizedUsageRecords.edit', [$item->id]) }}"
-                                class='btn btn-default btn-sm'>
-                                <i class="far fa-edit"></i>
-                            </a>
-                            {!! Form::button('<i class="far fa-trash-alt"></i>', [
-                                'type' => 'button',
-                                'class' => 'btn btn-danger btn-sm',
-                                'onclick' => "return check(this)",
-                            ]) !!}
-                        </div>
-                        {!! Form::close() !!}
-                    </td> --}}
-                    <td>
-                        <div class='btn-group'>
-                            <a href="{{ route('admin.cumulativeAuthorizedUsageRecords.edit', [$item->id]) }}"
-                                class='btn btn-default btn-sm'>
-                                <i class="far fa-edit"></i>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
         <tfoot>
             <tr>
                 <th class="ft-none"></th>
                 <th class="ft-none">Id</th>
-                <th class="ft-none">已授權序號</th>
+                <th class="ft-none text-white">已授權序號</th>
                 <th>授權書編號</th>
                 <th>檢測報告編號</th>
-                <th>申請者</th>
+                <th>
+                    <select class="form-control">
+                        <option value="">請選擇 申請者</option>
+                        @foreach ($reporters as $reporter)
+                            <option value="{{ $reporter->reporter_name }}">{{ $reporter->reporter_name }}</option>
+                        @endforeach
+                    </select>
+                </th>
                 <th>車身號碼</th>
-                <th>數量</th>
+                <th>
+                    <select class="form-control">
+                        <option value="">請選擇 數量</option>
+                        <option value="1">1</option>
+                        <option value="0">0</option>
+                    </select>
+                </th>
                 <th>授權日期</th>
-                <th class="ft-none">Action</th>
+                <th class="ft-none"></th>
             </tr>
         </tfoot>
     </table>
