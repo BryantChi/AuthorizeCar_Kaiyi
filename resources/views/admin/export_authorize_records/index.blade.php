@@ -248,24 +248,6 @@
             //     scrollX_enable = "{{ count($exportAuthorizeRecords) > 0 ? 1 : 0 }}" == true;
             // }
             var table = $('#exportAuthorizeRecords-table').DataTable({
-                initComplete: function() {
-                    this.api()
-                        .columns()
-                        .every(function() {
-                            var column = this;
-                            var title = column.footer().textContent;
-
-                            // Create input element and add event listener
-                            $('<input type="text" class="form-control" placeholder="Search ' +
-                                    title + '" />')
-                                .appendTo($(column.footer()).empty())
-                                .on('keyup change clear', function() {
-                                    if (column.search() !== this.value) {
-                                        column.search(this.value).draw();
-                                    }
-                                });
-                        });
-                },
                 // initComplete: function() {
                 //     this.api()
                 //         .columns()
@@ -273,58 +255,122 @@
                 //             var column = this;
                 //             var title = column.footer().textContent;
 
-                //             // Create select element and listener
-                //             var select = $(
-                //                     '<select class="form-control"><option value=""></option></select>'
-                //                 )
-                //                 .appendTo($(column.footer()).empty())
-                //                 .on('change', function() {
-                //                     var val = DataTable.util.escapeRegex($(this).val());
-
-                //                     column
-                //                         .search(val ? '^' + val + '$' : '', true, false)
-                //                         .draw();
-                //                 });
-
-                //             select.select2({
-                //                 language: 'zh-TW',
-                //                 width: '100%',
-                //                 maximumInputLength: 100,
-                //                 minimumInputLength: 0,
-                //                 tags: true,
-                //                 placeholder: '請選擇' + title,
-                //                 allowClear: true
-                //             });
-
-                //             // Add list of options
-                //             if (title == '授權項目') {
-                //                 $('<input type="text" class="form-control" placeholder="Search ' +
-                //                         title + '" />')
-                //                     .appendTo($(column.footer()).empty())
-                //                     .on('keyup change clear', function() {
-                //                         if (column.search() !== this.value) {
-                //                             column.search(this.value).draw();
-                //                         }
-                //                     });
-                //             } else {
-                //                 column
-                //                     .data()
-                //                     .unique()
-                //                     .sort()
-                //                     .each(function(d, j) {
-                //                         let s = d;
-
-                //                         select.append(
-                //                             '<option value="' + s + '">' + s + '</option>'
-                //                         );
-                //                     });
-
-                //             }
-
+                //             // Create input element and add event listener
+                //             $('<input type="text" class="form-control" placeholder="Search ' +
+                //                     title + '" />')
+                //                 .appendTo($(column.footer()).empty());
+                //                 // .on('keyup change clear', function() {
+                //                 //     if (column.search() !== this.value) {
+                //                 //         column.search(this.value).draw();
+                //                 //     }
+                //                 // });
                 //         });
                 // },
+                initComplete: function() {
+                    this.api()
+                        .columns()
+                        .every(function() {
+                            var column = this;
+                            var title = column.footer().textContent;
+
+                            // Create select element and listener
+                            var select = $(
+                                    '<select class="form-control"><option value=""></option></select>'
+                                )
+                                .appendTo($(column.footer()).empty());
+                                // .on('change', function() {
+                                //     var val = DataTable.util.escapeRegex($(this).val());
+
+                                //     column
+                                //         .search(val ? '^' + val + '$' : '', true, false)
+                                //         .draw();
+                                // });
+
+                            var select = $(column.footer()).find('select');
+                            select.select2({
+                                language: 'zh-TW',
+                                width: '100%',
+                                maximumInputLength: 100,
+                                minimumInputLength: 0,
+                                tags: true,
+                                placeholder: '請選擇' + title,
+                                allowClear: true
+                            });
+
+                            // Add list of options
+                            if (title == '授權書編號' || title == '授權使用對象' || title == '車身碼' ||
+                            title == '授權使用序號' || title == '檢測報告編號' || title == '廠牌' || title == '型號') {
+                                $('<input type="text" class="form-control" placeholder="Search ' +
+                                        title + '" />')
+                                    .appendTo($(column.footer()).empty());
+                                    // .on('keyup change clear', function() {
+                                    //     if (column.search() !== this.value) {
+                                    //         column.search(this.value).draw();
+                                    //     }
+                                    // });
+                            } else {
+                                // column
+                                //     .data()
+                                //     .unique()
+                                //     .sort()
+                                //     .each(function(d, j) {
+                                //         let s = d;
+
+                                //         select.append(
+                                //             '<option value="' + s + '">' + s + '</option>'
+                                //         );
+                                //     });
+
+                            }
+
+                        });
+
+                    table.columns().every(function() {
+                        var that = this;
+                        var title = that.header().textContent;
+                        $('input', this.footer()).on('keyup change', function() {
+                            if (that.search() !== this.value) {
+                                that.search(this.value).draw();
+                            }
+                        });
+
+                        $('select', this.footer()).select2({
+                            language: 'zh-TW',
+                            width: '100%',
+                            maximumInputLength: 100,
+                            minimumInputLength: 0,
+                            tags: false,
+                            placeholder: '請選擇 ' + title,
+                            allowClear: true
+                        });
+
+                        $('select', this.footer()).on('change', function() {
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                            // that.search(val ? '^' + val + '$' : '', true, false).draw();
+                            that.search($(this).val()).draw();
+                        });
+                    });
+
+                    $('.buttons-excel').removeClass('dt-button buttons-excel buttons-html5').addClass(
+                        'btn btn-outline-info mr-2').html('匯出Excel');
+
+                    if ($.UrlParam("q") != null && $.UrlParam("q") != '') {
+                        table.column(1).search($.UrlParam("q")).draw();
+                    } else {
+                        table.draw();
+                    }
+                },
+                ajax: {
+                    url: "{{ route('admin.exportAuthorizeRecords.index') }}",
+                    // data: function(d) {
+                    //     d.reports_reporter = $('#drsh-report-reporter').val();
+                    // }
+                },
+                processing: true,
+                serverSide: true,
+                deferRender: true,
                 lengthChange: true, // 呈現選單
-                lengthMenu: [10, 15, 20, 30, 50], // 選單值設定
+                lengthMenu: [10, 15, 20, 30, 50, 100, 500], // 選單值設定
                 pageLength: 10, // 不用選單設定也可改用固定每頁列數
                 fixedHeader: true,
                 fixedColumns: {
@@ -340,6 +386,53 @@
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/zh_Hant.json"
                 },
+                columns: [
+                    // { data: 'DT_RowIndex', name: 'DT_RowIndex' },
+                    {
+                        data: 'checkbox',
+                        name: 'checkbox',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'export_authorize_num',
+                        name: 'export_authorize_num'
+                    },
+                    {
+                        data: 'export_authorize_com',
+                        name: 'export_authorize_com'
+                    },
+                    {
+                        data: 'export_authorize_brand',
+                        name: 'export_authorize_brand'
+                    },
+                    {
+                        data: 'export_authorize_model',
+                        name: 'export_authorize_model'
+                    },
+                    {
+                        data: 'export_authorize_vin',
+                        name: 'export_authorize_vin'
+                    },
+                    {
+                        data: 'export_authorize_auth_num_id',
+                        name: 'export_authorize_auth_num_id'
+                    },
+                    {
+                        data: 'export_authorize_reports_nums',
+                        name: 'export_authorize_reports_nums'
+                    },
+                    {
+                        data: 'export_authorize_path',
+                        name: 'export_authorize_path'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
                 // columnDefs: [{
                 //     'targets': 0,
                 //     'searchable': false,
@@ -373,15 +466,15 @@
 
             });
 
-            setTimeout(function() {
-                if ($.UrlParam("q") != null && $.UrlParam("q") != '') {
-                    table.column(1).search($.UrlParam("q")).draw();
-                } else {
-                    table.draw();
-                }
-                $('.buttons-excel').removeClass('dt-button buttons-excel buttons-html5').addClass(
-                    'btn btn-outline-info mr-2').html('匯出Excel');
-            }, 1000);
+            // setTimeout(function() {
+            //     if ($.UrlParam("q") != null && $.UrlParam("q") != '') {
+            //         table.column(1).search($.UrlParam("q")).draw();
+            //     } else {
+            //         table.draw();
+            //     }
+            //     $('.buttons-excel').removeClass('dt-button buttons-excel buttons-html5').addClass(
+            //         'btn btn-outline-info mr-2').html('匯出Excel');
+            // }, 1000);
 
             $('#car_model').empty().select2({
                 data: [],
