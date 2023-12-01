@@ -117,18 +117,18 @@
                             var title = column.footer().textContent;
 
                             // Create select element and listener
-                            var select = $(
-                                    '<select class="form-control"><option value=""></option></select>'
-                                )
-                                .appendTo($(column.footer()).empty())
-                                .on('change', function() {
-                                    var val = DataTable.util.escapeRegex($(this).val());
+                            // var select = $(
+                            //         '<select class="form-control"><option value=""></option></select>'
+                            //     )
+                            //     .appendTo($(column.footer()).empty())
+                            //     .on('change', function() {
+                            //         var val = DataTable.util.escapeRegex($(this).val());
 
-                                    column
-                                        .search(val ? '^' + val + '$' : '', true, false)
-                                        .draw();
-                                });
-
+                            //         column
+                            //             .search(val ? '^' + val + '$' : '', true, false)
+                            //             .draw();
+                            //     });
+                            var select = $(column.footer()).find('select');
                             select.select2({
                                 language: 'zh-TW',
                                 width: '100%',
@@ -140,32 +140,72 @@
                             });
 
                             // Add list of options
-                            if (title == '授權證明書編號' || title == '授權項目' || title == '授權日期') {
+                            if (title == '授權證明書編號' || title == '授權日期' ||
+                            title == '年份' || title == '車身碼' || title == '對象') {
                                 $('<input type="text" class="form-control" placeholder="Search ' +
                                         title + '" />')
-                                    .appendTo($(column.footer()).empty())
-                                    .on('keyup change clear', function() {
-                                        if (column.search() !== this.value) {
-                                            column.search(this.value).draw();
-                                        }
-                                    });
+                                    .appendTo($(column.footer()).empty());
+                                    // .on('keyup change clear', function() {
+                                    //     if (column.search() !== this.value) {
+                                    //         column.search(this.value).draw();
+                                    //     }
+                                    // });
                             } else {
-                                column
-                                    .data()
-                                    .unique()
-                                    .sort()
-                                    .each(function(d, j) {
-                                        let s = d;
+                                // column
+                                //     .data()
+                                //     .unique()
+                                //     .sort()
+                                //     .each(function(d, j) {
+                                //         let s = d;
 
-                                        select.append(
-                                            '<option value="' + s + '">' + s + '</option>'
-                                        );
-                                    });
+                                //         select.append(
+                                //             '<option value="' + s + '">' + s + '</option>'
+                                //         );
+                                //     });
 
                             }
 
                         });
+
+                    table.columns().every(function() {
+                        var that = this;
+                        var title = that.header().textContent;
+                        $('input', this.footer()).on('keyup change', function() {
+                            if (that.search() !== this.value) {
+                                that.search(this.value).draw();
+                            }
+                        });
+
+                        $('select', this.footer()).select2({
+                            language: 'zh-TW',
+                            width: '100%',
+                            maximumInputLength: 100,
+                            minimumInputLength: 0,
+                            tags: false,
+                            placeholder: '請選擇' + title,
+                            allowClear: true
+                        });
+
+                        $('select', this.footer()).on('change', function() {
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                            // that.search(val ? '^' + val + '$' : '', true, false).draw();
+                            that.search($(this).val()).draw();
+                        });
+                    });
+
+                    $('.buttons-excel').removeClass('dt-button buttons-excel buttons-html5').addClass('btn btn-outline-info mr-2').html('匯出Excel');
+
+                    table.draw();
                 },
+                ajax: {
+                    url: "{{ route('admin.agreeAuthorizeRecords.index') }}",
+                    // data: function(d) {
+                    //     d.reports_reporter = $('#drsh-report-reporter').val();
+                    // }
+                },
+                processing: true,
+                serverSide: true,
+                deferRender: true,
                 lengthChange: true, // 呈現選單
                 lengthMenu: [
                     [10, 15, 20, 30, 50, 100, 500, -1],
@@ -186,6 +226,57 @@
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/zh_Hant.json"
                 },
+                columns: [
+                    // { data: 'DT_RowIndex', name: 'DT_RowIndex' },
+                    {
+                        data: 'checkbox',
+                        name: 'checkbox',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'authorize_num',
+                        name: 'authorize_num'
+                    },
+                    {
+                        data: 'authorize_date',
+                        name: 'authorize_date'
+                    },
+                    {
+                        data: 'authorize_year',
+                        name: 'authorize_year'
+                    },
+                    {
+                        data: 'car_brand_id',
+                        name: 'car_brand_id'
+                    },
+                    {
+                        data: 'car_model_id',
+                        name: 'car_model_id'
+                    },
+                    {
+                        data: 'reports_vin',
+                        name: 'reports_vin'
+                    },
+                    {
+                        data: 'reports_regulations',
+                        name: 'reports_regulations'
+                    },
+                    {
+                        data: 'licensee',
+                        name: 'licensee'
+                    },
+                    {
+                        data: 'Invoice_title',
+                        name: 'Invoice_title'
+                    },
+                    // {
+                    //     data: 'action',
+                    //     name: 'action',
+                    //     orderable: false,
+                    //     searchable: false
+                    // }
+                ],
                 // columnDefs: [{
                 //     'targets': 0,
                 //     'searchable': false,
@@ -221,10 +312,10 @@
 
             });
 
-            setTimeout(function() {
-                table.draw();
-                $('.buttons-excel').removeClass('dt-button buttons-excel buttons-html5').addClass('btn btn-outline-info mr-2').html('匯出Excel');
-            }, 1000);
+            // setTimeout(function() {
+            //     table.draw();
+            //     $('.buttons-excel').removeClass('dt-button buttons-excel buttons-html5').addClass('btn btn-outline-info mr-2').html('匯出Excel');
+            // }, 1000);
         })
     </script>
 @endpush
