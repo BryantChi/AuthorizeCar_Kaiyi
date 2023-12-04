@@ -99,3 +99,4 @@ Route::any('getReportByNum', [DetectionReportController::class, 'getReportByNum'
 
 Route::any('importReport', [DetectionReportController::class, 'importReport'])->name('importReport');
 Route::any('/save-draft', [DetectionReportController::class, 'saveDraft'])->name('saveDraft');
+Route::any('exportDetectionReports', [DetectionReportController::class, 'exportDetectionReports'])->name('exportDetectionReports');

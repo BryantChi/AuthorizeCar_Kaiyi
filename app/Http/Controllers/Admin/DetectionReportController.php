@@ -731,4 +731,9 @@ class DetectionReportController extends Controller
 
         return \Response::json(['status' => 'success']);
     }
+
+    public function exportDetectionReports(Request $request)
+    {
+        return Excel::download(new DetectionReportExport(), '檢測報告總表.xlsx');
+    }
 }

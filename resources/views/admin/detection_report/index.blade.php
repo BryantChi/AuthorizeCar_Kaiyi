@@ -15,6 +15,10 @@
                     <div class="float-right d-flex mr-2">
                         <div class="btn-action" id="btn-action">
                             <a class="btn btn-outline-success mr-2 mb-md-auto mb-2" id="btn-apply-delivery"
+                                href="{{ route('exportDetectionReports') }}">
+                                總表匯出
+                            </a>
+                            <a class="btn btn-outline-success mr-2 mb-md-auto mb-2" id="btn-apply-delivery"
                                 href="javascript:void(0)" onclick="applyForDelivery()">
                                 申請送件
                             </a>
@@ -425,8 +429,8 @@
                 deferRender: true,
                 lengthChange: true, // 呈現選單
                 lengthMenu: [
-                    [10, 15, 20, 30, 50, 100, 500, -1],
-                    [10, 15, 20, 30, 50, 100, 500, "全部"]
+                    [10, 15, 20, 30, 50, 100, 500, 1000, -1],
+                    [10, 15, 20, 30, 50, 100, 500, 1000, "全部"]
                 ], // 選單值設定
                 pageLength: 10, // 不用選單設定也可改用固定每頁列數
                 fixedHeader: true,

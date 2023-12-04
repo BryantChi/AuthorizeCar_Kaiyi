@@ -19,7 +19,7 @@ class DetectionReportExport implements FromCollection, WithHeadings, WithStyles,
 {
     protected $data_id;
 
-    public function __construct($data_id)
+    public function __construct($data_id = null)
     {
         $this->data_id = $data_id;
     }
@@ -29,7 +29,11 @@ class DetectionReportExport implements FromCollection, WithHeadings, WithStyles,
     */
     public function collection()
     {
-        $detectionReport = DetectionReport::whereIn('id', $this->data_id)->get();
+        if ($this->data_id == null) {
+            $detectionReport = DetectionReport::all();
+        } else {
+            $detectionReport = DetectionReport::whereIn('id', $this->data_id)->get();
+        }
 
         $processDetection = $detectionReport->map(function ($detectionReport, $index) {
             $reporter = (Reporter::find($detectionReport->reports_reporter))->reporter_name;
@@ -52,22 +56,43 @@ class DetectionReportExport implements FromCollection, WithHeadings, WithStyles,
             $d = Carbon::parse($detectionReport->reports_date);
             $reports_date = ((int)$d->year - 1911) . '/' . str_pad($d->month, 2, "0", STR_PAD_LEFT) . '/' . str_pad($d->day, 2, "0", STR_PAD_LEFT);
 
-            return [
-                'index' => $index + 1,
-                'reports_num' => $detectionReport->reports_num,
-                'reports_expiration_date_end' => $reports_expiration_date_end,
-                'reports_reporter' => $reporter,
-                'reports_car_brand' => $brand,
-                'reports_car_model' => $model,
-                'reports_inspection_institution' => $ii,
-                'reports_regulations' => $regulations,
-                'reports_car_model_code' => $detectionReport->reports_car_model_code,
-                'reports_test_date' => $reports_test_date,
-                'reports_date' => $reports_date,
-                'reports_note' => $detectionReport->reports_vin, // 登錄清冊備註欄為車身碼
-                'reports_authorize_count_current' => (string)$detectionReport->reports_authorize_count_current,
-                'reports_f_e' => $detectionReport->reports_f_e,
-            ];
+            if ($this->data_id == null) {
+                return [
+                    'index' => $index + 1,
+                    'reports_num' => $detectionReport->reports_num,
+                    'reports_expiration_date_end' => $reports_expiration_date_end,
+                    'reports_reporter' => $reporter,
+                    'reports_car_brand' => $brand,
+                    'reports_car_model' => $model,
+                    'reports_inspection_institution' => $ii,
+                    'reports_regulations' => $regulations,
+                    'reports_car_model_code' => $detectionReport->reports_car_model_code,
+                    'reports_test_date' => $reports_test_date,
+                    'reports_date' => $reports_date,
+                    'reports_note' => $detectionReport->reports_vin, // 登錄清冊備註欄為車身碼
+                    'reports_authorize_count_before' => (string)$detectionReport->reports_authorize_count_before,
+                    'reports_authorize_count_current' => (string)$detectionReport->reports_authorize_count_current,
+                    'reports_f_e' => $detectionReport->reports_f_e,
+                ];
+            } else {
+                return [
+                    'index' => $index + 1,
+                    'reports_num' => $detectionReport->reports_num,
+                    'reports_expiration_date_end' => $reports_expiration_date_end,
+                    'reports_reporter' => $reporter,
+                    'reports_car_brand' => $brand,
+                    'reports_car_model' => $model,
+                    'reports_inspection_institution' => $ii,
+                    'reports_regulations' => $regulations,
+                    'reports_car_model_code' => $detectionReport->reports_car_model_code,
+                    'reports_test_date' => $reports_test_date,
+                    'reports_date' => $reports_date,
+                    'reports_note' => $detectionReport->reports_vin, // 登錄清冊備註欄為車身碼
+                    'reports_authorize_count_current' => (string)$detectionReport->reports_authorize_count_current,
+                    'reports_f_e' => $detectionReport->reports_f_e,
+                ];
+            }
+
 
         });
 
@@ -76,22 +101,42 @@ class DetectionReportExport implements FromCollection, WithHeadings, WithStyles,
 
     public function headings(): array
     {
-        return [
-            '項次',
-            '檢測報告編號',
-            '有效期限-迄',
-            '報告所有者',
-            '車輛廠牌',
-            '車型名稱',
-            '檢測機構',
-            '法規項目',
-            '車種代號',
-            '測試日期',
-            '報告製作日期',
-            '備註',
-            '次數',
-            'F/E'
-        ];
+        if ($this->data_id == null) {
+            return [
+                '項次',
+                '檢測報告編號',
+                '有效期限-迄',
+                '報告所有者',
+                '車輛廠牌',
+                '車型名稱',
+                '檢測機構',
+                '法規項目',
+                '車種代號',
+                '測試日期',
+                '報告製作日期',
+                '備註',
+                '移入前授權使用次數',
+                '移入後累計授權次數',
+                'F/E'
+            ];
+        } else {
+            return [
+                '項次',
+                '檢測報告編號',
+                '有效期限-迄',
+                '報告所有者',
+                '車輛廠牌',
+                '車型名稱',
+                '檢測機構',
+                '法規項目',
+                '車種代號',
+                '測試日期',
+                '報告製作日期',
+                '備註',
+                '次數',
+                'F/E'
+            ];
+        }
     }
 
     public function styles(Worksheet $sheet)
