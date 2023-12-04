@@ -355,7 +355,7 @@
                         'btn btn-outline-info mr-2').html('匯出Excel');
 
                     if ($.UrlParam("q") != null && $.UrlParam("q") != '') {
-                        table.column(1).search($.UrlParam("q")).draw();
+                        table.column(1).search($.UrlParam("q").replace('TWCAR-', '')).draw();
                     } else {
                         table.draw();
                     }
