@@ -82,7 +82,7 @@ class ExportAuthorizeRecordsController extends AppBaseController
                         '</a>';
                     $btn_del = '<button type="button" class="btn btn-danger" onclick="return check(this)"><i class="far fa-trash-alt"></i></button>';
 
-                    return '<form action="' . route('admin.exportAuthorizeRecords.destroy', [$record->id]) . '" method="delete"><div class="btn-group">' . $btn_copy . $btn_edit . $btn_del . '</div></form>';
+                    return '<form action="' . route('admin.exportAuthorizeRecords.destroy', [$record->id]) . '" method="POST"><input name="_method" type="hidden" value="DELETE"><input name="_token" type="hidden" value="' . csrf_token() . '"><div class="btn-group">' . $btn_copy . $btn_edit . $btn_del . '</div></form>';
                 })
                 ->editColumn('export_authorize_num', function (ExportAuthorizeRecords $record) {
                     return "TWCAR-$record->export_authorize_num";
