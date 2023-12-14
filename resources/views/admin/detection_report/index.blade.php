@@ -423,6 +423,10 @@
                     // data: function(d) {
                     //     d.reports_reporter = $('#drsh-report-reporter').val();
                     // }
+                    error: function (xhr, error, thrown) {
+                        // 處理錯誤
+                        window.location.reload();
+                    }
                 },
                 processing: true,
                 serverSide: true,

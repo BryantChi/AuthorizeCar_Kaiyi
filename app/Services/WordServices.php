@@ -92,7 +92,7 @@ class WordServices
 
         $templateProcessor = new TemplateProcessor($filePath);
 
-        $data_id_string = implode(',', $data_id);
+        $data_id_string = implode(',', $data_id->toArray());
         $detection_reports = DetectionReport::whereIn('id', $data_id)->orderByRaw("FIELD(id, $data_id_string)")->get();
 
         $reports_reporter = Reporter::find($detection_reports[0]->reports_reporter);
@@ -409,9 +409,9 @@ class WordServices
             foreach ($value->reports_regulations as $i => $info) {
                 $regulation = Regulations::where('regulations_num', $info)->first();
                 if ($i == 0) {
-                    $reports_regulations .= $info . ' ' . $regulation->regulations_name;
+                    $reports_regulations .= $regulation->regulations_num . ' ' . $regulation->regulations_name;
                 } else {
-                    $reports_regulations .= ', ' . $info . ' ' . $regulation->regulations_name;
+                    $reports_regulations .= ', ' . $regulation->regulations_num . ' ' . $regulation->regulations_name;
                 }
             }
             $expiration_date = Carbon::parse($value->reports_expiration_date_end);
@@ -583,7 +583,8 @@ class WordServices
     {
         $templateProcessor = new TemplateProcessor($filePath);
 
-        $detection_reports = DetectionReport::whereIn('id', $data_id)->get();
+        $data_id_string = implode(',', $data_id->toArray());
+        $detection_reports = DetectionReport::whereIn('id', $data_id)->orderByRaw("FIELD(id, $data_id_string)")->get();
 
         $reports_reporter = Reporter::find($detection_reports[0]->reports_reporter);
 
@@ -842,7 +843,7 @@ class WordServices
 
         $templateProcessor = new TemplateProcessor($filePath);
 
-        $data_id_string = implode(',', $data_id);
+        $data_id_string = implode(',', $data_id->toArray());
         $detection_reports = DetectionReport::whereIn('id', $data_id)->orderByRaw("FIELD(id, $data_id_string)")->get();
 
         $reports_reporter = Reporter::find($detection_reports[0]->reports_reporter);
