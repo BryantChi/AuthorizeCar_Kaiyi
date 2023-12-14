@@ -1039,6 +1039,20 @@
 
                             setTimeout(function() {
                                 $('#downloadModal').modal('show');
+                                $('#downloadModal').on('hidden.bs.modal', function(
+                                        event) {
+                                        // do something...
+                                        reports_data = [];
+                                        Swal.fire({
+                                            title: '載入中...',
+                                            allowOutsideClick: false,
+                                            showConfirmButton: false,
+                                            didOpen: () => {
+                                                Swal.showLoading();
+                                            }
+                                        });
+                                        window.location.reload();
+                                    });
                             }, 500);
                         }
 
