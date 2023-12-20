@@ -246,7 +246,8 @@
                             //         window.location.href = '/login'; // 重定向到登入頁面
                             //     }
                             // });
-                            $('form#logout-form').submit();
+                            // $('form#logout-form').submit();
+                            window.location.reload();
                         }
                     })
 
