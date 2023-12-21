@@ -34,7 +34,7 @@
         }
         ?>
         {!! Form::label('reports_expiration_date_end', '有效期限-迄') !!}
-        {!! Form::date('reports_expiration_date_end', $temp3, ['class' => 'form-control']) !!}
+        {!! Form::date('reports_expiration_date_end', $temp3, ['class' => 'form-control', 'min' => "0001-01-01", 'max' => "9999-12-31"]) !!}
     </div>
     <div class="form-group">
         <?php
@@ -155,7 +155,7 @@
         }
         ?>
         {!! Form::label('reports_test_date', '測試日期') !!}
-        {!! Form::date('reports_test_date', $temp8, ['class' => 'form-control']) !!}
+        {!! Form::date('reports_test_date', $temp8, ['class' => 'form-control', 'min' => "0001-01-01", 'max' => "9999-12-31"]) !!}
     </div>
     <div class="form-group">
         <?php
@@ -167,7 +167,7 @@
         }
         ?>
         {!! Form::label('reports_date', '報告日期') !!}
-        {!! Form::date('reports_date', $temp9, ['class' => 'form-control']) !!}
+        {!! Form::date('reports_date', $temp9, ['class' => 'form-control', 'min' => "0001-01-01", 'max' => "9999-12-31"]) !!}
     </div>
     <div class="form-group">
         <?php
