@@ -273,6 +273,10 @@ class DetectionReportController extends Controller
         // }
         $input['reports_authorize_status'] = '2';
 
+        if ($input['reports_authorize_count_current'] == null || $input['reports_authorize_count_current'] == '') {
+            $input['reports_authorize_count_current'] = $input['reports_authorize_count_before'];
+        }
+
         $image = $request->file('reports_pdf');
 
         if ($image) {
