@@ -61,6 +61,10 @@ class ReporterController extends AppBaseController
     {
         $input = $request->all();
 
+        if ($input['reporter_fax'] == null || $input['reporter_fax'] == '') {
+            $input['reporter_fax'] = '';
+        }
+
         $image = $request->file('reporter_seal');
 
         if ($image) {
