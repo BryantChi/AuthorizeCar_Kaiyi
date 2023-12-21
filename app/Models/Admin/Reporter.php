@@ -55,11 +55,12 @@ class Reporter extends Model
      * @var array
      */
     public static $rules = [
-        'reporter_seal' => 'required|image',
+        // 'reporter_seal' => 'required|image',
+        'reporter_seal' => 'image',
     ];
 
     public static $messages = [
-        'reporter_seal.required' => '印章圖片不可空白',
+        // 'reporter_seal.required' => '印章圖片不可空白',
         'reporter_seal.image' => '格式錯誤，必須是圖檔'
     ];
 
