@@ -37,13 +37,6 @@ class ExportAuthorizeRecordsController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $caur = AgreeAuthorizeRecords::all();
-
-        foreach ($caur as $val) {
-            $exar = ExportAuthorizeRecords::find($val->export_id);
-            $exar->export_authorize_date = ($val->authorize_year - 1911) . '/' . $val->authorize_date;
-            $exar->save();
-        }
         $records = $this->exportAuthorizeRecordsRepository->all();
 
         if ($request->ajax()) {
