@@ -363,7 +363,11 @@ class WordServices
     {
         $templateProcessor = new TemplateProcessor($filePath);
 
-        $authorize_date = Carbon::today();
+        if ($auth_input[5] == null || $auth_input[5] == '') {
+            $authorize_date = Carbon::today();
+        } else {
+            $authorize_date = Carbon::parse($auth_input[5]);
+        }
         $date_y = ((int)$authorize_date->year) - 1911;
         $date_m = str_pad($authorize_date->month, 2, "0", STR_PAD_LEFT);
         $date_d = str_pad($authorize_date->day, 2, "0", STR_PAD_LEFT);
@@ -397,6 +401,7 @@ class WordServices
                 'export_authorize_brand' => $auth_input[1],
                 'export_authorize_model' => $auth_input[2],
                 'export_authorize_vin' => $auth_input[3],
+                'export_authorize_date' => $date_y . '/' .$date_m . '/' .$date_d,
                 'export_authorize_auth_num_id' => json_encode($export_authorize_auth_num_id), // 授權序號
                 'export_authorize_reports_nums' => json_encode($export_authorize_reports_nums),
                 'export_authorize_path' => json_encode($export_authorize_path),

@@ -298,7 +298,7 @@
                             });
 
                             // Add list of options
-                            if (title == '授權書編號' || title == '授權使用對象' || title == '車身碼' ||
+                            if (title == '授權書編號' || title == '授權使用對象' || title == '車身碼' || title == '授權日期' ||
                             title == '授權使用序號' || title == '檢測報告編號' || title == '廠牌' || title == '型號') {
                                 $('<input type="text" class="form-control" placeholder="Search ' +
                                         title + '" />')
@@ -415,6 +415,10 @@
                         name: 'export_authorize_vin'
                     },
                     {
+                        data: 'export_authorize_date',
+                        name: 'export_authorize_date'
+                    },
+                    {
                         data: 'export_authorize_auth_num_id',
                         name: 'export_authorize_auth_num_id'
                     },
@@ -458,7 +462,8 @@
                             return $(node).find('input[name="records[]"]').prop('checked');
                         },
                         columns: function(idx, data, node) {
-                            return idx != 0 && idx != 8 && idx != 9;
+                            return idx != 0 && idx != 9 && idx != 10;
+                            // return idx != 0 && idx != 6 && idx != 9 && idx != 10;
                         },
                     }
                 }],
@@ -872,7 +877,7 @@
                     });
                 } else {
                     const formValues = [$('#inp_com').val(), $('#car_brand').val(), $('#car_model').val(),
-                        $('#inp_vin').val(), $('#inp_auth_num').val()
+                        $('#inp_vin').val(), $('#inp_auth_num').val(), $('#inp_auth_date').val()
                     ];
 
                     if (isProcess == false) {
@@ -975,6 +980,7 @@
             $('#car_model').val(null).trigger('change');
             $('#inp_vin').val('');
             $('#inp_auth_num').val('');
+            $('#inp_auth_date').val('');
 
             $('#reports_regulations').val([]).trigger('change');
             $('#reports_num').val(null).trigger('change');
@@ -1004,6 +1010,17 @@
             // }
         }
 
+        function convertToGregorian(dateString) {
+            // 將日期字符串分割為年、月、日
+            var parts = dateString.split('/');
+
+            // 將民國年份轉換為數字並加上1911
+            var year = parseInt(parts[0], 10) + 1911;
+
+            // 組合成西元紀年的日期格式
+            return year + '-' + parts[1] + '-' + parts[2];
+        }
+
         async function autoInputAuth(jsonObj, mode) {
             reports_data = jsonObj.reports_ids;
             check_reports_data = Array.from(reports_data);
@@ -1015,6 +1032,7 @@
             }, 1500);
             $('#inp_vin').val(jsonObj.export_authorize_vin);
             $('#inp_auth_num').val(jsonObj.export_authorize_num);
+            $('#inp_auth_date').val(convertToGregorian(jsonObj.export_authorize_date));
 
             $.ajax({
                 url: "{{ route('getReportsData') }}",

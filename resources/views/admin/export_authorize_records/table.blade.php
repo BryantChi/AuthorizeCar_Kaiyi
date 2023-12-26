@@ -9,6 +9,7 @@
                 <th>廠牌</th>
                 <th>型號</th>
                 <th>車身碼</th>
+                <th>授權日期</th>
                 <th style="width: 20rem !important;">授權使用序號</th>
                 <th style="width: 20rem !important;">檢測報告編號</th>
                 <th>開立授權文件</th>
@@ -41,6 +42,7 @@
                     </select>
                 </th> --}}
                 <th>車身碼</th>
+                <th>授權日期</th>
                 <th style="width: 20rem !important;">授權使用序號</th>
                 <th style="width: 20rem !important;">檢測報告編號</th>
                 <th class="ft-none">開立授權文件</th>
