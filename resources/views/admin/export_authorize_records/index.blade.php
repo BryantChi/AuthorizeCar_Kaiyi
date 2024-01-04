@@ -298,7 +298,7 @@
                             });
 
                             // Add list of options
-                            if (title == '授權書編號' || title == '授權使用對象' || title == '車身碼' || title == '授權日期' ||
+                            if (title == '授權書編號' || title == '授權使用對象' || title == '樣式年份' || title == '車身碼' || title == '授權日期' ||
                             title == '授權使用序號' || title == '檢測報告編號' || title == '廠牌' || title == '型號') {
                                 $('<input type="text" class="form-control" placeholder="Search ' +
                                         title + '" />')
@@ -409,6 +409,10 @@
                     {
                         data: 'export_authorize_model',
                         name: 'export_authorize_model'
+                    },
+                    {
+                        data: 'export_authorize_type_year',
+                        name: 'export_authorize_type_year'
                     },
                     {
                         data: 'export_authorize_vin',
@@ -877,7 +881,7 @@
                     });
                 } else {
                     const formValues = [$('#inp_com').val(), $('#car_brand').val(), $('#car_model').val(),
-                        $('#inp_vin').val(), $('#inp_auth_num').val(), $('#inp_auth_date').val()
+                        $('#inp_vin').val(), $('#inp_auth_num').val(), $('#inp_auth_date').val(), $('#inp_auth_type_year').val()
                     ];
 
                     if (isProcess == false) {
@@ -981,6 +985,7 @@
             $('#inp_vin').val('');
             $('#inp_auth_num').val('');
             $('#inp_auth_date').val('');
+            $('#inp_auth_type_year').val(new Date().getFullYear());
 
             $('#reports_regulations').val([]).trigger('change');
             $('#reports_num').val(null).trigger('change');
@@ -1033,6 +1038,7 @@
             $('#inp_vin').val(jsonObj.export_authorize_vin);
             $('#inp_auth_num').val(jsonObj.export_authorize_num);
             $('#inp_auth_date').val(convertToGregorian(jsonObj.export_authorize_date));
+            $('#inp_auth_type_year').val(jsonObj.export_authorize_type_year);
 
             $.ajax({
                 url: "{{ route('getReportsData') }}",

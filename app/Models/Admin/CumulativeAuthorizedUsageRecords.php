@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $reports_vin
  * @property integer $quantity
  * @property string $authorization_date
+ * @property string $auth_type_year
  */
 class CumulativeAuthorizedUsageRecords extends Model
 {
@@ -39,7 +40,8 @@ class CumulativeAuthorizedUsageRecords extends Model
         'applicant',
         'reports_vin',
         'quantity',
-        'authorization_date'
+        'authorization_date',
+        'auth_type_year'
     ];
 
     /**
@@ -56,7 +58,8 @@ class CumulativeAuthorizedUsageRecords extends Model
         'applicant' => 'integer',
         'reports_vin' => 'string',
         'quantity' => 'integer',
-        'authorization_date' => 'string'
+        'authorization_date' => 'string',
+        'auth_type_year' => 'string'
     ];
 
     /**

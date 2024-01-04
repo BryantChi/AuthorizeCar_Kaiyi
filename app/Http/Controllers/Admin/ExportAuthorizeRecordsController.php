@@ -47,6 +47,7 @@ class ExportAuthorizeRecordsController extends AppBaseController
                 'export_authorize_com',
                 'export_authorize_brand',
                 'export_authorize_model',
+                'export_authorize_type_year',
                 'export_authorize_vin',
                 'export_authorize_date',
                 'export_authorize_auth_num_id',

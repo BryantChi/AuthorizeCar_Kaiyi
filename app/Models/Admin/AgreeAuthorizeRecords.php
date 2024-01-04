@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $reports_num
  * @property string $authorize_date
  * @property string $authorize_year
+ * @property string $auth_type_year
  * @property integer $car_brand_id
  * @property integer $car_model_id
  * @property string $reports_vin
@@ -40,6 +41,7 @@ class AgreeAuthorizeRecords extends Model
         'reports_num',
         'authorize_date',
         'authorize_year',
+        'auth_type_year',
         'car_brand_id',
         'car_model_id',
         'reports_vin',
@@ -60,6 +62,7 @@ class AgreeAuthorizeRecords extends Model
         'reports_num' => 'string',
         'authorize_date' => 'string',
         'authorize_year' => 'string',
+        'auth_type_year' => 'string',
         'car_brand_id' => 'integer',
         'car_model_id' => 'integer',
         'reports_vin' => 'string',

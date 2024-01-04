@@ -400,6 +400,7 @@ class WordServices
                 'export_authorize_com' => $auth_input[0],
                 'export_authorize_brand' => $auth_input[1],
                 'export_authorize_model' => $auth_input[2],
+                'export_authorize_type_year' => $auth_input[6],
                 'export_authorize_vin' => $auth_input[3],
                 'export_authorize_date' => $date_y . '/' .$date_m . '/' .$date_d,
                 'export_authorize_auth_num_id' => json_encode($export_authorize_auth_num_id), // 授權序號
@@ -452,6 +453,7 @@ class WordServices
                 'reports_num' => $value->reports_num,
                 'authorize_date' => $date_m . '/' . $date_d,
                 'authorize_year' => $authorize_date->year,
+                'auth_type_year' => $auth_input[6],
                 'car_brand_id' => $auth_input[1],
                 'car_model_id' => $auth_input[2],
                 'reports_vin' => $auth_input[3],
@@ -473,6 +475,7 @@ class WordServices
                 'reports_vin' => $auth_input[3],
                 'quantity' => 1,
                 'authorization_date' => $date_y . '/' . $date_m . '/' . $date_d,
+                'auth_type_year' => $auth_input[6],
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ];
@@ -543,6 +546,7 @@ class WordServices
             'export_authorize_com' => $auth_input[0],
             'export_authorize_brand' => $auth_input[1],
             'export_authorize_model' => $auth_input[2],
+            'export_authorize_type_year' => $auth_input[6],
             'export_authorize_vin' => $auth_input[3],
             'export_authorize_auth_num_id' => json_encode($export_authorize_auth_num_id), // 授權序號
             'export_authorize_reports_nums' => json_encode($export_authorize_reports_nums),

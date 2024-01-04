@@ -43,7 +43,7 @@ class AgreeAuthorizeRecordsController extends AppBaseController
         if ($request->ajax()) {
             $agreeAuthorizeRecords = AgreeAuthorizeRecords::select([
                 'id','export_id','authorize_num', 'reports_id', 'reports_num', 'authorize_date', 'authorize_year',
-                'car_brand_id','car_model_id','reports_vin', 'reports_regulations', 'licensee', 'Invoice_title'
+                'auth_type_year','car_brand_id','car_model_id','reports_vin', 'reports_regulations', 'licensee', 'Invoice_title'
             ])->groupBy('export_id');
 
             $dataTables = DataTables::eloquent($agreeAuthorizeRecords);

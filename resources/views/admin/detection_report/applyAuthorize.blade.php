@@ -21,6 +21,10 @@
             </select>
         </div>
         <div class="form-group">
+            <label for="inp_auth_type_year">樣式年份</label>
+            <input type="number" class="form-control" id="inp_auth_type_year" min="0001" max="9999" placeholder="輸入樣式年份" value="{{ \Carbon\Carbon::now()->year }}">
+        </div>
+        <div class="form-group">
             <label for="inp_vin">車身碼</label>
             <input type="text" class="form-control" id="inp_vin" placeholder="輸入車身碼">
         </div>

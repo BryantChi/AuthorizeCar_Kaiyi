@@ -1118,6 +1118,7 @@
                 $('#inp_vin').val('');
                 $('#inp_auth_num').val('');
                 $('#inp_auth_date').val('');
+                $('#inp_auth_type_year').val('');
 
                 $('#reports_regulations').val([]).trigger('change');
                 $('#reports_num').val(null).trigger('change');
@@ -1320,8 +1321,8 @@
                 $('#btn-auth').prop('disabled', true);
 
                 if ($('#inp_com').val() == '' || $('#car_brand').val() == '' || $('#car_model').val() ==
-                    '' || $('#inp_vin').val() == '' || $('#inp_auth_num').val() == '' || reports_data.length ==
-                    0) {
+                    '' || $('#inp_vin').val() == '' || $('#inp_auth_num').val() == '' ||
+                    $('#inp_auth_type_year').val() == '' || reports_data.length == 0) {
                     if ($('#inp_com').val() == '') {
                         $('#inp_com').addClass('is-invalid');
                     } else {
@@ -1338,6 +1339,12 @@
                         $('#car_model').parent().addClass('has-error');
                     } else {
                         $('#car_model').parent().removeClass('has-error');
+                    }
+
+                    if ($('#inp_auth_type_year').val() == '') {
+                        $('#inp_auth_type_year').addClass('is-invalid');
+                    } else {
+                        $('#inp_auth_type_year').removeClass('is-invalid');
                     }
 
                     if ($('#inp_vin').val() == '') {
@@ -1361,7 +1368,7 @@
                     });
                 } else {
                     const formValues = [$('#inp_com').val(), $('#car_brand').val(), $('#car_model').val(),
-                        $('#inp_vin').val(), $('#inp_auth_num').val(), $('#inp_auth_date').val()
+                        $('#inp_vin').val(), $('#inp_auth_num').val(), $('#inp_auth_date').val(), $('#inp_auth_type_year').val()
                     ];
 
                     if (isProcess == false) {

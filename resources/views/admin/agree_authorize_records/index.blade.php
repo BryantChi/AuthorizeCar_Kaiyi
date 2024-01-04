@@ -243,8 +243,8 @@
                         name: 'authorize_date'
                     },
                     {
-                        data: 'authorize_year',
-                        name: 'authorize_year'
+                        data: 'auth_type_year',
+                        name: 'auth_type_year'
                     },
                     {
                         data: 'car_brand_id',

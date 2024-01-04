@@ -8,6 +8,7 @@
                 <th>授權使用對象</th>
                 <th>廠牌</th>
                 <th>型號</th>
+                <th>樣式年份</th>
                 <th>車身碼</th>
                 <th>授權日期</th>
                 <th style="width: 20rem !important;">授權使用序號</th>
@@ -41,6 +42,7 @@
                         @endforeach
                     </select>
                 </th> --}}
+                <th>樣式年份</th>
                 <th>車身碼</th>
                 <th>授權日期</th>
                 <th style="width: 20rem !important;">授權使用序號</th>
