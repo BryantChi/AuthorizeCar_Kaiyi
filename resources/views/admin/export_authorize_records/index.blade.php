@@ -466,8 +466,8 @@
                             return $(node).find('input[name="records[]"]').prop('checked');
                         },
                         columns: function(idx, data, node) {
-                            return idx != 0 && idx != 9 && idx != 10;
-                            // return idx != 0 && idx != 6 && idx != 9 && idx != 10;
+                            return idx != 0 && idx != 10 && idx != 11;
+                            // return idx != 0 && idx != 7 && idx != 10 && idx != 11;
                         },
                     }
                 }],
