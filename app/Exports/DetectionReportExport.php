@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Admin\DetectionReport;
+use App\Models\Admin\AuthorizeStatus;
 use App\Models\Admin\CarBrand;
 use App\Models\Admin\CarModel;
 use App\Models\Admin\InspectionInstitution;
@@ -14,8 +15,15 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use Maatwebsite\Excel\Concerns\WithTitle;
+use Maatwebsite\Excel\Events\AfterSheet;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithStartRow;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Events\BeforeSheet;
 
-class DetectionReportExport implements FromCollection, WithHeadings, WithStyles, ShouldAutoSize
+class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMapping, WithHeadingRow, WithEvents, WithStyles
 {
     protected $data_id;
 
@@ -32,11 +40,113 @@ class DetectionReportExport implements FromCollection, WithHeadings, WithStyles,
         if ($this->data_id == null) {
             $detectionReport = DetectionReport::all();
         } else {
-            $detectionReport = DetectionReport::whereIn('id', $this->data_id)->get();
+            $data_ids = explode(',', $this->data_id);
+            $detectionReport = DetectionReport::whereIn('id', $data_ids)->get();
         }
 
         $processDetection = $detectionReport->map(function ($detectionReport, $index) {
+            return ['item' => $detectionReport, 'index' => $index];
+
+        });
+
+        if ($this->data_id == null) {
+
+            $processDetection->prepend(['item' => [
+                '項次',
+                '檢測報告編號',
+                '有效期限-迄',
+                '報告所有者',
+                '車輛廠牌',
+                '車型名稱',
+                '檢測機構',
+                '法規項目',
+                '車種代號',
+                '測試日期',
+                '報告製作日期',
+                '備註',
+                '移入前授權使用次數',
+                '移入後累計授權次數',
+                'F/E'
+            ], 'index' => '']);
+        } else {
+
+            $processDetection->prepend(['item' => [
+                '檢測報告編號',
+                '發函文號',
+                '授權狀態',
+                '有效期限-迄',
+                '報告所有人',
+                '廠牌',
+                '車型',
+                '檢測機構',
+                '法規項目',
+                '車種代號',
+                '測試日期',
+                '報告日期',
+                '代表車車身碼',
+                '移入前授權使用次數',
+                '移入後累計授權次數',
+                'F/E',
+                '車安回函',
+                '說明'
+            ], 'index' => '']);
+        }
+        // dd ($processDetection);
+        return $processDetection;
+    }
+
+    public function map($items): array
+    {
+        $detectionReport = $items['item'];
+        $index = $items['index'];
+
+        if ($index == '') {
+            if ($this->data_id == null) {
+                $dd = [
+                    'index' => $detectionReport[0],
+                    'reports_num' => $detectionReport[1],
+                    'reports_expiration_date_end' => $detectionReport[2],
+                    'reports_reporter' => $detectionReport[3],
+                    'reports_car_brand' => $detectionReport[4],
+                    'reports_car_model' => $detectionReport[5],
+                    'reports_inspection_institution' => $detectionReport[6],
+                    'reports_regulations' => $detectionReport[7],
+                    'reports_car_model_code' => $detectionReport[8],
+                    'reports_test_date' => $detectionReport[9],
+                    'reports_date' => $detectionReport[10],
+                    'reports_note' => $detectionReport[11],
+                    'reports_authorize_count_before' => $detectionReport[12],
+                    'reports_authorize_count_current' => $detectionReport[13],
+                    'reports_f_e' => $detectionReport[14],
+                ];
+            } else {
+                $dd = [
+                    // 'index' => $index + 1,
+                    'reports_num' => $detectionReport[0],
+                    'letter_id' => $detectionReport[1],
+                    'reports_authorize_status' => $detectionReport[2],
+                    'reports_expiration_date_end' => $detectionReport[3],
+                    'reports_reporter' => $detectionReport[4],
+                    'reports_car_brand' => $detectionReport[5],
+                    'reports_car_model' => $detectionReport[6],
+                    'reports_inspection_institution' => $detectionReport[7],
+                    'reports_regulations' => $detectionReport[8],
+                    'reports_car_model_code' => $detectionReport[9],
+                    'reports_test_date' => $detectionReport[10],
+                    'reports_date' => $detectionReport[11],
+                    'reports_vin' => $detectionReport[12],
+                    'reports_authorize_count_before' => $detectionReport[13],
+                    'reports_authorize_count_current' => $detectionReport[14],
+                    'reports_f_e' => $detectionReport[15],
+                    'reports_reply' => $detectionReport[16],
+                    'reports_note' => $detectionReport[17]
+                ];
+            }
+
+            return $dd;
+        } else {
             $reporter = (Reporter::find($detectionReport->reports_reporter))->reporter_name;
+            $status = (AuthorizeStatus::find($detectionReport->reports_authorize_status))->status_name;
             $brand = (CarBrand::find($detectionReport->reports_car_brand))->brand_name;
             $model = (CarModel::find($detectionReport->reports_car_model))->model_name;
             $ii = (InspectionInstitution::find($detectionReport->reports_inspection_institution))->ii_name;
@@ -76,8 +186,10 @@ class DetectionReportExport implements FromCollection, WithHeadings, WithStyles,
                 ];
             } else {
                 return [
-                    'index' => $index + 1,
+                    // 'index' => $index + 1,
                     'reports_num' => $detectionReport->reports_num,
+                    'letter_id' => $detectionReport->letter_id,
+                    'reports_authorize_status' => $status,
                     'reports_expiration_date_end' => $reports_expiration_date_end,
                     'reports_reporter' => $reporter,
                     'reports_car_brand' => $brand,
@@ -87,64 +199,147 @@ class DetectionReportExport implements FromCollection, WithHeadings, WithStyles,
                     'reports_car_model_code' => $detectionReport->reports_car_model_code,
                     'reports_test_date' => $reports_test_date,
                     'reports_date' => $reports_date,
-                    'reports_note' => $detectionReport->reports_vin, // 登錄清冊備註欄為車身碼
+                    'reports_vin' => $detectionReport->reports_vin,
+                    'reports_authorize_count_before' => (string)$detectionReport->reports_authorize_count_before,
                     'reports_authorize_count_current' => (string)$detectionReport->reports_authorize_count_current,
                     'reports_f_e' => $detectionReport->reports_f_e,
+                    'reports_reply' => $detectionReport->reports_reply,
+                    'reports_note' => $detectionReport->reports_note,
                 ];
             }
-
-
-        });
-
-        return $processDetection;
-    }
-
-    public function headings(): array
-    {
-        if ($this->data_id == null) {
-            return [
-                '項次',
-                '檢測報告編號',
-                '有效期限-迄',
-                '報告所有者',
-                '車輛廠牌',
-                '車型名稱',
-                '檢測機構',
-                '法規項目',
-                '車種代號',
-                '測試日期',
-                '報告製作日期',
-                '備註',
-                '移入前授權使用次數',
-                '移入後累計授權次數',
-                'F/E'
-            ];
-        } else {
-            return [
-                '項次',
-                '檢測報告編號',
-                '有效期限-迄',
-                '報告所有者',
-                '車輛廠牌',
-                '車型名稱',
-                '檢測機構',
-                '法規項目',
-                '車種代號',
-                '測試日期',
-                '報告製作日期',
-                '備註',
-                '次數',
-                'F/E'
-            ];
         }
+
     }
+
+    // public function title(): string
+    // {
+    //     if ($this->data_id == null) {
+    //         return '檢測報告總表';
+    //     } else {
+    //         return '外匯車授權管理系統';
+    //     }
+    // }
+
+    /**
+     * @return int
+     */
+    // public function startRow(): int
+    // {
+    //     return 2;
+    // }
+
+    // public function headings(): array
+    // {
+    //     if ($this->data_id == null) {
+    //         return [
+    //             '項次',
+    //             '檢測報告編號',
+    //             '有效期限-迄',
+    //             '報告所有者',
+    //             '車輛廠牌',
+    //             '車型名稱',
+    //             '檢測機構',
+    //             '法規項目',
+    //             '車種代號',
+    //             '測試日期',
+    //             '報告製作日期',
+    //             '備註',
+    //             '移入前授權使用次數',
+    //             '移入後累計授權次數',
+    //             'F/E'
+    //         ];
+    //     } else {
+    //         return [
+    //             '檢測報告編號',
+    //             '發函文號',
+    //             '授權狀態',
+    //             '有效期限-迄',
+    //             '報告所有人',
+    //             '廠牌',
+    //             '車型',
+    //             '檢測機構',
+    //             '法規項目',
+    //             '車種代號',
+    //             '測試日期',
+    //             '報告日期',
+    //             '代表車車身碼',
+    //             '移入前授權使用次數',
+    //             '移入後累計授權次數',
+    //             'F/E',
+    //             '車安回函',
+    //             '說明'
+    //         ];
+    //     }
+    // }
 
     public function styles(Worksheet $sheet)
     {
         // 設置整個工作表的字體大小
-        $sheet->getStyle('A1:Z1000')->getFont()->setSize(12);
+        $sheet->getStyle('A2:R2000')->getFont()->setSize(12);
 
         // 設置標題行的字體大小
-        // $sheet->getStyle('A1:Z1')->getFont()->setSize(16);
+        $sheet->getStyle('A1:R1')->getFont()->setSize(16);
+        // $sheet->getStyle('A2:R2')->getFont()->setSize(13);
+
+        // 合併 A1 至最後一個標題的欄位
+        // $sheet->mergeCells('A1:' . $sheet->getHighestDataColumn() . '1');
+
+        // // 設定樣式
+        // $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
+        // $sheet->getStyle('A1')->getFont()->setBold(true);
+
+        // // 設定大標題
+        // if ($this->data_id == null) {
+        //     $sheet->setCellValue('A1', '檢測報告總表');
+        // } else {
+        //     $sheet->setCellValue('A1', '外匯車授權管理系統');
+        // }
     }
+
+        public function registerEvents(): array
+        {
+            return [
+                AfterSheet::class => function(AfterSheet $event) {
+                    // $event->sheet->getDelegate()->mergeCells('A1:S1'); // 根據需要合併的欄位調整
+                    // // 設置標題樣式
+                    // $event->sheet->getDelegate()->getStyle('A1')->getFont()->setBold(true);
+                    // $event->sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER); // 置中
+
+                    // if ($this->data_id == null) {
+                    //     $event->sheet->setCellValue('A1', '檢測報告總表');
+                    // } else {
+                    //     $event->sheet->setCellValue('A1', '外匯車授權管理系統');
+                    // }
+
+                    $event->sheet->getStyle('A2:S2')->applyFromArray([
+                        'font' => [
+                            'bold' => true
+                        ]
+                        // 其他樣式屬性...
+                    ]);
+                },
+                BeforeSheet::class => function(BeforeSheet $event) {
+
+
+                    if ($this->data_id == null) {
+                        $event->sheet->setCellValue('A1', '檢測報告總表');
+                        $event->sheet->getDelegate()->mergeCells('A1:O1'); // 根據需要合併的欄位調整
+                    } else {
+                        $event->sheet->setCellValue('A1', '外匯車授權管理系統');
+                        $event->sheet->getDelegate()->mergeCells('A1:S1'); // 根據需要合併的欄位調整
+                    }
+
+                    // 設置標題樣式
+                    $event->sheet->getDelegate()->getStyle('A1')->getFont()->setBold(true);
+                    $event->sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER); // 置中
+
+                    // $event->sheet->getStyle('A2:S2')->applyFromArray([
+                    //     'font' => [
+                    //         'bold' => true
+                    //     ]
+                    //     // 其他樣式屬性...
+                    // ]);
+                },
+            ];
+        }
 }

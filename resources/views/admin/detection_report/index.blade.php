@@ -15,7 +15,7 @@
                     <div class="float-right d-flex mr-2">
                         <div class="btn-action" id="btn-action">
                             <a class="btn btn-outline-success mr-2 mb-md-auto mb-2" id="btn-apply-delivery"
-                                href="{{ route('exportDetectionReports') }}">
+                                href="javascript:void(0)" onclick="exportData()">
                                 總表匯出
                             </a>
                             <a class="btn btn-outline-success mr-2 mb-md-auto mb-2" id="btn-apply-delivery"
@@ -555,23 +555,23 @@
                 //                 .reports_authorize_status).html() + '">';
                 //     }
                 // }],
-                dom: 'Blfrtip', // 這行代碼是必須的，用於告訴 DataTables 插入哪些按鈕
-                buttons: [{
-                    extend: 'excel',
-                    // text: '導出已篩選的數據到 Excel',
-                    exportOptions: {
-                        modifier: {
-                            search: 'applied', // 這裡確保只有已篩選的數據會被導出
-                            order: 'applied' // 這裡確保導出的數據與目前的排序方式一致
-                        },
-                        rows: function(idx, data, node) {
-                            return $(node).find('input[name="reports[]"]').prop('checked');
-                        },
-                        columns: function(idx, data, node) {
-                            return idx != 0 && idx != 19;
-                        },
-                    }
-                }],
+                // dom: 'Blfrtip', // 這行代碼是必須的，用於告訴 DataTables 插入哪些按鈕
+                // buttons: [{
+                //     extend: 'excel',
+                //     // text: '導出已篩選的數據到 Excel',
+                //     exportOptions: {
+                //         modifier: {
+                //             search: 'applied', // 這裡確保只有已篩選的數據會被導出
+                //             order: 'applied' // 這裡確保導出的數據與目前的排序方式一致
+                //         },
+                //         rows: function(idx, data, node) {
+                //             return $(node).find('input[name="reports[]"]').prop('checked');
+                //         },
+                //         columns: function(idx, data, node) {
+                //             return idx != 0 && idx != 19;
+                //         },
+                //     }
+                // }],
 
 
             });
@@ -1713,6 +1713,15 @@
                 }
             }
 
+        }
+
+        function exportData()
+        {
+            var ck_reports = $('input[name="reports[]"]:checked').map(function() {
+                return $(this).val();
+            }).get();
+
+            window.location.href = "{{ route('exportDetectionReports') }}" + "?data_ids=" + ck_reports
         }
 
         // function prevent_reloading(){
