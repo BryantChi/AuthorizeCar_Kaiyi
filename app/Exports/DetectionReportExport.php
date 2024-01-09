@@ -54,6 +54,8 @@ class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMappi
             $processDetection->prepend(['item' => [
                 '項次',
                 '檢測報告編號',
+                '發函文號',
+                '授權狀態',
                 '有效期限-迄',
                 '報告所有者',
                 '車輛廠牌',
@@ -66,11 +68,14 @@ class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMappi
                 '備註',
                 '移入前授權使用次數',
                 '移入後累計授權次數',
-                'F/E'
+                'F/E',
+                '車安回函',
+                '說明'
             ], 'index' => '']);
         } else {
 
             $processDetection->prepend(['item' => [
+                '項次',
                 '檢測報告編號',
                 '發函文號',
                 '授權狀態',
@@ -105,41 +110,45 @@ class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMappi
                 $dd = [
                     'index' => $detectionReport[0],
                     'reports_num' => $detectionReport[1],
-                    'reports_expiration_date_end' => $detectionReport[2],
-                    'reports_reporter' => $detectionReport[3],
-                    'reports_car_brand' => $detectionReport[4],
-                    'reports_car_model' => $detectionReport[5],
-                    'reports_inspection_institution' => $detectionReport[6],
-                    'reports_regulations' => $detectionReport[7],
-                    'reports_car_model_code' => $detectionReport[8],
-                    'reports_test_date' => $detectionReport[9],
-                    'reports_date' => $detectionReport[10],
-                    'reports_note' => $detectionReport[11],
-                    'reports_authorize_count_before' => $detectionReport[12],
-                    'reports_authorize_count_current' => $detectionReport[13],
-                    'reports_f_e' => $detectionReport[14],
+                    'letter_id' => $detectionReport[2],
+                    'reports_authorize_status' => $detectionReport[3],
+                    'reports_expiration_date_end' => $detectionReport[4],
+                    'reports_reporter' => $detectionReport[5],
+                    'reports_car_brand' => $detectionReport[6],
+                    'reports_car_model' => $detectionReport[7],
+                    'reports_inspection_institution' => $detectionReport[8],
+                    'reports_regulations' => $detectionReport[9],
+                    'reports_car_model_code' => $detectionReport[10],
+                    'reports_test_date' => $detectionReport[11],
+                    'reports_date' => $detectionReport[12],
+                    'reports_vin' => $detectionReport[13],
+                    'reports_authorize_count_before' => $detectionReport[14],
+                    'reports_authorize_count_current' => $detectionReport[15],
+                    'reports_f_e' => $detectionReport[16],
+                    'reports_reply' => $detectionReport[17],
+                    'reports_note' => $detectionReport[18]
                 ];
             } else {
                 $dd = [
-                    // 'index' => $index + 1,
-                    'reports_num' => $detectionReport[0],
-                    'letter_id' => $detectionReport[1],
-                    'reports_authorize_status' => $detectionReport[2],
-                    'reports_expiration_date_end' => $detectionReport[3],
-                    'reports_reporter' => $detectionReport[4],
-                    'reports_car_brand' => $detectionReport[5],
-                    'reports_car_model' => $detectionReport[6],
-                    'reports_inspection_institution' => $detectionReport[7],
-                    'reports_regulations' => $detectionReport[8],
-                    'reports_car_model_code' => $detectionReport[9],
-                    'reports_test_date' => $detectionReport[10],
-                    'reports_date' => $detectionReport[11],
-                    'reports_vin' => $detectionReport[12],
-                    'reports_authorize_count_before' => $detectionReport[13],
-                    'reports_authorize_count_current' => $detectionReport[14],
-                    'reports_f_e' => $detectionReport[15],
-                    'reports_reply' => $detectionReport[16],
-                    'reports_note' => $detectionReport[17]
+                    'index' => $detectionReport[0],
+                    'reports_num' => $detectionReport[1],
+                    'letter_id' => $detectionReport[2],
+                    'reports_authorize_status' => $detectionReport[3],
+                    'reports_expiration_date_end' => $detectionReport[4],
+                    'reports_reporter' => $detectionReport[5],
+                    'reports_car_brand' => $detectionReport[6],
+                    'reports_car_model' => $detectionReport[7],
+                    'reports_inspection_institution' => $detectionReport[8],
+                    'reports_regulations' => $detectionReport[9],
+                    'reports_car_model_code' => $detectionReport[10],
+                    'reports_test_date' => $detectionReport[11],
+                    'reports_date' => $detectionReport[12],
+                    'reports_vin' => $detectionReport[13],
+                    'reports_authorize_count_before' => $detectionReport[14],
+                    'reports_authorize_count_current' => $detectionReport[15],
+                    'reports_f_e' => $detectionReport[16],
+                    'reports_reply' => $detectionReport[17],
+                    'reports_note' => $detectionReport[18]
                 ];
             }
 
@@ -170,6 +179,8 @@ class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMappi
                 return [
                     'index' => $index + 1,
                     'reports_num' => $detectionReport->reports_num,
+                    'letter_id' => $detectionReport->letter_id,
+                    'reports_authorize_status' => $status,
                     'reports_expiration_date_end' => $reports_expiration_date_end,
                     'reports_reporter' => $reporter,
                     'reports_car_brand' => $brand,
@@ -179,14 +190,16 @@ class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMappi
                     'reports_car_model_code' => $detectionReport->reports_car_model_code,
                     'reports_test_date' => $reports_test_date,
                     'reports_date' => $reports_date,
-                    'reports_note' => $detectionReport->reports_vin, // 登錄清冊備註欄為車身碼
+                    'reports_vin' => $detectionReport->reports_vin, // 登錄清冊備註欄為車身碼
                     'reports_authorize_count_before' => (string)$detectionReport->reports_authorize_count_before,
                     'reports_authorize_count_current' => (string)$detectionReport->reports_authorize_count_current,
                     'reports_f_e' => $detectionReport->reports_f_e,
+                    'reports_reply' => $detectionReport->reports_reply,
+                    'reports_note' => $detectionReport->reports_note,
                 ];
             } else {
                 return [
-                    // 'index' => $index + 1,
+                    'index' => $index + 1,
                     'reports_num' => $detectionReport->reports_num,
                     'letter_id' => $detectionReport->letter_id,
                     'reports_authorize_status' => $status,
