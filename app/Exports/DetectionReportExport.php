@@ -40,7 +40,11 @@ class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMappi
         if ($this->data_id == null) {
             $detectionReport = DetectionReport::all();
         } else {
-            $data_ids = explode(',', $this->data_id);
+            if (is_array($this->data_id)) {
+                $data_ids = $this->data_id;
+            } else {
+                $data_ids = explode(',', $this->data_id);
+            }
             $detectionReport = DetectionReport::whereIn('id', $data_ids)->get();
         }
 
