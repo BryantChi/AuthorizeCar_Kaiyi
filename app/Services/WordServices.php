@@ -347,7 +347,7 @@ class WordServices
         }
 
         // 將檔案保存到 public 目錄下
-        $path = Excel::store(new DetectionReportExport($data_id), $folderPath . '/'. $fileName, 's2');
+        $path = Excel::store(new DetectionReportExport($data_id, DetectionReportExport::REPORTS_SIMPLE), $folderPath . '/'. $fileName, 's2');
 
         // return json_encode([
         //     'status' => 'success',
@@ -856,7 +856,7 @@ class WordServices
         }
 
         // 將檔案保存到 public 目錄下
-        $path = Excel::store(new DetectionReportExport($data_id), $folderPath . '/'. $fileName, 's2');
+        $path = Excel::store(new DetectionReportExport($data_id, DetectionReportExport::REPORTS_SIMPLE), $folderPath . '/'. $fileName, 's2');
 
         // return json_encode([
         //     'status' => 'success',
@@ -1125,7 +1125,7 @@ class WordServices
         }
 
         // 將檔案保存到 public 目錄下
-        $path = Excel::store(new DetectionReportExport($data_id), $folderPath . '/'. $fileName, 's2');
+        $path = Excel::store(new DetectionReportExport($data_id, DetectionReportExport::REPORTS_SIMPLE), $folderPath . '/'. $fileName, 's2');
 
         // return json_encode([
         //     'status' => 'success',

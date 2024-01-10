@@ -27,9 +27,79 @@ class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMappi
 {
     protected $data_id;
 
-    public function __construct($data_id = null)
+    protected $type;
+
+    const REPORTS_FULL = "REPORTS_FULL";
+
+    const REPORTS_SIMPLE = "REPORTS_SIMPLE";
+
+    const HEADER_FULL_BY_ID = [
+        '項次',
+        '檢測報告編號',
+        '發函文號',
+        '授權狀態',
+        '有效期限-迄',
+        '報告所有人',
+        '廠牌',
+        '車型',
+        '檢測機構',
+        '法規項目',
+        '車種代號',
+        '測試日期',
+        '報告日期',
+        '代表車車身碼',
+        '移入前授權使用次數',
+        '移入後累計授權次數',
+        'F/E',
+        '車安回函',
+        '說明'
+    ];
+
+    const HEADER_FULL = [
+        '項次',
+        '檢測報告編號',
+        '發函文號',
+        '授權狀態',
+        '有效期限-迄',
+        '報告所有者',
+        '車輛廠牌',
+        '車型名稱',
+        '檢測機構',
+        '法規項目',
+        '車種代號',
+        '測試日期',
+        '報告製作日期',
+        '備註',
+        '移入前授權使用次數',
+        '移入後累計授權次數',
+        'F/E',
+        '車安回函',
+        '說明'
+    ];
+
+    const HEADER_SIMPLE = [
+        '項次',
+        '檢測報告編號',
+        '有效期限-迄',
+        '報告所有者',
+        '車輛廠牌',
+        '車型名稱',
+        '檢測機構',
+        '法規項目',
+        '車種代號',
+        '測試日期',
+        '報告製作日期',
+        '備註',
+        '移入前授權使用次數',
+        '移入後累計授權次數',
+        'F/E'
+    ];
+
+    public function __construct($data_id = null, $type = self::REPORTS_SIMPLE)
     {
         $this->data_id = $data_id;
+
+        $this->type = $type;
     }
 
     /**
@@ -53,53 +123,20 @@ class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMappi
 
         });
 
-        if ($this->data_id == null) {
+        switch ($this->type) {
+            case self::REPORTS_FULL:
+                if ($this->data_id == null) {
+                    $processDetection->prepend(['item' => self::HEADER_FULL, 'index' => '']);
+                } else {
+                    $processDetection->prepend(['item' => self::HEADER_FULL_BY_ID, 'index' => '']);
+                }
+                break;
 
-            $processDetection->prepend(['item' => [
-                '項次',
-                '檢測報告編號',
-                '發函文號',
-                '授權狀態',
-                '有效期限-迄',
-                '報告所有者',
-                '車輛廠牌',
-                '車型名稱',
-                '檢測機構',
-                '法規項目',
-                '車種代號',
-                '測試日期',
-                '報告製作日期',
-                '備註',
-                '移入前授權使用次數',
-                '移入後累計授權次數',
-                'F/E',
-                '車安回函',
-                '說明'
-            ], 'index' => '']);
-        } else {
-
-            $processDetection->prepend(['item' => [
-                '項次',
-                '檢測報告編號',
-                '發函文號',
-                '授權狀態',
-                '有效期限-迄',
-                '報告所有人',
-                '廠牌',
-                '車型',
-                '檢測機構',
-                '法規項目',
-                '車種代號',
-                '測試日期',
-                '報告日期',
-                '代表車車身碼',
-                '移入前授權使用次數',
-                '移入後累計授權次數',
-                'F/E',
-                '車安回函',
-                '說明'
-            ], 'index' => '']);
+            case self::REPORTS_SIMPLE:
+                $processDetection->prepend(['item' => self::HEADER_SIMPLE, 'index' => '']);
+                break;
         }
+
         // dd ($processDetection);
         return $processDetection;
     }
@@ -110,50 +147,50 @@ class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMappi
         $index = $items['index'];
 
         if ($index == '') {
-            if ($this->data_id == null) {
-                $dd = [
-                    'index' => $detectionReport[0],
-                    'reports_num' => $detectionReport[1],
-                    'letter_id' => $detectionReport[2],
-                    'reports_authorize_status' => $detectionReport[3],
-                    'reports_expiration_date_end' => $detectionReport[4],
-                    'reports_reporter' => $detectionReport[5],
-                    'reports_car_brand' => $detectionReport[6],
-                    'reports_car_model' => $detectionReport[7],
-                    'reports_inspection_institution' => $detectionReport[8],
-                    'reports_regulations' => $detectionReport[9],
-                    'reports_car_model_code' => $detectionReport[10],
-                    'reports_test_date' => $detectionReport[11],
-                    'reports_date' => $detectionReport[12],
-                    'reports_vin' => $detectionReport[13],
-                    'reports_authorize_count_before' => $detectionReport[14],
-                    'reports_authorize_count_current' => $detectionReport[15],
-                    'reports_f_e' => $detectionReport[16],
-                    'reports_reply' => $detectionReport[17],
-                    'reports_note' => $detectionReport[18]
-                ];
-            } else {
-                $dd = [
-                    'index' => $detectionReport[0],
-                    'reports_num' => $detectionReport[1],
-                    'letter_id' => $detectionReport[2],
-                    'reports_authorize_status' => $detectionReport[3],
-                    'reports_expiration_date_end' => $detectionReport[4],
-                    'reports_reporter' => $detectionReport[5],
-                    'reports_car_brand' => $detectionReport[6],
-                    'reports_car_model' => $detectionReport[7],
-                    'reports_inspection_institution' => $detectionReport[8],
-                    'reports_regulations' => $detectionReport[9],
-                    'reports_car_model_code' => $detectionReport[10],
-                    'reports_test_date' => $detectionReport[11],
-                    'reports_date' => $detectionReport[12],
-                    'reports_vin' => $detectionReport[13],
-                    'reports_authorize_count_before' => $detectionReport[14],
-                    'reports_authorize_count_current' => $detectionReport[15],
-                    'reports_f_e' => $detectionReport[16],
-                    'reports_reply' => $detectionReport[17],
-                    'reports_note' => $detectionReport[18]
-                ];
+            switch ($this->type) {
+                case self::REPORTS_FULL:
+                    $dd = [
+                        'index' => $detectionReport[0],
+                        'reports_num' => $detectionReport[1],
+                        'letter_id' => $detectionReport[2],
+                        'reports_authorize_status' => $detectionReport[3],
+                        'reports_expiration_date_end' => $detectionReport[4],
+                        'reports_reporter' => $detectionReport[5],
+                        'reports_car_brand' => $detectionReport[6],
+                        'reports_car_model' => $detectionReport[7],
+                        'reports_inspection_institution' => $detectionReport[8],
+                        'reports_regulations' => $detectionReport[9],
+                        'reports_car_model_code' => $detectionReport[10],
+                        'reports_test_date' => $detectionReport[11],
+                        'reports_date' => $detectionReport[12],
+                        'reports_vin' => $detectionReport[13],
+                        'reports_authorize_count_before' => $detectionReport[14],
+                        'reports_authorize_count_current' => $detectionReport[15],
+                        'reports_f_e' => $detectionReport[16],
+                        'reports_reply' => $detectionReport[17],
+                        'reports_note' => $detectionReport[18]
+                    ];
+                    break;
+
+                case self::REPORTS_SIMPLE:
+                    $dd = [
+                        'index' => $detectionReport[0],
+                        'reports_authorize_status' => $detectionReport[1],
+                        'reports_expiration_date_end' => $detectionReport[2],
+                        'reports_reporter' => $detectionReport[3],
+                        'reports_car_brand' => $detectionReport[4],
+                        'reports_car_model' => $detectionReport[5],
+                        'reports_inspection_institution' => $detectionReport[6],
+                        'reports_regulations' => $detectionReport[7],
+                        'reports_car_model_code' => $detectionReport[8],
+                        'reports_test_date' => $detectionReport[9],
+                        'reports_date' => $detectionReport[10],
+                        'reports_vin' => $detectionReport[11],
+                        'reports_authorize_count_before' => $detectionReport[12],
+                        'reports_authorize_count_current' => $detectionReport[13],
+                        'reports_f_e' => $detectionReport[14],
+                    ];
+                    break;
             }
 
             return $dd;
@@ -179,50 +216,51 @@ class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMappi
             $d = Carbon::parse($detectionReport->reports_date);
             $reports_date = ((int)$d->year - 1911) . '/' . str_pad($d->month, 2, "0", STR_PAD_LEFT) . '/' . str_pad($d->day, 2, "0", STR_PAD_LEFT);
 
-            if ($this->data_id == null) {
-                return [
-                    'index' => $index + 1,
-                    'reports_num' => $detectionReport->reports_num,
-                    'letter_id' => $detectionReport->letter_id,
-                    'reports_authorize_status' => $status,
-                    'reports_expiration_date_end' => $reports_expiration_date_end,
-                    'reports_reporter' => $reporter,
-                    'reports_car_brand' => $brand,
-                    'reports_car_model' => $model,
-                    'reports_inspection_institution' => $ii,
-                    'reports_regulations' => $regulations,
-                    'reports_car_model_code' => $detectionReport->reports_car_model_code,
-                    'reports_test_date' => $reports_test_date,
-                    'reports_date' => $reports_date,
-                    'reports_vin' => $detectionReport->reports_vin, // 登錄清冊備註欄為車身碼
-                    'reports_authorize_count_before' => (string)$detectionReport->reports_authorize_count_before,
-                    'reports_authorize_count_current' => (string)$detectionReport->reports_authorize_count_current,
-                    'reports_f_e' => $detectionReport->reports_f_e,
-                    'reports_reply' => $detectionReport->reports_reply,
-                    'reports_note' => $detectionReport->reports_note,
-                ];
-            } else {
-                return [
-                    'index' => $index + 1,
-                    'reports_num' => $detectionReport->reports_num,
-                    'letter_id' => $detectionReport->letter_id,
-                    'reports_authorize_status' => $status,
-                    'reports_expiration_date_end' => $reports_expiration_date_end,
-                    'reports_reporter' => $reporter,
-                    'reports_car_brand' => $brand,
-                    'reports_car_model' => $model,
-                    'reports_inspection_institution' => $ii,
-                    'reports_regulations' => $regulations,
-                    'reports_car_model_code' => $detectionReport->reports_car_model_code,
-                    'reports_test_date' => $reports_test_date,
-                    'reports_date' => $reports_date,
-                    'reports_vin' => $detectionReport->reports_vin,
-                    'reports_authorize_count_before' => (string)$detectionReport->reports_authorize_count_before,
-                    'reports_authorize_count_current' => (string)$detectionReport->reports_authorize_count_current,
-                    'reports_f_e' => $detectionReport->reports_f_e,
-                    'reports_reply' => $detectionReport->reports_reply,
-                    'reports_note' => $detectionReport->reports_note,
-                ];
+
+            switch ($this->type) {
+                case self::REPORTS_FULL:
+                    return [
+                        'index' => $index + 1,
+                        'reports_num' => $detectionReport->reports_num,
+                        'letter_id' => $detectionReport->letter_id,
+                        'reports_authorize_status' => $status,
+                        'reports_expiration_date_end' => $reports_expiration_date_end,
+                        'reports_reporter' => $reporter,
+                        'reports_car_brand' => $brand,
+                        'reports_car_model' => $model,
+                        'reports_inspection_institution' => $ii,
+                        'reports_regulations' => $regulations,
+                        'reports_car_model_code' => $detectionReport->reports_car_model_code,
+                        'reports_test_date' => $reports_test_date,
+                        'reports_date' => $reports_date,
+                        'reports_vin' => $detectionReport->reports_vin, // 登錄清冊備註欄為車身碼
+                        'reports_authorize_count_before' => (string)$detectionReport->reports_authorize_count_before,
+                        'reports_authorize_count_current' => (string)$detectionReport->reports_authorize_count_current,
+                        'reports_f_e' => $detectionReport->reports_f_e,
+                        'reports_reply' => $detectionReport->reports_reply,
+                        'reports_note' => $detectionReport->reports_note,
+                    ];
+                    break;
+
+                case self::REPORTS_SIMPLE:
+                    return [
+                        'index' => $index + 1,
+                        'reports_num' => $detectionReport->reports_num,
+                        'reports_expiration_date_end' => $reports_expiration_date_end,
+                        'reports_reporter' => $reporter,
+                        'reports_car_brand' => $brand,
+                        'reports_car_model' => $model,
+                        'reports_inspection_institution' => $ii,
+                        'reports_regulations' => $regulations,
+                        'reports_car_model_code' => $detectionReport->reports_car_model_code,
+                        'reports_test_date' => $reports_test_date,
+                        'reports_date' => $reports_date,
+                        'reports_vin' => $detectionReport->reports_vin,
+                        'reports_authorize_count_before' => (string)$detectionReport->reports_authorize_count_before,
+                        'reports_authorize_count_current' => (string)$detectionReport->reports_authorize_count_current,
+                        'reports_f_e' => $detectionReport->reports_f_e,
+                    ];
+                    break;
             }
         }
 

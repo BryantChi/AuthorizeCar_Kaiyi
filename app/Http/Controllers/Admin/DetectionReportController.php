@@ -743,9 +743,9 @@ class DetectionReportController extends Controller
         $data_ids = $input['data_ids'];
 
         if ($data_ids == null) {
-            return Excel::download(new DetectionReportExport(), '檢測報告總表.xlsx');
+            return Excel::download(new DetectionReportExport(null, DetectionReportExport::REPORTS_FULL), '檢測報告總表.xlsx');
         } else {
-            return Excel::download(new DetectionReportExport($data_ids), '外匯車授權管理系統.xlsx');
+            return Excel::download(new DetectionReportExport($data_ids, DetectionReportExport::REPORTS_FULL), '外匯車授權管理系統.xlsx');
         }
 
     }
