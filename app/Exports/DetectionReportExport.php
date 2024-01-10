@@ -255,7 +255,7 @@ class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMappi
                         'reports_car_model_code' => $detectionReport->reports_car_model_code,
                         'reports_test_date' => $reports_test_date,
                         'reports_date' => $reports_date,
-                        'reports_vin' => $detectionReport->reports_vin,
+                        'reports_vin' => $detectionReport->reports_vin, // 登錄清冊備註欄為車身碼
                         'reports_authorize_count_before' => (string)$detectionReport->reports_authorize_count_before,
                         'reports_authorize_count_current' => (string)$detectionReport->reports_authorize_count_current,
                         'reports_f_e' => $detectionReport->reports_f_e,
