@@ -25,7 +25,7 @@ class StoreDetectionReportRequest extends FormRequest
     {
         return [
             //
-            'reports_num' => 'required',
+            'reports_num' => 'required|unique:detection_reports',
             'reports_expiration_date_end' => 'required',
             'reports_reporter' => 'required',
             'reports_car_brand' => 'required',
@@ -40,6 +40,7 @@ class StoreDetectionReportRequest extends FormRequest
     {
         return [
             'reports_num.required' => '檢測報告編號不可以空白',
+            'reports_num.unique' => '檢測報告編號已存在',
             'reports_expiration_date_end' => '有效期限-迄不可以空白',
             'reports_reporter.required' => '報告原有人不可以空白',
             'reports_car_brand.required' => '廠牌不可以空白',
