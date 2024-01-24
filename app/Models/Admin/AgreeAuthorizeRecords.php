@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $reports_regulations
  * @property string $licensee
  * @property string $Invoice_title
+ * @property string $auth_note
  */
 class AgreeAuthorizeRecords extends Model
 {
@@ -47,7 +48,8 @@ class AgreeAuthorizeRecords extends Model
         'reports_vin',
         'reports_regulations',
         'licensee',
-        'Invoice_title'
+        'Invoice_title',
+        'auth_note'
     ];
 
     /**
@@ -68,7 +70,8 @@ class AgreeAuthorizeRecords extends Model
         'reports_vin' => 'string',
         'reports_regulations' => 'json',
         'licensee' => 'string',
-        'Invoice_title' => 'string'
+        'Invoice_title' => 'string',
+        'auth_note' => 'string',
     ];
 
     /**

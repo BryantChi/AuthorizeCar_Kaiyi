@@ -1118,7 +1118,8 @@
                 $('#inp_vin').val('');
                 $('#inp_auth_num').val('');
                 $('#inp_auth_date').val('');
-                $('#inp_auth_type_year').val('');
+                $('#inp_auth_type_year').val(new Date().getFullYear());
+                $('#inp_auth_note').val('');
 
                 $('#reports_regulations').val([]).trigger('change');
                 $('#reports_num').val(null).trigger('change');
@@ -1368,7 +1369,8 @@
                     });
                 } else {
                     const formValues = [$('#inp_com').val(), $('#car_brand').val(), $('#car_model').val(),
-                        $('#inp_vin').val(), $('#inp_auth_num').val(), $('#inp_auth_date').val(), $('#inp_auth_type_year').val()
+                        $('#inp_vin').val(), $('#inp_auth_num').val(), $('#inp_auth_date').val(),
+                        $('#inp_auth_type_year').val(), $('#inp_auth_note').val()
                     ];
 
                     if (isProcess == false) {

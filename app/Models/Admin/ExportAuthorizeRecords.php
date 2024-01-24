@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $export_authorize_auth_num_id
  * @property string $export_authorize_reports_nums
  * @property string $export_authorize_path
+ * @property string $export_authorize_note
  */
 class ExportAuthorizeRecords extends Model
 {
@@ -46,7 +47,8 @@ class ExportAuthorizeRecords extends Model
         'export_authorize_date',
         'export_authorize_auth_num_id',
         'export_authorize_reports_nums',
-        'export_authorize_path'
+        'export_authorize_path',
+        'export_authorize_note'
     ];
 
     /**
@@ -66,6 +68,7 @@ class ExportAuthorizeRecords extends Model
         'export_authorize_auth_num_id' => 'json',
         'export_authorize_reports_nums' => 'json',
         'export_authorize_path' => 'json',
+        'export_authorize_note' => 'string',
     ];
 
     /**

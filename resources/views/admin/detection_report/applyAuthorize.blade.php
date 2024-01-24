@@ -36,6 +36,11 @@
             <label for="inp_auth_date">授權日期</label>
             <input type="date" class="form-control" id="inp_auth_date" min="0001-01-01" max="9999-12-31" placeholder="輸入授權日期">
         </div>
+        <div class="form-group">
+            <label for="inp_auth_note">備註</label>
+            {{-- <input type="text" class="form-control" id="inp_auth_note" placeholder="備註"> --}}
+            <textarea class="form-control" id="inp_auth_note" rows="5" placeholder="備註"></textarea>
+        </div>
     </div>
     <div class="col-md-9 p-3 authorize-temp-conatiner">
         <div class="form-row justify-content-center">

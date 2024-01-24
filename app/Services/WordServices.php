@@ -406,6 +406,7 @@ class WordServices
                 'export_authorize_auth_num_id' => json_encode($export_authorize_auth_num_id), // 授權序號
                 'export_authorize_reports_nums' => json_encode($export_authorize_reports_nums),
                 'export_authorize_path' => json_encode($export_authorize_path),
+                'export_authorize_note' => $auth_input[7],
             ];
             $exportInsert = ExportAuthorizeRecords::create($exportAuthRecord);
             $export_id = $exportInsert->id;
@@ -460,6 +461,7 @@ class WordServices
                 'reports_regulations' => json_encode($value->reports_regulations),
                 'licensee' => $auth_input[0],
                 'Invoice_title' => '',
+                'auth_note' => $auth_input[7],
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ];
@@ -551,6 +553,7 @@ class WordServices
             'export_authorize_auth_num_id' => json_encode($export_authorize_auth_num_id), // 授權序號
             'export_authorize_reports_nums' => json_encode($export_authorize_reports_nums),
             'export_authorize_path' => json_encode($export_authorize_path),
+            'export_authorize_note' => $auth_input[7],
         ];
         ExportAuthorizeRecords::where('id', $export_id)->update($exportAuthRecord);
 
