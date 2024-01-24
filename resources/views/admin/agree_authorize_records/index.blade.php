@@ -141,7 +141,7 @@
 
                             // Add list of options
                             if (title == '授權證明書編號' || title == '授權日期' ||
-                            title == '年份' || title == '車身碼' || title == '對象') {
+                            title == '年份' || title == '車身碼' || title == '對象' || title == '備註') {
                                 $('<input type="text" class="form-control" placeholder="Search ' +
                                         title + '" />')
                                     .appendTo($(column.footer()).empty());
@@ -269,6 +269,10 @@
                     {
                         data: 'Invoice_title',
                         name: 'Invoice_title'
+                    },
+                    {
+                        data: 'auth_note',
+                        name: 'auth_note'
                     },
                     // {
                     //     data: 'action',

@@ -53,6 +53,7 @@ class ExportAuthorizeRecordsController extends AppBaseController
                 'export_authorize_auth_num_id',
                 'export_authorize_reports_nums',
                 'export_authorize_path',
+                'export_authorize_note',
                 'created_at',
                 'updated_at',
                 'deleted_at'

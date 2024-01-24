@@ -14,6 +14,7 @@
                 <th style="max-width: 300px;">授權項目</th>
                 <th>對象</th>
                 <th>發票抬頭</th>
+                <th>備註</th>
                 {{-- <th colspan="3">Action</th> --}}
             </tr>
         </thead>
@@ -46,6 +47,7 @@
                 <th class="text-white" style="max-width: 300px;">授權項目</th>
                 <th>對象</th>
                 <th class="text-white">發票抬頭</th>
+                <th>備註</th>
                 {{-- <th colspan="3">Action</th> --}}
             </tr>
         </tfoot>

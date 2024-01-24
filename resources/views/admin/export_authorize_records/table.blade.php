@@ -14,6 +14,7 @@
                 <th style="width: 20rem !important;">授權使用序號</th>
                 <th style="width: 20rem !important;">檢測報告編號</th>
                 <th>開立授權文件</th>
+                <th>備註</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -48,6 +49,7 @@
                 <th style="width: 20rem !important;">授權使用序號</th>
                 <th style="width: 20rem !important;">檢測報告編號</th>
                 <th class="ft-none">開立授權文件</th>
+                <th>備註</th>
                 <th class="ft-none">Action</th>
             </tr>
         </tfoot>

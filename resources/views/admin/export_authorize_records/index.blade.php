@@ -299,7 +299,7 @@
 
                             // Add list of options
                             if (title == '授權書編號' || title == '授權使用對象' || title == '樣式年份' || title == '車身碼' || title == '授權日期' ||
-                            title == '授權使用序號' || title == '檢測報告編號' || title == '廠牌' || title == '型號') {
+                            title == '授權使用序號' || title == '檢測報告編號' || title == '廠牌' || title == '型號' || title == '備註') {
                                 $('<input type="text" class="form-control" placeholder="Search ' +
                                         title + '" />')
                                     .appendTo($(column.footer()).empty());
@@ -435,6 +435,10 @@
                         name: 'export_authorize_path'
                     },
                     {
+                        data: 'export_authorize_note',
+                        name: 'export_authorize_note'
+                    },
+                    {
                         data: 'action',
                         name: 'action',
                         orderable: false,
@@ -466,8 +470,8 @@
                             return $(node).find('input[name="records[]"]').prop('checked');
                         },
                         columns: function(idx, data, node) {
-                            return idx != 0 && idx != 10 && idx != 11;
-                            // return idx != 0 && idx != 7 && idx != 10 && idx != 11;
+                            return idx != 0 && idx != 10 && idx != 12;
+                            // return idx != 0 && idx != 7 && idx != 10 && idx != 12;
                         },
                     }
                 }],
