@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreDetectionReportRequest extends FormRequest
 {
@@ -25,7 +26,7 @@ class StoreDetectionReportRequest extends FormRequest
     {
         return [
             //
-            'reports_num' => 'required|unique:detection_reports',
+            'reports_num' => [ 'required', Rule::unique( 'detection_reports' )->whereNull( 'deleted_at' )],
             'reports_expiration_date_end' => 'required',
             'reports_reporter' => 'required',
             'reports_car_brand' => 'required',
