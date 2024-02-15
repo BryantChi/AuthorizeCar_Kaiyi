@@ -1123,7 +1123,8 @@
         }
 
         async function copy(item) {
-            let jsonObj = JSON.parse(item);
+            let str = item.replace(/(\r\n)|(\n)/g,'<br>')
+            let jsonObj = JSON.parse(str);
             // console.log(jsonObj);
             await autoInputAuth(jsonObj);
 
@@ -1131,7 +1132,8 @@
         }
 
         async function edit(item) {
-            let jsonObj = JSON.parse(item);
+            let str = item.replace(/(\r\n)|(\n)/g,'<br>')
+            let jsonObj = JSON.parse(str);
             // console.log(jsonObj);
             await autoInputAuth(jsonObj, 'edit');
 
