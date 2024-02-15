@@ -71,7 +71,7 @@
             </div>
         </div>
         <div style="border-bottom: 1px dashed #444444bf"></div>
-        <div class="table-responsive" style="height: 23rem;overflow-y: auto;">
+        <div class="table-responsive" style="min-height: 23rem;max-height: 43rem;overflow-y: auto;">
             <table class="table table-hover" id="authorize-data-temp-table">
                 <thead>
                     <tr>
