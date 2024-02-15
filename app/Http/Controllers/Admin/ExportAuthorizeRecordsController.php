@@ -79,9 +79,9 @@ class ExportAuthorizeRecordsController extends AppBaseController
                 ->addColumn('action', function (ExportAuthorizeRecords $record) {
                     $newR = json_encode($record, JSON_UNESCAPED_UNICODE);
                     $sr = str_replace(" ", "&nbsp;", $newR);
-                    $sr = str_replace("\t", "\\t", $sr);
-                    $sr = str_replace("\n",  "\\n", $sr);
-                    $sr = str_replace("\r", "\\r", $sr);
+                    $sr = str_replace("\t", "&#9;", $sr);
+                    $sr = str_replace("\n",  "<br>", $sr);
+                    $sr = str_replace("\r", "<br>", $sr);
                     $btn_copy = '<a href="javascript:void(0)" onclick=copy(\''. $sr .'\') class="btn btn-default btn-lg2">' .
                         '<i class="far fa-copy"></i>' .
                         '</a>';
