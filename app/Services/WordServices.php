@@ -566,29 +566,29 @@ class WordServices
         $maxAttempts = 3; // 最大重試次數
         $attempts = 0; // 目前的嘗試次數
 
-        // while ($attempts < $maxAttempts) {
+        while ($attempts < $maxAttempts) {
 
-        //     $ilovepdf = new Ilovepdf($pdfKey[$attempts]['publicKey'], $pdfKey[$attempts]['secretKey']);
-        //     try {
-        //         // 嘗試要執行的操作
-        //         // 例如：資料庫查詢、外部API調用等
-        //         $myTask = $ilovepdf->newTask('officepdf');
-        //         $file1 = $myTask->addFile($newWordFilePath);
-        //         $myTask->execute();
-        //         $myTask->download(public_path($folderPdfPath));
+            $ilovepdf = new Ilovepdf($pdfKey[$attempts]['publicKey'], $pdfKey[$attempts]['secretKey']);
+            try {
+                // 嘗試要執行的操作
+                // 例如：資料庫查詢、外部API調用等
+                $myTask = $ilovepdf->newTask('officepdf');
+                $file1 = $myTask->addFile($newWordFilePath);
+                $myTask->execute();
+                $myTask->download(public_path($folderPdfPath));
 
-        //         break; // 如果操作成功，跳出循環
-        //     } catch (\Exception $e) {
-        //         $attempts++; // 增加嘗試次數
-        //         if ($attempts == $maxAttempts) {
-        //             // 如果達到最大嘗試次數，可以選擇拋出異常或者處理錯誤
-        //             throw $e;
-        //         }
+                break; // 如果操作成功，跳出循環
+            } catch (\Exception $e) {
+                $attempts++; // 增加嘗試次數
+                if ($attempts == $maxAttempts) {
+                    // 如果達到最大嘗試次數，可以選擇拋出異常或者處理錯誤
+                    throw $e;
+                }
 
-        //         // 可選：在重試之前暫停一段時間
-        //         sleep(1); // 休息1秒
-        //     }
-        // }
+                // 可選：在重試之前暫停一段時間
+                sleep(1); // 休息1秒
+            }
+        }
 
 
         // return json_encode([
