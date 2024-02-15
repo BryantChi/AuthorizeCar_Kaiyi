@@ -77,10 +77,11 @@ class ExportAuthorizeRecordsController extends AppBaseController
                     return '<div class="form-group form-check"><input type="checkbox" name="records[]" class="form-check-input" style="width: 20px;height: 20px;" value="' . $record->id . '" id="' . $record->id . '" ></div>';
                 })
                 ->addColumn('action', function (ExportAuthorizeRecords $record) {
-                    $sr = str_replace(" ", "&nbsp;", json_encode($record, JSON_UNESCAPED_UNICODE));
-                    $sr = str_replace("\t", "\\t", json_encode($sr, JSON_UNESCAPED_UNICODE));
-                    $sr = str_replace("\n",  "\\n", json_encode($sr, JSON_UNESCAPED_UNICODE));
-                    $sr = str_replace("\r", "\\r", json_encode($sr, JSON_UNESCAPED_UNICODE));
+                    $newR = json_encode($record, JSON_UNESCAPED_UNICODE);
+                    $sr = str_replace(" ", "&nbsp;", $newR);
+                    $sr = str_replace("\t", "\\t", $sr);
+                    $sr = str_replace("\n",  "\\n", $sr);
+                    $sr = str_replace("\r", "\\r", $sr);
                     $btn_copy = '<a href="javascript:void(0)" onclick=copy(\''. $sr .'\') class="btn btn-default btn-lg2">' .
                         '<i class="far fa-copy"></i>' .
                         '</a>';
