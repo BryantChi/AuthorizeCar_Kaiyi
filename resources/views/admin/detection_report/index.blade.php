@@ -949,6 +949,7 @@
                 $.ajax({
                     url: "{{ route('exportDocument') }}",
                     type: 'POST',
+                    timeout: 600000,
                     data: {
                         data_ids: reports_id,
                         typer: 'delivery',
