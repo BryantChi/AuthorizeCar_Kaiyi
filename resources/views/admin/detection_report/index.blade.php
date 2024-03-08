@@ -14,6 +14,10 @@
                     </a>
                     <div class="float-right d-flex mr-2">
                         <div class="btn-action" id="btn-action">
+                            {{-- <a href="javascript:void(0)" class="btn btn-outline-success mr-2 mb-md-auto mb-2" id="btn-modify-letter-id">
+                                <i class="fas fa-pen"></i>
+                                一鍵修改發函文號
+                            </a> --}}
                             <a class="btn btn-outline-success mr-2 mb-md-auto mb-2" id="btn-apply-delivery"
                                 href="javascript:void(0)" onclick="exportData()">
                                 總表匯出
@@ -79,6 +83,20 @@
                         <input type="checkbox" class="form-check-input check-all mr-1 my-0 ml-1 d-none"
                             style="width: 20px;height: 20px;" id="check-all" value="" />
                         <label for="check-all" class="check-all-label px-2 mb-0 ml-42">全選</label>
+                    </div>
+                    <div class="d-md-flex d-inline-block mx-2">
+                        <a href="javascript:void(0)" class="btn btn-outline-success mb-md-auto" id="btn-modify-letter-id">
+                            <i class="fas fa-pen"></i>
+                            一鍵修改發函文號
+                        </a>
+                        <div class="mb-2 letter-content ml-2 my-md-0 my-1">
+                            <div class="input-group-append">
+                                <input type="text" class="col form-control" style="width: 8rem;" id="letter_id">
+                                <a class="btn btn-outline-success" id="btn-modify-letters" onclick="modifyLetterAction()">
+                                    修改
+                                </a>
+                            </div>
+                        </div>
                     </div>
                     <div class="ml-auto mb-3" style="width: max-content;">
                         <a class="btn btn-outline-secondary" id="resetTableState" href="javascript:void(0)">重新整理</a>
@@ -894,6 +912,9 @@
                             return [];
                         }
                         break;
+                    case 'modify_letter_id':
+                        return ck_reports;
+                        break;
 
                     default:
                         break;
@@ -925,6 +946,60 @@
             }
 
             return str;
+        }
+
+        $('.letter-content').hide();
+        $('#btn-modify-letter-id').click(function() {
+            $('.letter-content').toggle();
+        });
+        function modifyLetterAction() {
+            if ($('#letter_id').val() == '') {
+                Swal.fire('注意！', '輸入不能為空', 'warning');
+                return;
+            } else {
+                modifyLetterId($('#letter_id').val());
+            }
+        }
+        function modifyLetterId(letter_id) {
+
+            var reports_id = getReportsCheckboxForStatus('modify_letter_id');
+
+            if (reports_id.length > 0) {
+                Swal.fire({
+                    title: '處理中...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                $.ajax({
+                    url: "{{ route('modifyLetter') }}",
+                    type: 'POST',
+                    data: {
+                        data_ids: reports_id,
+                        letter_id: letter_id,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(res) {
+                        Swal.close();
+                        if (res.status == 'success') {
+                            Swal.fire('恭喜！', '修改成功', 'success').then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.reload();
+                                }
+                            });
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        Swal.fire('錯誤！', '程序失敗', 'error');
+                    }
+                });
+
+            } else {
+                Swal.fire('注意！', '請選擇至少一個項目！', 'warning');
+            }
         }
 
         function applyForDelivery() {
@@ -1057,6 +1132,11 @@
                             }, 500);
                         }
 
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        /*错误信息处理*/
+                        Swal.close();
+                        Swal.fire('錯誤！', '程序失敗', 'error');
                     }
                 })
             }

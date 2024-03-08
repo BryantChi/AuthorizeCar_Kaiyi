@@ -501,6 +501,13 @@ class DetectionReportController extends Controller
         return response()->json($auth_status);
     }
 
+    public function modifyLetterId(Request $request)
+    {
+        $input = $request->all();
+        DetectionReport::whereIn('id', $input['data_ids'])->update(['letter_id' => $input['letter_id']]);
+        return \Response::json(['status' => 'success']);
+    }
+
     public function exportDocument(Request $request)
     {
         $wordService = new WordServices();
