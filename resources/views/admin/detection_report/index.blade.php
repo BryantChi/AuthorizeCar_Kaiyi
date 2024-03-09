@@ -993,6 +993,7 @@
                         }
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
+                        Swal.close();
                         Swal.fire('錯誤！', '程序失敗', 'error');
                     }
                 });
