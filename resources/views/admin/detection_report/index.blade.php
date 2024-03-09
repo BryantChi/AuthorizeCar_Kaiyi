@@ -1137,7 +1137,7 @@
                     error: function (jqXHR, textStatus, errorThrown) {
                         /*错误信息处理*/
                         Swal.close();
-                        Swal.fire('錯誤！', '轉檔程序超載失敗，請稍後再試', 'error');
+                        Swal.fire('錯誤！', '轉檔程序超載失敗，請稍後再試！', 'error');
                     }
                 })
             }
