@@ -1079,7 +1079,7 @@
                             });
 
                             $('.file-container').append(
-                                '<div class="col-12"></div><div class="col-12 mt-3"><h5><申請函/h5></div>');
+                                '<div class="col-12"></div><div class="col-12 mt-3"><h5><申請函</h5></div>');
                             $('.file-container').append(
                                 '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
                                 '<a href="' + window.location.origin + '/' + res.apply_letter_data
