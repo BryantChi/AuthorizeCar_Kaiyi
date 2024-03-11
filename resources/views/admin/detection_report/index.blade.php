@@ -177,8 +177,8 @@
                 </div>
                 <div class="modal-body">
                     {{-- {{ env('APP_URL') . '/uploads/' }} --}}
-                    <iframe id="pdf-data" src="" width="100%" style="height: 100vh;" seamless scrolling="yes"
-                        type="application/pdf" frameborder="0"></iframe>
+                    <iframe id="pdf-data" src="" width="100%" style="height: 100vh;" seamless
+                        scrolling="yes" type="application/pdf" frameborder="0"></iframe>
                 </div>
                 {{-- <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -190,7 +190,8 @@
 @endsection
 
 @push('page_css')
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
     <style>
         .select2-container {
             width: 100% !important;
@@ -294,11 +295,13 @@
                     }).nodes();
                     $('.check-all-label').html('取消全選');
                     $('input[name="reports[]"]', rows).prop('checked', true);
-                    // $('input[name="reports[]"]', rows).change();
+                    $('.selected-Count').show('500');
+                    $('.count-selected').html($('input[name="reports[]"]:checked').length);
                 } else {
                     $('.check-all-label').html('全選');
                     $('input[name="reports[]"]', rows).prop('checked', false);
-                    // $('input[name="reports[]"]', rows).change();
+                    $('.selected-Count').hide('500');
+                    $('.count-selected').html(0);
                 }
             });
 
@@ -443,9 +446,11 @@
                     $('input[name="reports[]"]').change(function() {
                         if ($('input[name="reports[]"]:checked').length > 0) {
                             $('.selected-Count').show('500');
-                            $('.count-selected').html($('input[name="reports[]"]:checked').length);
+                            $('.count-selected').html($('input[name="reports[]"]:checked')
+                                .length);
                         } else {
                             $('.selected-Count').hide('500');
+                            $('.count-selected').html(0);
                         }
                     });
                 },
@@ -454,9 +459,22 @@
                     // data: function(d) {
                     //     d.reports_reporter = $('#drsh-report-reporter').val();
                     // }
-                    error: function (xhr, error, thrown) {
+                    error: function(xhr, error, thrown) {
                         // 處理錯誤
                         window.location.reload();
+                    },
+                    complete: function() {
+                        $('.selected-Count').hide();
+                        $('input[name="reports[]"]').change(function() {
+                            if ($('input[name="reports[]"]:checked').length > 0) {
+                                $('.selected-Count').show('500');
+                                $('.count-selected').html($('input[name="reports[]"]:checked')
+                                    .length);
+                            } else {
+                                $('.selected-Count').hide('500');
+                                $('.count-selected').html(0);
+                            }
+                        });
                     }
                 },
                 processing: true,
@@ -623,7 +641,7 @@
                 var searchBox = $('div.dataTables_filter input');
                 var recentSearchesDiv = $(
                     '<div id="recentSearches" class="text-right border p-2" style="border-radius: 5px;"></div>'
-                    ).insertAfter(searchBox);
+                ).insertAfter(searchBox);
 
                 searchBox.on('focus', function() {
                     displayRecentSearches();
@@ -709,6 +727,7 @@
 
                 localStorage.setItem('dtSearches', JSON.stringify(searches));
                 displayRecentSearches();
+                $('input[name="reports[]"]').change();
             });
 
             function displayRecentSearches() {
@@ -965,6 +984,7 @@
         $('#btn-modify-letter-id').click(function() {
             $('.letter-content').toggle();
         });
+
         function modifyLetterAction() {
             if ($('#letter_id').val() == '') {
                 Swal.fire('注意！', '輸入不能為空', 'warning');
@@ -973,6 +993,7 @@
                 modifyLetterId($('#letter_id').val());
             }
         }
+
         function modifyLetterId(letter_id) {
 
             var reports_id = getReportsCheckboxForStatus('modify_letter_id');
@@ -1130,24 +1151,24 @@
                             setTimeout(function() {
                                 $('#downloadModal').modal('show');
                                 $('#downloadModal').on('hidden.bs.modal', function(
-                                        event) {
-                                        // do something...
-                                        reports_data = [];
-                                        Swal.fire({
-                                            title: '載入中...',
-                                            allowOutsideClick: false,
-                                            showConfirmButton: false,
-                                            didOpen: () => {
-                                                Swal.showLoading();
-                                            }
-                                        });
-                                        window.location.reload();
+                                    event) {
+                                    // do something...
+                                    reports_data = [];
+                                    Swal.fire({
+                                        title: '載入中...',
+                                        allowOutsideClick: false,
+                                        showConfirmButton: false,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                        }
                                     });
+                                    window.location.reload();
+                                });
                             }, 500);
                         }
 
                     },
-                    error: function (jqXHR, textStatus, errorThrown) {
+                    error: function(jqXHR, textStatus, errorThrown) {
                         /*错误信息处理*/
                         Swal.close();
                         Swal.fire('錯誤！', '轉檔程序超載失敗，請稍後再試！', 'error');
@@ -1391,20 +1412,23 @@
                             let e_date_m = padZero(e_date[1], 2);
                             let e_date_d = padZero(e_date[2], 2);
                             let auth_count = 0;
-                            if (data.report_data.reports_authorize_count_current < data.report_data.reports_authorize_count_before) {
-                                auth_count = padZero((data.report_data.reports_authorize_count_before + 1), 3);
+                            if (data.report_data.reports_authorize_count_current < data.report_data
+                                .reports_authorize_count_before) {
+                                auth_count = padZero((data.report_data
+                                    .reports_authorize_count_before + 1), 3);
                             } else {
-                                auth_count = padZero((data.report_data.reports_authorize_count_current + 1), 3);
+                                auth_count = padZero((data.report_data
+                                    .reports_authorize_count_current + 1), 3);
                             }
                             let fe = '';
-                            if (data.report_data.reports_f_e != null) fe = data.report_data.reports_f_e;
-                            let authorize_id = data.report_data.reports_num + '-Y' + fe + e_date_y + e_date_m + e_date_d + '-' + auth_count;
+                            if (data.report_data.reports_f_e != null) fe = data.report_data
+                                .reports_f_e;
+                            let authorize_id = data.report_data.reports_num + '-Y' + fe + e_date_y +
+                                e_date_m + e_date_d + '-' + auth_count;
                             $('#inputAuthNum').val(authorize_id);
                         },
-                        error: function(jqXHR, textStatus, errorThrown) {
-                        },
-                        complete: function(XMLHttpRequest, textStatus) {
-                        },
+                        error: function(jqXHR, textStatus, errorThrown) {},
+                        complete: function(XMLHttpRequest, textStatus) {},
                     })
                 }
             });
@@ -1459,7 +1483,7 @@
                         isProcess = false;
                     }
 
-                    Swal.fire('注意！', '輸入不能為空及授權項目至少一項', 'warning').then(function () {
+                    Swal.fire('注意！', '輸入不能為空及授權項目至少一項', 'warning').then(function() {
                         $('#btn-auth').prop('disabled', false);
                     });
                 } else {
@@ -1812,8 +1836,7 @@
 
         }
 
-        function exportData()
-        {
+        function exportData() {
             var ck_reports = $('input[name="reports[]"]:checked').map(function() {
                 return $(this).val();
             }).get();
