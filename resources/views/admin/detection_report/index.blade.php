@@ -102,6 +102,9 @@
                         <a class="btn btn-outline-secondary" id="resetTableState" href="javascript:void(0)">重新整理</a>
                     </div>
                 </div>
+                <div class="d-flex">
+                    <div class="selected-Count mb-3">目前已選取 <span class="count-selected text-danger"></span> 筆</div>
+                </div>
 
                 @include('admin.detection_report.table')
 
@@ -435,6 +438,16 @@
 
                     $('.buttons-excel').removeClass('dt-button buttons-excel buttons-html5').addClass(
                         'btn btn-outline-info mr-2').html('匯出Excel');
+
+                    $('.selected-Count').hide();
+                    $('input[name="reports[]"]').change(function() {
+                        if ($('input[name="reports[]"]:checked').length > 0) {
+                            $('.selected-Count').show('500');
+                            $('.count-selected').html($('input[name="reports[]"]:checked').length);
+                        } else {
+                            $('.selected-Count').hide('500');
+                        }
+                    });
                 },
                 ajax: {
                     url: "{{ route('admin.detectionReports.index') }}",
