@@ -28,18 +28,18 @@
                         case 0:
                             $files .= '<h5>合約書</h5>';
                             foreach ($value as $i => $v) {
-                                $files .= "<a href='" . url($v['word']) . "' download><img src='" . asset('assets/img/word-icon.png') . "'' class='img-fluid mx-2 my-1' width='30' title='" . $v['contract_file_name'] . "' alt=''></a>";
-                                $files .= "<a href='" . url($v['pdf']) . "' download><img src='" . asset('assets/img/pdf-icon.png') . "'' class='img-fluid mx-2 my-1' width='30' title='" . $v['contract_file_name'] . "' alt=''></a>";
+                                $files .= "<a href='" . url($v['word']) . "' download><img src='" . asset('assets/img/word-icon.png') . "' class='img-fluid mx-2 my-1' width='30' title='" . $v['contract_file_name'] . "' alt=''></a>";
+                                $files .= '<a href="javascript:void(0);" onclick="checkAndDownload(\''. url($v['pdf']) .'\', \''.$v['word'].'\',\''.$v['pdf'].'\',\''.$v['contract_file_name'].'\')"><img src="' . asset('assets/img/pdf-icon.png') . '" class="img-fluid mx-2 my-1" width="30" title="' . $v['contract_file_name'] . '" alt="" /></a>';
                             }
                             break;
                         case 1:
                             $files .= "<h5 class='mt-3'>申請函</h5>";
-                            $files .= "<a href='" . url($value['word']) . "' download><img src='" . asset('assets/img/word-icon.png') . "'' class='img-fluid mx-2 my-1' width='30' title='" . $value['apply_letter_file_name'] . "' alt=''></a>";
-                            $files .= "<a href='" . url($value['pdf']) . "' download><img src='" . asset('assets/img/pdf-icon.png') . "'' class='img-fluid mx-2 my-1' width='30' title='" . $value['apply_letter_file_name'] . "' alt=''></a><br>";
+                            $files .= "<a href='" . url($value['word']) . "' download><img src='" . asset('assets/img/word-icon.png') . "' class='img-fluid mx-2 my-1' width='30' title='" . $value['apply_letter_file_name'] . "' alt=''></a>";
+                            $files .= '<a href="javascript:void(0);" onclick="checkAndDownload(\''. url($value['pdf']) .'\', \''.$value['word'].'\',\''.$value['pdf'].'\',\''.$value['apply_letter_file_name'].'\')"><img src="' . asset('assets/img/pdf-icon.png') . '" class="img-fluid mx-2 my-1" width="30" title="' . $value['apply_letter_file_name'] . '" alt="" /></a><br>';
                             break;
                         case 2:
                             $files .= "<h5 class='mt-3'>登錄清冊</h5>";
-                            $files .= "<a href='" . url($value['excel']) . "' download><img src='" . asset('assets/img/excel-icon.png') . "'' class='img-fluid mx-2 my-1' width='30' title='" . $value['data_entry_file_name'] . "' alt=''></a>";
+                            $files .= "<a href='" . url($value['excel']) . "' download><img src='" . asset('assets/img/excel-icon.png') . "' class='img-fluid mx-2 my-1' width='30' title='" . $value['data_entry_file_name'] . "' alt=''></a>";
                             break;
                     }
                 }
@@ -101,4 +101,64 @@
             white-space: nowrap;
         } */
     </style>
+@endpush
+@push('page_scripts')
+
+    <script>
+        function checkAndDownload(url, wordFilePath, pdfFilePath, fileName) {
+            $.ajax({
+                url: url,
+                type: 'HEAD', // 使用 HEAD 請求
+                success: function(data, textStatus, jqXHR) {
+                    // 如果成功，表示檔案存在，則進行下載
+                    if (jqXHR.status === 200) {
+                        downloadFile(url, fileName);
+                    } else {
+                        console.error('檔案不存在或無法存取');
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    // console.log(wordFilePath);
+                    Swal.fire('錯誤！', '檔案不存在或無法存取', 'error');
+                    Swal.fire({
+                        title: '轉檔中...',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    $.ajax({
+                        url: "{{ route('admin.deliveryRecords.downloadPdf') }}",
+                        type: 'POST',
+                        data: {
+                            word: wordFilePath,
+                            pdf: pdfFilePath,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(res) {
+                            Swal.close();
+                            if (res.status == 'success') {
+                                downloadFile(url, fileName);
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            Swal.fire('錯誤！', '轉檔程序失敗', 'error');
+                        }
+                    })
+                }
+            });
+        }
+
+        function downloadFile(url, fileName) {
+            var a = $('<a>', {
+                href: url,
+                download: fileName,
+            }).appendTo('body');
+            a.hide();
+            a[0].click();
+            a.remove();
+        }
+    </script>
 @endpush

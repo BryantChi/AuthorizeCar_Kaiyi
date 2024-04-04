@@ -1087,85 +1087,99 @@
                         //     }, 500);
                         // }
                         Swal.close();
-                        if (res.status == 'success') {
-                            $('.file-container').empty();
-                            $('.file-container').append(
-                                '<div class="col-12"></div><div class="col-12"><h5>合約書</h5></div>');
-                            res.contract_data.forEach(element => {
-                                $('.file-container').append(
-                                    '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
-                                    '<a href="' + window.location.origin + '/' + element
-                                    .word + '" download>' +
-                                    '<p class="text-secondary file-name" style="max-width: 200px;">' +
-                                    element.contract_file_name + '</p>' +
-                                    '<img src="{{ asset('assets/img/word-icon.png') }}" class="img-fluid" width="80" alt="">' +
-                                    '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
-                                    '</a>' +
-                                    '</div>' +
-                                    '<div class="col-auto d-block pdf-download-content text-center mx-3">' +
-                                    '<a href="' + window.location.origin + '/' + element
-                                    .pdf + '" download>' +
-                                    '<p class="text-secondary file-name" style="max-width: 200px;">' +
-                                    element.contract_file_name + '</p>' +
-                                    '<img src="{{ asset('assets/img/pdf-icon.png') }}" class="img-fluid" width="80" alt="">' +
-                                    '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
-                                    '</a>' +
-                                    '</div>');
-                            });
+                        Swal.fire('匯出成功', '請至「匯出」選單下載', 'success').then((result) => {
+                            if (result.isConfirmed) {
+                                reports_data = [];
+                                // Swal.fire({
+                                //     title: '載入中...',
+                                //     allowOutsideClick: false,
+                                //     showConfirmButton: false,
+                                //     didOpen: () => {
+                                //         Swal.showLoading();
+                                //     }
+                                // });
+                                window.location.reload();
+                            }
+                        });
+                        // if (res.status == 'success') {
+                        //     $('.file-container').empty();
+                        //     $('.file-container').append(
+                        //         '<div class="col-12"></div><div class="col-12"><h5>合約書</h5></div>');
+                        //     res.contract_data.forEach(element => {
+                        //         $('.file-container').append(
+                        //             '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
+                        //             '<a href="' + window.location.origin + '/' + element
+                        //             .word + '" download>' +
+                        //             '<p class="text-secondary file-name" style="max-width: 200px;">' +
+                        //             element.contract_file_name + '</p>' +
+                        //             '<img src="{{ asset('assets/img/word-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                        //             '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                        //             '</a>' +
+                        //             '</div>' +
+                        //             '<div class="col-auto d-block pdf-download-content text-center mx-3">' +
+                        //             '<a href="' + window.location.origin + '/' + element
+                        //             .pdf + '" download>' +
+                        //             '<p class="text-secondary file-name" style="max-width: 200px;">' +
+                        //             element.contract_file_name + '</p>' +
+                        //             '<img src="{{ asset('assets/img/pdf-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                        //             '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                        //             '</a>' +
+                        //             '</div>');
+                        //     });
 
-                            $('.file-container').append(
-                                '<div class="col-12"></div><div class="col-12 mt-3"><h5><申請函</h5></div>');
-                            $('.file-container').append(
-                                '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
-                                '<a href="' + window.location.origin + '/' + res.apply_letter_data
-                                .word + '" download>' +
-                                '<p class="text-secondary file-name" style="max-width: 200px;">' + res
-                                .apply_letter_data.apply_letter_file_name + '</p>' +
-                                '<img src="{{ asset('assets/img/word-icon.png') }}" class="img-fluid" width="80" alt="">' +
-                                '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
-                                '</a>' +
-                                '</div>' +
-                                '<div class="col-auto d-block pdf-download-content text-center mx-3">' +
-                                '<a href="' + window.location.origin + '/' + res.apply_letter_data
-                                .pdf + '" download>' +
-                                '<p class="text-secondary file-name" style="max-width: 200px;">' + res
-                                .apply_letter_data.apply_letter_file_name + '</p>' +
-                                '<img src="{{ asset('assets/img/pdf-icon.png') }}" class="img-fluid" width="80" alt="">' +
-                                '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
-                                '</a>' +
-                                '</div>');
+                        //     $('.file-container').append(
+                        //         '<div class="col-12"></div><div class="col-12 mt-3"><h5><申請函</h5></div>');
+                        //     $('.file-container').append(
+                        //         '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
+                        //         '<a href="' + window.location.origin + '/' + res.apply_letter_data
+                        //         .word + '" download>' +
+                        //         '<p class="text-secondary file-name" style="max-width: 200px;">' + res
+                        //         .apply_letter_data.apply_letter_file_name + '</p>' +
+                        //         '<img src="{{ asset('assets/img/word-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                        //         '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                        //         '</a>' +
+                        //         '</div>' +
+                        //         '<div class="col-auto d-block pdf-download-content text-center mx-3">' +
+                        //         '<a href="' + window.location.origin + '/' + res.apply_letter_data
+                        //         .pdf + '" download>' +
+                        //         '<p class="text-secondary file-name" style="max-width: 200px;">' + res
+                        //         .apply_letter_data.apply_letter_file_name + '</p>' +
+                        //         '<img src="{{ asset('assets/img/pdf-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                        //         '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                        //         '</a>' +
+                        //         '</div>');
 
-                            $('.file-container').append(
-                                '<div class="col-12"></div><div class="col-12 mt-3"><h5>登錄清冊</h5></div>');
-                            $('.file-container').append(
-                                '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
-                                '<a href="' + window.location.origin + '/' + res.data_entry_data
-                                .excel + '" download>' +
-                                '<p class="text-secondary file-name" style="max-width: 200px;">' + res
-                                .data_entry_data.data_entry_file_name + '</p>' +
-                                '<img src="{{ asset('assets/img/excel-icon.png') }}" class="img-fluid" width="80" alt="">' +
-                                '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
-                                '</a>' +
-                                '</div>');
+                        //     $('.file-container').append(
+                        //         '<div class="col-12"></div><div class="col-12 mt-3"><h5>登錄清冊</h5></div>');
+                        //     $('.file-container').append(
+                        //         '<div class="col-auto d-block word-download-content text-center mx-3 mb-md-auto mb-3">' +
+                        //         '<a href="' + window.location.origin + '/' + res.data_entry_data
+                        //         .excel + '" download>' +
+                        //         '<p class="text-secondary file-name" style="max-width: 200px;">' + res
+                        //         .data_entry_data.data_entry_file_name + '</p>' +
+                        //         '<img src="{{ asset('assets/img/excel-icon.png') }}" class="img-fluid" width="80" alt="">' +
+                        //         '<p class="text-secondary font-weight-lighter">點擊即可下載</p>' +
+                        //         '</a>' +
+                        //         '</div>');
 
-                            setTimeout(function() {
-                                $('#downloadModal').modal('show');
-                                $('#downloadModal').on('hidden.bs.modal', function(
-                                    event) {
-                                    // do something...
-                                    reports_data = [];
-                                    Swal.fire({
-                                        title: '載入中...',
-                                        allowOutsideClick: false,
-                                        showConfirmButton: false,
-                                        didOpen: () => {
-                                            Swal.showLoading();
-                                        }
-                                    });
-                                    window.location.reload();
-                                });
-                            }, 500);
-                        }
+                        //     setTimeout(function() {
+                        //         $('#downloadModal').modal('show');
+                        //         $('#downloadModal').on('hidden.bs.modal', function(
+                        //             event) {
+                        //             // do something...
+                        //             reports_data = [];
+                        //             Swal.fire({
+                        //                 title: '載入中...',
+                        //                 allowOutsideClick: false,
+                        //                 showConfirmButton: false,
+                        //                 didOpen: () => {
+                        //                     Swal.showLoading();
+                        //                 }
+                        //             });
+                        //             window.location.reload();
+                        //         });
+                        //     }, 500);
+                        // }
 
                     },
                     error: function(jqXHR, textStatus, errorThrown) {

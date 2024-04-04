@@ -82,6 +82,8 @@ Route::prefix('admin')->group(function () {
         Route::any('detectionReports/update/{id}', [DetectionReportController::class, 'update'])->name('admin.detectionReports.update');
         Route::any('detectionReports/edit/{id}', [DetectionReportController::class, 'edit'])->name('admin.detectionReports.edit');
         Route::any('detectionReports/reply-modify', [DetectionReportController::class, 'modifyReply'])->name('admin.detectionReports.reply-modify');
+
+        Route::any('deliveryRecordsDownloadPdf', [App\Http\Controllers\Admin\DeliveryRecordController::class, 'convertToPdfWithContract_s1'])->name('admin.deliveryRecords.downloadPdf');
     });
 });
 

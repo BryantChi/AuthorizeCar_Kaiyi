@@ -163,6 +163,11 @@
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/zh_Hant.json"
                 },
+                initComplete: function() {
+                    setTimeout(() => {
+                        table.draw();
+                    }, 600);
+                },
                 // columnDefs: [{
                 //     'targets': 0,
                 //     'searchable': false,
@@ -193,9 +198,6 @@
             });
         })
 
-        setTimeout(() => {
-            table.draw();
-        }, 600);
 
         function openReport(reportId) {
             Swal.fire({
