@@ -550,6 +550,7 @@ class WordServices
             'export_authorize_model' => $auth_input[2],
             'export_authorize_type_year' => $auth_input[6],
             'export_authorize_vin' => $auth_input[3],
+            'export_authorize_date' => $date_y . '/' .$date_m . '/' .$date_d,
             'export_authorize_auth_num_id' => json_encode($export_authorize_auth_num_id), // 授權序號
             'export_authorize_reports_nums' => json_encode($export_authorize_reports_nums),
             'export_authorize_path' => json_encode($export_authorize_path),
