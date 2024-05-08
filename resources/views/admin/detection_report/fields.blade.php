@@ -142,10 +142,6 @@
         {!! Form::label('reports_car_model_code', '車種代號') !!}
         {!! Form::text('reports_car_model_code', $temp7, ['class' => 'form-control']) !!}
     </div>
-
-</div>
-<div class="col-md-6">
-
     <div class="form-group">
         <?php
         if (session()->has('form_data') && $mode == 'create') {
@@ -181,6 +177,10 @@
         {!! Form::label('reports_vin', '代表車車身碼(VIN)') !!}
         {!! Form::text('reports_vin', $temp10, ['class' => 'form-control']) !!}
     </div>
+
+</div>
+<div class="col-md-6">
+
     <div class="form-group">
         <?php
         if (session()->has('form_data') && $mode == 'create') {
@@ -230,6 +230,76 @@
             <option {{ ($detectionReport->reports_f_e ?? '') == 'E' ? ' selected="selected"' : '' }} {{ $temp132 }} value="E">E
             </option>
         </select>
+    </div>
+    <div class="form-group">
+        <?php
+        if (session()->has('form_data') && $mode == 'create') {
+            // dd(session('form_data'));
+            $temp16 = session('form_data')['reports_vehicle_pattern'] ?? '';
+        } else {
+            $temp16 = $detectionReport->reports_vehicle_pattern ?? '';
+        }
+        ?>
+        {!! Form::label('reports_vehicle_pattern', '車輛型式') !!}
+        {!! Form::select(
+            'reports_vehicle_pattern',
+            $carPattern,
+            $temp16,
+            ['class' => 'form-control'],
+        ) !!}
+    </div>
+    <div class="form-group">
+        <?php
+        if (session()->has('form_data') && $mode == 'create') {
+            // dd(session('form_data'));
+            $temp17 = session('form_data')['reports_vehicle_doors'] ?? '';
+        } else {
+            $temp17 = null;
+        }
+        ?>
+        {!! Form::label('reports_vehicle_doors', '門數') !!}
+        {!! Form::text('reports_vehicle_doors', $temp17, ['class' => 'form-control']) !!}
+    </div>
+    <div class="form-group">
+        <?php
+        if (session()->has('form_data') && $mode == 'create') {
+            // dd(session('form_data'));
+            $temp18 = session('form_data')['reports_vehicle_cylinders'] ?? '';
+        } else {
+            $temp18 = null;
+        }
+        ?>
+        {!! Form::label('reports_vehicle_cylinders', '汽缸數') !!}
+        {!! Form::text('reports_vehicle_cylinders', $temp18, ['class' => 'form-control']) !!}
+    </div>
+    <div class="form-group">
+        <?php
+        if (session()->has('form_data') && $mode == 'create') {
+            // dd(session('form_data'));
+            $temp19 = session('form_data')['reports_vehicle_seats'] ?? '';
+        } else {
+            $temp19 = null;
+        }
+        ?>
+        {!! Form::label('reports_vehicle_seats', '座位數') !!}
+        {!! Form::text('reports_vehicle_seats', $temp19, ['class' => 'form-control']) !!}
+    </div>
+    <div class="form-group">
+        <?php
+        if (session()->has('form_data') && $mode == 'create') {
+            // dd(session('form_data'));
+            $temp20 = session('form_data')['reports_vehicle_fuel_category'] ?? '';
+        } else {
+            $temp20 = $detectionReport->reports_vehicle_fuel_category ?? '';
+        }
+        ?>
+        {!! Form::label('reports_vehicle_fuel_category', '燃油類別') !!}
+        {!! Form::select(
+            'reports_vehicle_fuel_category',
+            $carFuelCategory,
+            $temp20,
+            ['class' => 'form-control'],
+        ) !!}
     </div>
     <div class="form-group">
         <?php

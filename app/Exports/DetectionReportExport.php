@@ -5,7 +5,9 @@ namespace App\Exports;
 use App\Models\Admin\DetectionReport;
 use App\Models\Admin\AuthorizeStatus;
 use App\Models\Admin\CarBrand;
+use App\Models\Admin\CarFuelCategory;
 use App\Models\Admin\CarModel;
+use App\Models\Admin\CarPattern;
 use App\Models\Admin\InspectionInstitution;
 use App\Models\Admin\Reporter;
 use App\Models\Admin\Regulations;
@@ -51,6 +53,11 @@ class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMappi
         '移入前授權使用次數',
         '移入後累計授權次數',
         'F/E',
+        '車輛型式',
+        '門數',
+        '汽缸數',
+        '座位數',
+        '燃油類別',
         '車安回函',
         '說明'
     ];
@@ -73,6 +80,11 @@ class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMappi
         '移入前授權使用次數',
         '移入後累計授權次數',
         'F/E',
+        '車輛型式',
+        '門數',
+        '汽缸數',
+        '座位數',
+        '燃油類別',
         '車安回函',
         '說明'
     ];
@@ -167,8 +179,13 @@ class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMappi
                         'reports_authorize_count_before' => $detectionReport[14],
                         'reports_authorize_count_current' => $detectionReport[15],
                         'reports_f_e' => $detectionReport[16],
-                        'reports_reply' => $detectionReport[17],
-                        'reports_note' => $detectionReport[18]
+                        'reports_vehicle_pattern' => $detectionReport[17],
+                        'reports_vehicle_doors' => $detectionReport[18],
+                        'reports_vehicle_cylinders' => $detectionReport[19],
+                        'reports_vehicle_seats' => $detectionReport[20],
+                        'reports_vehicle_fuel_category' => $detectionReport[21],
+                        'reports_reply' => $detectionReport[22],
+                        'reports_note' => $detectionReport[23]
                     ];
                     break;
 
@@ -209,6 +226,8 @@ class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMappi
                     $regulations .= '，' . $regulation->regulations_num . ' ' . $regulation->regulations_name;
                 }
             }
+            $carPattern = (CarPattern::find($detectionReport->reports_vehicle_pattern))->pattern_name ?? '';
+            $carFuelCategory = (CarFuelCategory::find($detectionReport->reports_vehicle_fuel_category))->category_name ?? '';
             $reports_expiration_date_end = Carbon::parse($detectionReport->reports_expiration_date_end)->format('Y/m/d');
             $td = Carbon::parse($detectionReport->reports_test_date);
             $reports_test_date = ((int)$td->year - 1911) . '/' . str_pad($td->month, 2, "0", STR_PAD_LEFT) . '/' . str_pad($td->day, 2, "0", STR_PAD_LEFT);
@@ -237,6 +256,11 @@ class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMappi
                         'reports_authorize_count_before' => (string)$detectionReport->reports_authorize_count_before,
                         'reports_authorize_count_current' => (string)$detectionReport->reports_authorize_count_current,
                         'reports_f_e' => $detectionReport->reports_f_e,
+                        'reports_vehicle_pattern' => $carPattern,
+                        'reports_vehicle_doors' => $detectionReport->reports_vehicle_doors,
+                        'reports_vehicle_cylinders' => $detectionReport->reports_vehicle_cylinders,
+                        'reports_vehicle_seats' => $detectionReport->reports_vehicle_seats,
+                        'reports_vehicle_fuel_category' => $carFuelCategory,
                         'reports_reply' => $detectionReport->reports_reply,
                         'reports_note' => $detectionReport->reports_note,
                     ];
@@ -330,10 +354,10 @@ class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMappi
     public function styles(Worksheet $sheet)
     {
         // 設置整個工作表的字體大小
-        $sheet->getStyle('A2:R2000')->getFont()->setSize(12);
+        $sheet->getStyle('A2:X2000')->getFont()->setSize(12);
 
         // 設置標題行的字體大小
-        $sheet->getStyle('A1:R1')->getFont()->setSize(16);
+        $sheet->getStyle('A1:X1')->getFont()->setSize(16);
         // $sheet->getStyle('A2:R2')->getFont()->setSize(13);
 
         // 合併 A1 至最後一個標題的欄位
@@ -366,7 +390,7 @@ class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMappi
                     //     $event->sheet->setCellValue('A1', '外匯車授權管理系統');
                     // }
 
-                    $event->sheet->getStyle('A2:S2')->applyFromArray([
+                    $event->sheet->getStyle('A2:X2')->applyFromArray([
                         'font' => [
                             'bold' => true
                         ]
@@ -381,7 +405,7 @@ class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMappi
                         $event->sheet->getDelegate()->mergeCells('A1:O1'); // 根據需要合併的欄位調整
                     } else {
                         $event->sheet->setCellValue('A1', '外匯車授權管理系統');
-                        $event->sheet->getDelegate()->mergeCells('A1:S1'); // 根據需要合併的欄位調整
+                        $event->sheet->getDelegate()->mergeCells('A1:X1'); // 根據需要合併的欄位調整
                     }
 
                     // 設置標題樣式

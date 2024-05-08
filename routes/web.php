@@ -74,6 +74,8 @@ Route::prefix('admin')->group(function () {
         Route::resource('exportAuthorizeRecords', App\Http\Controllers\Admin\ExportAuthorizeRecordsController::class, ["as" => 'admin']);
         Route::resource('affidavitRecords', App\Http\Controllers\Admin\AffidavitRecordController::class, ["as" => 'admin']);
         Route::resource('postponeRecords', App\Http\Controllers\Admin\PostponeRecordController::class, ["as" => 'admin']);
+        Route::resource('carPatterns', App\Http\Controllers\Admin\CarPatternController::class, ["as" => 'admin']);
+        Route::resource('carFuelCategories', App\Http\Controllers\Admin\CarFuelCategoryController::class, ["as" => 'admin']);
 
         Route::any('detectionReports', [DetectionReportController::class, 'index'])->name('admin.detectionReports.index');
         Route::any('detectionReports/create', [DetectionReportController::class, 'create'])->name('admin.detectionReports.create');

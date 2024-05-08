@@ -118,6 +118,18 @@
             </ul>
         </li>
         <li class="nav-item">
+            <a href="{{ route('admin.carPatterns.index') }}"
+               class="nav-link {{ Request::is('admin/carPatterns*') ? 'active' : '' }}">
+                <p>車輛型式管理</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.carFuelCategories.index') }}"
+               class="nav-link {{ Request::is('admin/carFuelCategories*') ? 'active' : '' }}">
+                <p>燃油類別管理</p>
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="{{ route('admin.inspectionInstitutions.index') }}"
                 class="nav-link {{ Request::is('admin/inspectionInstitutions*') ? 'active' : '' }}">
                 <p>檢測機構管理</p>
@@ -176,7 +188,9 @@
             let regulations = "{{ Request::is('admin/regulations*') }}";
             let inspectionInstitutions = "{{ Request::is('admin/inspectionInstitutions*') }}";
             let companyInfos = "{{ Request::is('admin/companyInfos*') }}";
-            if (reporters || authorizeStatuses || regulations || inspectionInstitutions || companyInfos) {
+            let carPatterns = "{{ Request::is('admin/carPatterns*') }}";
+            let carFuelCategories = "{{ Request::is('admin/carFuelCategories*') }}";
+            if (reporters || authorizeStatuses || regulations || inspectionInstitutions || companyInfos || carPatterns || carFuelCategories) {
                 $('.dropdown-dbdata').parent().find('.dropdown-menus').show();
             }
         });

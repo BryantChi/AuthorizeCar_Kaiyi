@@ -355,8 +355,9 @@
 
                             // Add list of options
                             if (title == '檢測報告編號' || title == '法規項目' || title == '有效期限-迄' ||
-                                title == '測試日期' || title ==
-                                '報告日期') {
+                                title == '測試日期' || title == '報告日期' ||
+                                title == '車輛型式' || title == '門數' || title == '汽缸數' ||
+                                title == '座位數' || title == '燃油類別') {
                                 $('<input type="text" class="form-control" placeholder="Search ' +
                                         title + '"  />')
                                     .appendTo($(column.footer()).empty());
@@ -575,6 +576,26 @@
                     {
                         data: 'reports_f_e',
                         name: 'reports_f_e'
+                    },
+                    {
+                        data: 'reports_vehicle_pattern',
+                        name: 'reports_vehicle_pattern'
+                    },
+                    {
+                        data: 'reports_vehicle_doors',
+                        name: 'reports_vehicle_doors'
+                    },
+                    {
+                        data: 'reports_vehicle_cylinders',
+                        name: 'reports_vehicle_cylinders'
+                    },
+                    {
+                        data: 'reports_vehicle_seats',
+                        name: 'reports_vehicle_seats'
+                    },
+                    {
+                        data: 'reports_vehicle_fuel_category',
+                        name: 'reports_vehicle_fuel_category'
                     },
                     {
                         data: 'reports_reply',

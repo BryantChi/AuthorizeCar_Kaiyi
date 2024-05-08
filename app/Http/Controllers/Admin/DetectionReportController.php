@@ -19,6 +19,8 @@ use App\Models\Admin\AgreeAuthorizeRecords;
 use App\Models\Admin\CumulativeAuthorizedUsageRecords;
 use App\Models\Admin\ExportAuthorizeRecords;
 use App\Models\Admin\AffidavitRecord;
+use App\Models\Admin\CarFuelCategory;
+use App\Models\Admin\CarPattern;
 use App\Models\Admin\PostponeRecord;
 use App\Repositories\Admin\DetectionReportRepository as DetectionReportRep;
 use Illuminate\Http\Request;
@@ -107,6 +109,11 @@ class DetectionReportController extends Controller
                 'reports_authorize_count_before',
                 'reports_authorize_count_current',
                 'reports_f_e',
+                'reports_vehicle_pattern' => DB::table('car_pattern_infos')->select('pattern_name')->whereNull('deleted_at')->whereColumn('detection_reports.reports_vehicle_pattern', 'id'),
+                'reports_vehicle_doors',
+                'reports_vehicle_cylinders',
+                'reports_vehicle_seats',
+                'reports_vehicle_fuel_category' => DB::table('car_fuel_category_infos')->select('category_name')->whereNull('deleted_at')->whereColumn('detection_reports.reports_vehicle_fuel_category', 'id'),
                 'reports_reply',
                 'reports_note',
                 'reports_pdf',
@@ -158,6 +165,23 @@ class DetectionReportController extends Controller
                 })
                 ->filterColumn('reports_f_e', function ($query, $keyword) {
                     $query->whereRaw("reports_f_e like ?", ["%{$keyword}%"]);
+                })
+                ->filterColumn('reports_vehicle_pattern', function ($query, $keyword) {
+                    $newKeyword = CarPattern::where('pattern_name', 'like', "%{$keyword}%")->get('id');
+                    $query->whereIn("reports_vehicle_pattern", $newKeyword);
+                })
+                ->filterColumn('reports_vehicle_doors', function ($query, $keyword) {
+                    $query->whereRaw("reports_vehicle_doors like ?", ["%{$keyword}%"]);
+                })
+                ->filterColumn('reports_vehicle_cylinders', function ($query, $keyword) {
+                    $query->whereRaw("reports_vehicle_cylinders like ?", ["%{$keyword}%"]);
+                })
+                ->filterColumn('reports_vehicle_seats', function ($query, $keyword) {
+                    $query->whereRaw("reports_vehicle_seats like ?", ["%{$keyword}%"]);
+                })
+                ->filterColumn('reports_vehicle_fuel_category', function ($query, $keyword) {
+                    $newKeyword = CarFuelCategory::where('category_name', 'like', "%{$keyword}%")->get('id');
+                    $query->whereIn("reports_vehicle_fuel_category", $newKeyword);
                 });
             // }
 
@@ -221,7 +245,13 @@ class DetectionReportController extends Controller
                     $report_date = $report->reports_date == '' || $report->reports_date == null ? '' : Carbon::parse($report->reports_date)->format('Y/m/d');
                     return $report_date;
                 }, ['searchable' => true])
-                ->rawColumns(['checkbox', 'action', 'reports_num', 'reports_expiration_date_end', 'reports_regulations', 'reports_test_date', 'reports_date'])
+                ->editColumn('reports_vehicle_pattern', function (DetectionReport $report) {
+                    return CarPattern::where('id', $report->reports_vehicle_pattern)->value('pattern_name');
+                }, ['searchable' => true])
+                ->editColumn('reports_vehicle_fuel_category', function (DetectionReport $report) {
+                    return CarPattern::where('id', $report->reports_vehicle_fuel_category)->value('pattern_name');
+                }, ['searchable' => true])
+                ->rawColumns(['checkbox', 'action', 'reports_num', 'reports_expiration_date_end', 'reports_regulations', 'reports_test_date', 'reports_date', 'reports_vehicle_pattern', 'reports_vehicle_fuel_category'])
                 ->toJson();
         }
 
@@ -249,7 +279,12 @@ class DetectionReportController extends Controller
 
         $inspectionInstitution = InspectionInstitution::all()->pluck('ii_name', 'id');
 
-        return view('admin.detection_report.create', ['authStatus' => $auth_status, 'reporter' => $reporter, 'regulations' => $regulations, 'brand' => $carBrand, 'inspectionInstitution' => $inspectionInstitution, 'mode' => 'create']);
+        $carPattern = CarPattern::all()->pluck('pattern_name', 'id');
+
+        $carFuelCategory = CarFuelCategory::all()->pluck('category_name', 'id');
+
+
+        return view('admin.detection_report.create', ['authStatus' => $auth_status, 'reporter' => $reporter, 'regulations' => $regulations, 'brand' => $carBrand, 'inspectionInstitution' => $inspectionInstitution, 'carPattern' => $carPattern, 'carFuelCategory' => $carFuelCategory, 'mode' => 'create']);
     }
 
     /**
@@ -386,7 +421,11 @@ class DetectionReportController extends Controller
 
         $inspectionInstitution = InspectionInstitution::all()->pluck('ii_name', 'id');
 
-        return view('admin.detection_report.edit', ['detectionReport' => $detectionReport, 'authStatus' => $auth_status, 'reporter' => $reporter, 'regulations' => $regulations, 'brand' => $carBrand, 'inspectionInstitution' => $inspectionInstitution, 'mode' => 'edit']);
+        $carPattern = CarPattern::all()->pluck('pattern_name', 'id');
+
+        $carFuelCategory = CarFuelCategory::all()->pluck('category_name', 'id');
+
+        return view('admin.detection_report.edit', ['detectionReport' => $detectionReport, 'authStatus' => $auth_status, 'reporter' => $reporter, 'regulations' => $regulations, 'brand' => $carBrand, 'inspectionInstitution' => $inspectionInstitution, 'carPattern' => $carPattern, 'carFuelCategory' => $carFuelCategory, 'mode' => 'edit']);
     }
 
     /**
