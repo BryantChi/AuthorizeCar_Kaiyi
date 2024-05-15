@@ -245,12 +245,12 @@ class DetectionReportController extends Controller
                     $report_date = $report->reports_date == '' || $report->reports_date == null ? '' : Carbon::parse($report->reports_date)->format('Y/m/d');
                     return $report_date;
                 }, ['searchable' => true])
-                ->editColumn('reports_vehicle_pattern', function (DetectionReport $report) {
-                    return CarPattern::where('id', $report->reports_vehicle_pattern)->value('pattern_name');
-                }, ['searchable' => true])
-                ->editColumn('reports_vehicle_fuel_category', function (DetectionReport $report) {
-                    return CarPattern::where('id', $report->reports_vehicle_fuel_category)->value('pattern_name');
-                }, ['searchable' => true])
+                // ->editColumn('reports_vehicle_pattern', function (DetectionReport $report) {
+                //     return CarPattern::where('id', $report->reports_vehicle_pattern)->value('pattern_name');
+                // }, ['searchable' => true])
+                // ->editColumn('reports_vehicle_fuel_category', function (DetectionReport $report) {
+                //     return CarFuelCategory::where('id', $report->reports_vehicle_fuel_category)->value('category_name');
+                // }, ['searchable' => true])
                 ->rawColumns(['checkbox', 'action', 'reports_num', 'reports_expiration_date_end', 'reports_regulations', 'reports_test_date', 'reports_date', 'reports_vehicle_pattern', 'reports_vehicle_fuel_category'])
                 ->toJson();
         }
