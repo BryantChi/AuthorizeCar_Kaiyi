@@ -151,7 +151,7 @@
         }
         ?>
         {!! Form::label('reports_test_date', '測試日期') !!}
-        {!! Form::date('reports_test_date', $temp8, ['class' => 'form-control', 'min' => "0001-01-01", 'max' => "9999-12-31"]) !!}
+        {!! Form::date('reports_test_date', $temp8, ['class' => 'form-control', 'min' => "1911-01-01", 'max' => "9999-12-31"]) !!}
     </div>
     <div class="form-group">
         <?php
@@ -163,7 +163,7 @@
         }
         ?>
         {!! Form::label('reports_date', '報告日期') !!}
-        {!! Form::date('reports_date', $temp9, ['class' => 'form-control', 'min' => "0001-01-01", 'max' => "9999-12-31"]) !!}
+        {!! Form::date('reports_date', $temp9, ['class' => 'form-control', 'min' => "1911-01-01", 'max' => "9999-12-31"]) !!}
     </div>
     <div class="form-group">
         <?php
