@@ -355,7 +355,7 @@
 
                             // Add list of options
                             if (title == '檢測報告編號' || title == '法規項目' || title == '有效期限-迄' ||
-                                title == '測試日期' || title == '報告日期' || title == '車型'
+                                title == '測試日期' || title == '報告日期' || title == '車型' ||
                                 title == '車輛樣式' || title == '門數' || title == '汽缸數' ||
                                 title == '座位數' || title == '燃油類別') {
                                 $('<input type="text" class="form-control" placeholder="Search ' +
