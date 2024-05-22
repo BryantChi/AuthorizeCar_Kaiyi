@@ -21,7 +21,7 @@
                 <th>移入前授權使用次數</th>
                 <th>移入後累計授權次數</th>
                 <th>F/E</th>
-                <th>車輛型式</th>
+                <th>車輛樣式</th>
                 <th>門數</th>
                 <th>汽缸數</th>
                 <th>座位數</th>
@@ -65,12 +65,13 @@
                     </select>
                 </th>
                 <th>
-                    <select class="form-control">
+                    <input type="text" class="form-control" placeholder="Search 車型"/>
+                    {{-- <select class="form-control">
                         <option value="">請選擇 車型</option>
                         @foreach ($model as $m)
                             <option value="{{ $m->model_name }}">{{ $m->model_name }}</option>
                         @endforeach
-                    </select>
+                    </select> --}}
                 </th>
                 <th>
                     <select class="form-control">
@@ -94,7 +95,7 @@
                         <option value="e">E</option>
                     </select>
                 </th>
-                <th><input type="text" class="form-control" placeholder="Search 車輛型式"/></th>
+                <th><input type="text" class="form-control" placeholder="Search 車輛樣式"/></th>
                 <th><input type="text" class="form-control" placeholder="Search 門數"/></th>
                 <th><input type="text" class="form-control" placeholder="Search 汽缸數"/></th>
                 <th><input type="text" class="form-control" placeholder="Search 座位數"/></th>

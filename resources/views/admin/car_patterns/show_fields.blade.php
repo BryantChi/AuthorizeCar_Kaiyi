@@ -6,7 +6,7 @@
 
 <!-- Pattern Name Field -->
 <div class="col-sm-12">
-    {!! Form::label('pattern_name', '型式:') !!}
+    {!! Form::label('pattern_name', '樣式:') !!}
     <p>{{ $carPattern->pattern_name }}</p>
 </div>
 

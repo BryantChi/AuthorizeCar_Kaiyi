@@ -2,7 +2,7 @@
     <table class="table w-100" id="carPatterns-table">
         <thead>
         <tr>
-            <th>型式</th>
+            <th>樣式</th>
             <th>Action</th>
         </tr>
         </thead>

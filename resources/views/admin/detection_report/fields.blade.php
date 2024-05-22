@@ -240,7 +240,7 @@
             $temp16 = $detectionReport->reports_vehicle_pattern ?? '';
         }
         ?>
-        {!! Form::label('reports_vehicle_pattern', '車輛型式') !!}
+        {!! Form::label('reports_vehicle_pattern', '車輛樣式') !!}
         {!! Form::select(
             'reports_vehicle_pattern',
             $carPattern,

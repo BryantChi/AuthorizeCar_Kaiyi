@@ -112,7 +112,7 @@
                 <li class="nav-item">
                     <a href="{{ route('admin.carModels.index') }}"
                         class="nav-link {{ Request::is('admin/carModels*') ? 'active' : '' }}">
-                        <p>型號管理</p>
+                        <p>型式管理</p>
                     </a>
                 </li>
             </ul>
@@ -120,7 +120,7 @@
         <li class="nav-item">
             <a href="{{ route('admin.carPatterns.index') }}"
                class="nav-link {{ Request::is('admin/carPatterns*') ? 'active' : '' }}">
-                <p>車輛型式管理</p>
+                <p>車輛樣式管理</p>
             </a>
         </li>
         <li class="nav-item">
