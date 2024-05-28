@@ -102,7 +102,7 @@ class WordServices
         $templateProcessor->setValue('reporter_address', $reports_reporter->reporter_address);
         $templateProcessor->setValue('reporter_phone', $reports_reporter->reporter_phone);
         $templateProcessor->setValue('reporter_fax', $reports_reporter->reporter_fax);
-        if (File::exists(public_path('uploads/'.$reports_reporter->reporter_seal))) {
+        if (File::exists(public_path('uploads/'.$reports_reporter->reporter_seal)) && !empty($reports_reporter->reporter_seal) && $reports_reporter->reporter_seal != 'null') {
             $templateProcessor->setImageValue('image_sign_reporter', public_path('uploads/'.$reports_reporter->reporter_seal));
             // $templateProcessor->setImageValue('image_sign_reporter', public_path('assets/img/sign_test_icon/sign_com.png'));
         } else {
@@ -619,7 +619,7 @@ class WordServices
         $templateProcessor->setValue('reporter_address', $reports_reporter->reporter_address);
         $templateProcessor->setValue('reporter_phone', $reports_reporter->reporter_phone);
         $templateProcessor->setValue('reporter_fax', $reports_reporter->reporter_fax);
-        if (File::exists(public_path('uploads/'.$reports_reporter->reporter_seal))) {
+        if (File::exists(public_path('uploads/'.$reports_reporter->reporter_seal)) && !empty($reports_reporter->reporter_seal) && $reports_reporter->reporter_seal != 'null') {
             $templateProcessor->setImageValue('image_sign_reporter', public_path('uploads/'.$reports_reporter->reporter_seal));
             // $templateProcessor->setImageValue('image_sign_reporter', public_path('assets/img/sign_test_icon/sign_com.png'));
         } else {
@@ -887,7 +887,7 @@ class WordServices
         $templateProcessor->setValue('reporter_address', $reports_reporter->reporter_address);
         $templateProcessor->setValue('reporter_phone', $reports_reporter->reporter_phone);
         $templateProcessor->setValue('reporter_fax', $reports_reporter->reporter_fax);
-        if (File::exists(public_path('uploads/'.$reports_reporter->reporter_seal))) {
+        if (File::exists(public_path('uploads/'.$reports_reporter->reporter_seal)) && !empty($reports_reporter->reporter_seal) && $reports_reporter->reporter_seal != 'null') {
             $templateProcessor->setImageValue('image_sign_reporter', public_path('uploads/'.$reports_reporter->reporter_seal));
             // $templateProcessor->setImageValue('image_sign_reporter', public_path('assets/img/sign_test_icon/sign_com.png'));
         } else {
