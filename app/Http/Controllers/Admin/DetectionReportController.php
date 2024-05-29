@@ -418,7 +418,7 @@ class DetectionReportController extends Controller
 
         $regulations = Regulations::all();
 
-        $carBrand = CarBrand::all()->orderBy('brand_name', 'ASC');
+        $carBrand = CarBrand::orderBy('brand_name', 'ASC')->get();
 
         $inspectionInstitution = InspectionInstitution::orderBy('ii_name', 'asc')->pluck('ii_name', 'id');
 
