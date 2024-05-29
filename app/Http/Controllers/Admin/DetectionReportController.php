@@ -275,9 +275,9 @@ class DetectionReportController extends Controller
 
         $regulations = Regulations::all();
 
-        $carBrand = CarBrand::all();
+        $carBrand = CarBrand::orderBy('brand_name', 'asc')->get();
 
-        $inspectionInstitution = InspectionInstitution::all()->pluck('ii_name', 'id');
+        $inspectionInstitution = InspectionInstitution::orderBy('ii_name', 'asc')->pluck('ii_name', 'id');
 
         $carPattern = CarPattern::all()->pluck('pattern_name', 'id');
 
@@ -296,10 +296,11 @@ class DetectionReportController extends Controller
     public function store(StoreDetectionReportRequest $request)
     {
         //
+        $input = $request->all();
+
+        $isDel = DetectionReport::withTrashed()->where('reports_num', $input['reports_num'])->forceDelete();
 
         $validated = $request->validated();
-
-        $input = $request->all();
 
         // if (($input['letter_id'] == '' && $input['letter_id'] == null) || ($input['reports_reply'] == '' && $input['reports_reply'] == null)) {
         //     $input['reports_authorize_status'] = '2';
@@ -417,9 +418,9 @@ class DetectionReportController extends Controller
 
         $regulations = Regulations::all();
 
-        $carBrand = CarBrand::all();
+        $carBrand = CarBrand::all()->orderBy('brand_name', 'ASC');
 
-        $inspectionInstitution = InspectionInstitution::all()->pluck('ii_name', 'id');
+        $inspectionInstitution = InspectionInstitution::orderBy('ii_name', 'asc')->pluck('ii_name', 'id');
 
         $carPattern = CarPattern::all()->pluck('pattern_name', 'id');
 
