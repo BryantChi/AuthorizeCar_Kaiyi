@@ -126,7 +126,7 @@
         <li class="nav-item">
             <a href="{{ route('admin.carFuelCategories.index') }}"
                class="nav-link {{ Request::is('admin/carFuelCategories*') ? 'active' : '' }}">
-                <p>燃油類別管理</p>
+                <p>動力代碼管理</p>
             </a>
         </li>
         <li class="nav-item">

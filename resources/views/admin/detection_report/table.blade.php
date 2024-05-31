@@ -25,7 +25,7 @@
                 <th>門數</th>
                 <th>汽缸數</th>
                 <th>座位數</th>
-                <th>燃油類別</th>
+                <th>動力代碼</th>
                 <th>車安回函</th>
                 <th>說明</th>
                 <th>Action</th>
@@ -99,7 +99,7 @@
                 <th><input type="text" class="form-control" placeholder="Search 門數"/></th>
                 <th><input type="text" class="form-control" placeholder="Search 汽缸數"/></th>
                 <th><input type="text" class="form-control" placeholder="Search 座位數"/></th>
-                <th><input type="text" class="form-control" placeholder="Search 燃油類別"/></th>
+                <th><input type="text" class="form-control" placeholder="Search 動力代碼"/></th>
                 <th><input type="text" class="form-control" placeholder="Search 車安回函"/></th>
                 <th><input type="text" class="form-control" placeholder="Search 說明"/></th>
                 <th class="ft-none">Action</th>
