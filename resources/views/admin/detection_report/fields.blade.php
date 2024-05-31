@@ -97,13 +97,13 @@
             // dd(session('form_data'));
             $temp6 = session('form_data')['reports_inspection_institution'] ?? '';
         } else {
-            $temp6 = $detectionReport->reports_inspection_institution ?? '';
+            $temp6 = $detectionReport->reports_inspection_institution ?? null;
         }
         ?>
         {!! Form::label('reports_inspection_institution', '檢測機構') !!}
         {!! Form::select(
             'reports_inspection_institution',
-            $inspectionInstitution,
+            $inspectionInstitution->prepend('請選擇', ''),
             $temp6,
             ['class' => 'form-control'],
         ) !!}
@@ -237,13 +237,13 @@
             // dd(session('form_data'));
             $temp16 = session('form_data')['reports_vehicle_pattern'] ?? '';
         } else {
-            $temp16 = $detectionReport->reports_vehicle_pattern ?? '';
+            $temp16 = $detectionReport->reports_vehicle_pattern ?? null;
         }
         ?>
         {!! Form::label('reports_vehicle_pattern', '車輛樣式') !!}
         {!! Form::select(
             'reports_vehicle_pattern',
-            $carPattern,
+            $carPattern->prepend('請選擇', ''),
             $temp16,
             ['class' => 'form-control'],
         ) !!}
@@ -290,13 +290,13 @@
             // dd(session('form_data'));
             $temp20 = session('form_data')['reports_vehicle_fuel_category'] ?? '';
         } else {
-            $temp20 = $detectionReport->reports_vehicle_fuel_category ?? '';
+            $temp20 = $detectionReport->reports_vehicle_fuel_category ?? null;
         }
         ?>
         {!! Form::label('reports_vehicle_fuel_category', '燃油類別') !!}
         {!! Form::select(
             'reports_vehicle_fuel_category',
-            $carFuelCategory,
+            $carFuelCategory->prepend('請選擇', ''),
             $temp20,
             ['class' => 'form-control'],
         ) !!}
