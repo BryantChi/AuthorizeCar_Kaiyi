@@ -175,7 +175,7 @@ class CarModelController extends AppBaseController
     public function getModelsByBrand(Request $request)
     {
         $brand_id = $request->input('brand_id');
-        $models = CarModel::where('car_brand_id', $brand_id)->get(['id', 'model_name']);
+        $models = CarModel::where('car_brand_id', $brand_id)->orderBy('model_name', 'ASC')->get(['id', 'model_name']);
 
         return response()->json($models);
     }
