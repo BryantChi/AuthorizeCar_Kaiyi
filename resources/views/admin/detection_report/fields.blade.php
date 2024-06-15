@@ -30,7 +30,7 @@
             // dd(session('form_data'));
             $temp3 = session('form_data')['reports_expiration_date_end'] ?? '';
         } else {
-            $temp3 = '2053-12-31';
+            $temp3 = $detectionReport->reports_inspection_institution ?? '2053-12-31';
         }
         ?>
         {!! Form::label('reports_expiration_date_end', '有效期限-迄') !!}
