@@ -949,7 +949,8 @@
                         break;
                     case 'moveout':
                         var validValues = [13];
-                        if (areAllValuesSame(checkReportLetter) && containsOnly(checkReportStatus, validValues)) {
+                        if (areAllValuesSame(checkReportLetter)) {
+                            //  && containsOnly(checkReportStatus, validValues)
                             return ck_reports;
                         } else {
                             Swal.fire('注意！', '發函文號需相同且狀態皆需為移出！', 'warning');

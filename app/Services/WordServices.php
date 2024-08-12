@@ -16,6 +16,7 @@ use App\Models\Admin\CarBrand;
 use App\Models\Admin\CarModel;
 use App\Models\Admin\CumulativeAuthorizedUsageRecords;
 use App\Models\Admin\ExportAuthorizeRecords;
+use App\Repositories\Admin\DetectionReportRepository;
 use stdClass;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -116,8 +117,8 @@ class WordServices
         $templateProcessor->setValue('com_phone', $company->com_phone);
         $templateProcessor->setValue('com_fax', $company->com_fax);
         if (File::exists(public_path('uploads/'.$company->com_seal))) {
-            $templateProcessor->setImageValue('image_sign_com', public_path('uploads/'.$company->com_seal));
-            // $templateProcessor->setImageValue('image_sign_com', public_path('assets/img/sign_test_icon/sign_com.png'));
+            $templateProcessor->setImageValue('image_sign_com', ["path" => public_path('uploads/'.$company->com_seal), "width" => 280, "height" => '']);
+            // $templateProcessor->setImageValue('image_sign_com', ["path" => public_path('assets/img/sign_test_icon/sign_com.png'), "width" => 150, "height" => '']);
         } else {
             $templateProcessor->setValue('image_sign_com', '');
         }
@@ -633,7 +634,7 @@ class WordServices
         $templateProcessor->setValue('com_phone', $company->com_phone);
         $templateProcessor->setValue('com_fax', $company->com_fax);
         if (File::exists(public_path('uploads/'.$company->com_seal))) {
-            $templateProcessor->setImageValue('image_sign_com', public_path('uploads/'.$company->com_seal));
+            $templateProcessor->setImageValue('image_sign_com', ["path" => public_path('uploads/'.$company->com_seal), "width" => 280, "height" => '']);
             // $templateProcessor->setImageValue('image_sign_com', public_path('assets/img/sign_test_icon/sign_com.png'));
         } else {
             $templateProcessor->setValue('image_sign_com', '');
@@ -676,6 +677,9 @@ class WordServices
                 'reports_authorize_count_after' => $value->reports_authorize_count_current - (int) $value->reports_authorize_count_before,
                 'reports_authorize_count_total' => ($value->reports_authorize_count_current - (int) $value->reports_authorize_count_before) + (int) $value->reports_authorize_count_before
             ]);
+
+            $value->reports_authorize_status = DetectionReportRepository::ACTION_FOR_MOVE_OUT;
+            $value->save();
         }
 
         // dd($tb_values);
@@ -901,7 +905,7 @@ class WordServices
         $templateProcessor->setValue('com_phone', $company->com_phone);
         $templateProcessor->setValue('com_fax', $company->com_fax);
         if (File::exists(public_path('uploads/'.$company->com_seal))) {
-            $templateProcessor->setImageValue('image_sign_com', public_path('uploads/'.$company->com_seal));
+            $templateProcessor->setImageValue('image_sign_com', ["path" => public_path('uploads/'.$company->com_seal), "width" => 280, "height" => '']);
             // $templateProcessor->setImageValue('image_sign_com', public_path('assets/img/sign_test_icon/sign_com.png'));
         } else {
             $templateProcessor->setValue('image_sign_com', '');
