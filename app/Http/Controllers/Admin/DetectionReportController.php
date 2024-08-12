@@ -370,6 +370,9 @@ class DetectionReportController extends Controller
 
         switch ($detectionReport->reports_authorize_status) {
             case DetectionReportRep::UNDELIVERY:
+                $status = $base_status;
+                array_push($status, DetectionReportRep::AUTHORIZATION);
+                break;
             case DetectionReportRep::DEACTIVATED:
                 $status = $base_status;
                 array_push($status, DetectionReportRep::AUTHORIZATION);
