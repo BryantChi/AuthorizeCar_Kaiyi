@@ -373,6 +373,7 @@ class DetectionReportController extends Controller
             case DetectionReportRep::DEACTIVATED:
                 $status = $base_status;
                 array_push($status, DetectionReportRep::AUTHORIZATION);
+                array_push($status, DetectionReportRep::MOVE_OUT);
                 break;
             case DetectionReportRep::AUTHORIZATION:
                 $status = $base_status;
@@ -617,7 +618,7 @@ class DetectionReportController extends Controller
             $data_affidavit_res = $wordService->updateWordDocument(WordServices::DATA_AFFIDAVIT_EXCEL, $data_ids);
 
             AffidavitRecord::create(['report_id' => $data_ids, 'affidavit_path' => [$moveout_file_res, $affidavit_letter_file_res->original, $data_affidavit_res->original]]);
-            DetectionReport::whereIn('id', $data_ids)->update(["reports_authorize_status" => DetectionReportRep::DEACTIVATED]);
+            DetectionReport::whereIn('id', $data_ids)->update(["reports_authorize_status" => DetectionReportRep::MOVE_OUT]);
 
             return \Response::json(['status' => 'success', 'contract_data' => $moveout_file_res, 'letter_data' => $affidavit_letter_file_res->original, 'data_affidavit_data' => $data_affidavit_res->original]);
         }
