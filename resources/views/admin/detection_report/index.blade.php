@@ -1712,6 +1712,10 @@
 
                             setTimeout(function() {
                                 $('#downloadModal').modal('show');
+                                $('#downloadModal').on('hidden.bs.modal', function(e) {
+                                    // 重新載入頁面
+                                    window.location.reload();
+                                })
                             }, 500);
                         }
 
