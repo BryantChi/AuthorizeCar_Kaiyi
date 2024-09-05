@@ -218,12 +218,16 @@ class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMappi
             $model = (CarModel::find($detectionReport->reports_car_model))->model_name;
             $ii = (InspectionInstitution::find($detectionReport->reports_inspection_institution))->ii_name;
             $regulations = '';
-            foreach ($detectionReport->reports_regulations as $i => $reg) {
-                $regulation = Regulations::where('regulations_num', $reg)->first();
-                if ($i == 0) {
-                    $regulations .= $regulation->regulations_num . ' ' . $regulation->regulations_name;
-                } else {
-                    $regulations .= '，' . $regulation->regulations_num . ' ' . $regulation->regulations_name;
+            if ($detectionReport->reports_regulations == null) {
+                $regulations = '無';
+            } else {
+                foreach ($detectionReport->reports_regulations as $i => $reg) {
+                    $regulation = Regulations::where('regulations_num', $reg)->first();
+                    if ($i == 0) {
+                        $regulations .= $regulation->regulations_num . ' ' . $regulation->regulations_name;
+                    } else {
+                        $regulations .= '，' . $regulation->regulations_num . ' ' . $regulation->regulations_name;
+                    }
                 }
             }
             $carPattern = (CarPattern::find($detectionReport->reports_vehicle_pattern))->pattern_name ?? '';
