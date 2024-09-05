@@ -41,6 +41,10 @@ class DetectionReportRepository {
         foreach ($detectionReports as $value) {
             $dr = Model::find($value->id);
 
+            if ($dr->reports_authorize_status == self::DEACTIVATED) {
+                continue;
+            }
+
             $reports_expiration_date_end = Carbon::parse($dr->reports_expiration_date_end);
 
             if ($dr->reports_authorize_status == self::REPLIED) {
