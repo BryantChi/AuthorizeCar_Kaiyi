@@ -223,6 +223,10 @@ class DetectionReportExport implements FromCollection, ShouldAutoSize, WithMappi
             } else {
                 foreach ($detectionReport->reports_regulations as $i => $reg) {
                     $regulation = Regulations::where('regulations_num', $reg)->first();
+                    if (is_null($regulation)) {
+                        $regulations = '無';
+                        continue;
+                    }
                     if ($i == 0) {
                         $regulations .= $regulation->regulations_num . ' ' . $regulation->regulations_name;
                     } else {
