@@ -745,7 +745,10 @@ class DetectionReportController extends Controller
         $input = $request->all();
         $data_ids = $input['data_ids'];
 
-        $reports = DetectionReport::whereIn('id', $data_ids)->get();
+        // Get reports by IDs，then reports_authorize_status is DetectionReportRep::AUTHORIZATION
+        $reports = DetectionReport::whereIn('id', $data_ids)
+            ->where('reports_authorize_status', DetectionReportRep::AUTHORIZATION)
+            ->get();
 
         $regulations = [];
         foreach ($reports as $report) {
