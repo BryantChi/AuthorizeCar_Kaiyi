@@ -750,13 +750,18 @@ class DetectionReportController extends Controller
             ->whereIn('reports_authorize_status', [DetectionReportRep::AUTHORIZATION, DetectionReportRep::REACH_LIMIT_280, DetectionReportRep::OUT_OF_TIME])
             ->get();
 
+        // Get reports that are not in the above status, these are the unUseReports , get ids
+        $unUseReports = DetectionReport::whereIn('id', $data_ids)
+            ->whereNotIn('reports_authorize_status', [DetectionReportRep::AUTHORIZATION, DetectionReportRep::REACH_LIMIT_280, DetectionReportRep::OUT_OF_TIME])
+            ->get(['reports_num']);
+
         $regulations = [];
         foreach ($reports as $report) {
             $regs = Regulations::whereIn('regulations_num', $report->reports_regulations)->get(['regulations_num', 'regulations_name']);
             $regulations[$report->id] = $regs;
         }
 
-        return \Response::json(['status' => 'success', 'reports' => $reports, 'regulations' => $regulations]);
+        return \Response::json(['status' => 'success', 'reports' => $reports, 'regulations' => $regulations, 'unUseReports' => $unUseReports]);
     }
 
     public function getReportByNum(Request $request)

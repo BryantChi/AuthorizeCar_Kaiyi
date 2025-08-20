@@ -1111,6 +1111,20 @@
                                 '</tr>');
                         });
 
+                        // swal 提醒 unUseReports無法使用
+                        if (res.unUseReports.length > 0) {
+                            let unUseReportsIds = res.unUseReports.map(report => report.reports_num);
+                            Swal.fire({
+                                title: '注意！',
+                                text: '以下報告無法使用：' + unUseReportsIds.join(', ') + '，請確認報告狀態。\n列出的報告將不會顯示於授權檢測基準項目中。',
+                                icon: 'warning'
+                            }).then(function() {
+                                // 滾動到#card-authorize
+                                $('html, body').animate({
+                                    scrollTop: $('#card-authorize').offset().top
+                                }, 1000);
+                            });
+                        }
 
                     }
                 },
