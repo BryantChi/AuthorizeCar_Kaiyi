@@ -745,9 +745,9 @@ class DetectionReportController extends Controller
         $input = $request->all();
         $data_ids = $input['data_ids'];
 
-        // Get reports by IDs，then reports_authorize_status is DetectionReportRep::AUTHORIZATION
+        // Get reports by IDs，then reports_authorize_status is [DetectionReportRep::AUTHORIZATION, DetectionReportRep::REACH_LIMIT_280, DetectionReportRep::OUT_OF_TIME]
         $reports = DetectionReport::whereIn('id', $data_ids)
-            ->where('reports_authorize_status', DetectionReportRep::AUTHORIZATION)
+            ->whereIn('reports_authorize_status', [DetectionReportRep::AUTHORIZATION, DetectionReportRep::REACH_LIMIT_280, DetectionReportRep::OUT_OF_TIME])
             ->get();
 
         $regulations = [];
