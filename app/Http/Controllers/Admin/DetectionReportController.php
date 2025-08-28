@@ -753,7 +753,8 @@ class DetectionReportController extends Controller
         // Get reports that are not in the above status, these are the unUseReports , get ids
         $unUseReports = DetectionReport::whereIn('id', $data_ids)
             ->whereNotIn('reports_authorize_status', [DetectionReportRep::AUTHORIZATION, DetectionReportRep::REACH_LIMIT_280, DetectionReportRep::OUT_OF_TIME])
-            ->get(['reports_num']);
+            ->get(['reports_num', 'id']);
+
 
         $regulations = [];
         foreach ($reports as $report) {
