@@ -1114,7 +1114,11 @@
                         // swal 提醒 unUseReports無法使用
                         if (res.unUseReports.length > 0) {
                             // reports_data(id)移除res.unUseReports(id)
-                            reports_data = reports_data.filter(id => !res.unUseReports.some(unreport => unreport.id === id));
+                            reports_data = reports_data.filter(function(id) {
+                                return !res.unUseReports.some(function(report) {
+                                    return report.id == id;
+                                });
+                            });
                             // 取得無法使用的報告編號陣列
                             let unUseReportsIds = res.unUseReports.map(report => report.reports_num);
                             Swal.fire({
