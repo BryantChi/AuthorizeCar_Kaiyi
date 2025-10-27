@@ -1143,24 +1143,40 @@
             });
         }
 
-        async function copy(item) {
-            let str = item.replace(/(\n)/g,'\\n');
-            str = str.replace(/(\r)/g,'\\r');
-            let jsonObj = JSON.parse(str);
-            // console.log(jsonObj);
-            await autoInputAuth(jsonObj);
+        // 支援 UTF-8 的 base64 解碼函數
+        function base64DecodeUnicode(str) {
+            // 將 base64 轉換為 percent-encoding，然後解碼 UTF-8
+            return decodeURIComponent(atob(str).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+        }
 
-            await applyForAuthorize('copy');
+        async function copy(item) {
+            // 解碼 base64 編碼的 JSON 資料（支援中文）
+            try {
+                let decodedStr = base64DecodeUnicode(item);
+                let jsonObj = JSON.parse(decodedStr);
+                // console.log(jsonObj);
+                await autoInputAuth(jsonObj);
+                await applyForAuthorize('copy');
+            } catch (error) {
+                console.error('解析資料錯誤:', error);
+                Swal.fire('錯誤！', '無法讀取資料，請重新整理頁面後再試', 'error');
+            }
         }
 
         async function edit(item) {
-            let str = item.replace(/(\n)/g,'\\n');
-            str = str.replace(/(\r)/g,'\\r');
-            let jsonObj = JSON.parse(str);
-            // console.log(jsonObj);
-            await autoInputAuth(jsonObj, 'edit');
-
-            await applyForAuthorize('edit', jsonObj.id);
+            // 解碼 base64 編碼的 JSON 資料（支援中文）
+            try {
+                let decodedStr = base64DecodeUnicode(item);
+                let jsonObj = JSON.parse(decodedStr);
+                // console.log(jsonObj);
+                await autoInputAuth(jsonObj, 'edit');
+                await applyForAuthorize('edit', jsonObj.id);
+            } catch (error) {
+                console.error('解析資料錯誤:', error);
+                Swal.fire('錯誤！', '無法讀取資料，請重新整理頁面後再試', 'error');
+            }
         }
 
         // function prevent_reloading(){

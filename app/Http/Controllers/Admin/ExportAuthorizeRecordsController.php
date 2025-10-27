@@ -77,15 +77,14 @@ class ExportAuthorizeRecordsController extends AppBaseController
                     return '<div class="form-group form-check"><input type="checkbox" name="records[]" class="form-check-input" style="width: 20px;height: 20px;" value="' . $record->id . '" id="' . $record->id . '" ></div>';
                 })
                 ->addColumn('action', function (ExportAuthorizeRecords $record) {
+                    // 使用 base64 編碼來安全傳遞 JSON 資料
                     $newR = json_encode($record, JSON_UNESCAPED_UNICODE);
-                    $sr = str_replace(" ", "&nbsp;", $newR);
-                    $sr = str_replace("\t", "&#9;", $sr);
-                    $sr = str_replace("\n",  "<br>", $sr);
-                    $sr = str_replace("\r", "<br>", $sr);
-                    $btn_copy = '<a href="javascript:void(0)" onclick=copy(\''. $sr .'\') class="btn btn-default btn-lg2">' .
+                    $encodedData = base64_encode($newR);
+
+                    $btn_copy = '<a href="javascript:void(0)" onclick=copy(\''.$encodedData.'\') class="btn btn-default btn-lg2">' .
                         '<i class="far fa-copy"></i>' .
                         '</a>';
-                    $btn_edit = '<a href="javascript:void(0)" onclick=edit(\''. $sr .'\') class="btn btn-default btn-lg2">' .
+                    $btn_edit = '<a href="javascript:void(0)" onclick=edit(\''.$encodedData.'\') class="btn btn-default btn-lg2">' .
                         '<i class="far fa-edit"></i>' .
                         '</a>';
                     $btn_del = '<button type="button" class="btn btn-danger" onclick="return check(this)"><i class="far fa-trash-alt"></i></button>';
