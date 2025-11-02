@@ -1,8 +1,8 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a href="{{ url('/') }}" class="brand-link">
-        <img src="https://kaiyi-car.com.tw/images/kaiyi_logo.png" width="150"
+        {{-- <img src="https://kaiyi-car.com.tw/images/kaiyi_logo.png" width="150"
              alt="{{ config('app.name') }} Logo"
-             class="brand-image img-circle elevation-3">
+             class="brand-image img-circle elevation-3"> --}}
         <span class="brand-text font-weight-light">{{ config('app.name') }}</span>
     </a>
     <div class="sidebar">
