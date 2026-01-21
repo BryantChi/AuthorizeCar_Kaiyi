@@ -15,7 +15,7 @@ class FixDuplicateSerialNumbersCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'fix:serial-numbers {--dry-run : 只顯示會修改的資料，不實際執行}';
+    protected $signature = 'fix:serial-numbers {--dry-run : 只顯示會修改的資料，不實際執行} {--force : 跳過確認直接執行}';
 
     /**
      * The console command description.
@@ -42,10 +42,11 @@ class FixDuplicateSerialNumbersCommand extends Command
     public function handle()
     {
         $dryRun = $this->option('dry-run');
+        $force = $this->option('force');
 
         if ($dryRun) {
             $this->info('=== 乾跑模式：只顯示會修改的資料 ===');
-        } else {
+        } else if (!$force) {
             if (!$this->confirm('此操作將修改資料庫中的序號資料，建議先備份資料庫。是否繼續？')) {
                 $this->info('操作已取消');
                 return 0;
