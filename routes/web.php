@@ -106,3 +106,17 @@ Route::any('importReport', [DetectionReportController::class, 'importReport'])->
 Route::any('/save-draft', [DetectionReportController::class, 'saveDraft'])->name('saveDraft');
 Route::any('exportDetectionReports', [DetectionReportController::class, 'exportDetectionReports'])->name('exportDetectionReports');
 Route::any('/letter-modify', [DetectionReportController::class, 'modifyLetterId'])->name('modifyLetter');
+
+// 修復重複的授權使用序號（歷史資料）
+Route::get('/fix-serial-numbers', function () {
+    $dryRun = request()->get('dry_run', false);
+
+    \Artisan::call('fix:serial-numbers', [
+        '--dry-run' => $dryRun
+    ]);
+
+    $output = \Artisan::output();
+
+    return response('<pre>' . htmlspecialchars($output) . '</pre>')
+        ->header('Content-Type', 'text/html; charset=utf-8');
+});
