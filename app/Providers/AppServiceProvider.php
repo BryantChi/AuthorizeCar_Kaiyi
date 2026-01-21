@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -26,5 +27,12 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         Paginator::useBootstrap();
+
+        if (request()->server('HTTP_X_FORWARDED_PROTO') == 'https' ||
+            request()->server('HTTPS') == 'on' ||
+            env('FORCE_HTTPS', false)) {
+            URL::forceScheme('https');
+        }
+        // https://allyson-cartable-uncriticizably.ngrok-free.dev/
     }
 }

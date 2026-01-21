@@ -643,7 +643,17 @@ class DetectionReportController extends Controller
             $data_postpone_res = $wordService->updateWordDocument(WordServices::DATA_POSTPONE_EXCEL, $data_ids);
 
             PostponeRecord::create(['report_id' => $data_ids, 'postpone_path' => [$postpone_file_res, $postpone_apply_letter_file_res->original, $data_postpone_res->original]]);
-            DetectionReport::whereIn('id', $data_ids)->update(["reports_authorize_status" => DetectionReportRep::MOVE_OUT, 'reports_authorize_count_before' => 0, 'reports_authorize_count_current' => 0]);
+
+            // 使用事務+悲觀鎖防止與開立/刪除授權書操作衝突
+            DB::transaction(function () use ($data_ids) {
+                DetectionReport::whereIn('id', $data_ids)
+                    ->lockForUpdate()
+                    ->update([
+                        "reports_authorize_status" => DetectionReportRep::MOVE_OUT,
+                        'reports_authorize_count_before' => 0,
+                        'reports_authorize_count_current' => 0
+                    ]);
+            });
 
             return \Response::json(['status' => 'success', 'contract_data' => $postpone_file_res, 'postpone_apply_letter_data' => $postpone_apply_letter_file_res->original, 'data_postpone_data' => $data_postpone_res->original]);
         }
@@ -774,6 +784,51 @@ class DetectionReportController extends Controller
         $report = DetectionReport::where('reports_num', $num)->first();
 
         return \Response::json(['status' => 'success', 'report_data' => $report]);
+    }
+
+    /**
+     * 取得報告的下一個可用授權序號（使用回填邏輯）
+     * 用於前端預覽正確的預期序號
+     */
+    public function getNextSerialNumber(Request $request)
+    {
+        $reportId = $request->get('report_id');
+
+        if (!$reportId) {
+            return \Response::json(['error' => 'report_id is required'], 400);
+        }
+
+        $report = DetectionReport::find($reportId);
+        if (!$report) {
+            return \Response::json(['error' => 'Report not found'], 404);
+        }
+
+        // 使用與 WordServices 相同的回填邏輯
+        $usedSerials = CumulativeAuthorizedUsageRecords::where('reports_id', $reportId)
+            ->where('quantity', '>', 0)
+            ->pluck('authorization_serial_number')
+            ->toArray();
+
+        $nextSerial = 1;
+        while (in_array($nextSerial, $usedSerials)) {
+            $nextSerial++;
+        }
+
+        // 組成完整的授權序號格式
+        $expirationDate = Carbon::parse($report->reports_expiration_date_end);
+        $dateY = $expirationDate->year - 1911;
+        $dateM = str_pad($expirationDate->month, 2, '0', STR_PAD_LEFT);
+        $dateD = str_pad($expirationDate->day, 2, '0', STR_PAD_LEFT);
+        $fe = $report->reports_f_e ?? '';
+
+        $fullSerialNumber = $report->reports_num . '-Y' . $fe . $dateY . $dateM . $dateD
+                          . '-' . str_pad($nextSerial, 3, '0', STR_PAD_LEFT);
+
+        return \Response::json([
+            'status' => 'success',
+            'next_serial' => str_pad($nextSerial, 3, '0', STR_PAD_LEFT),
+            'full_serial_number' => $fullSerialNumber
+        ]);
     }
 
     public function importReport(Request $request)

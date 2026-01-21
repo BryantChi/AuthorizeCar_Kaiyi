@@ -779,58 +779,25 @@
 
             $('#reports_num').change(function() {
                 if ($('#reports_num').val() != null && $('#reports_num').val() != '') {
-                    // let e_date = $(this).find(':selected').data('expirationdate').split('-');
-                    // let e_date_y = e_date[0] - 1911;
-                    // let e_date_m = padZero(e_date[1], 2);
-                    // let e_date_d = padZero(e_date[2], 2);
-                    // let auth_count = 0;
-                    // if ($(this).find(':selected').data('countcurrent') < $(this).find(':selected').data(
-                    //         'countbefore')) {
-                    //     auth_count = padZero(($(this).find(':selected').data('countbefore') + 1), 3);
-                    // } else {
-                    //     if ($.inArray($(this).find(':selected').val(), check_reports_data) != -1 && mode == 'edit') {
-                    //         auth_count = padZero(($(this).find(':selected').data('countcurrent')), 3);
-                    //     } else {
-                    //         auth_count = padZero(($(this).find(':selected').data('countcurrent') + 1), 3);
-                    //     }
+                    // 【修正】使用新的 API 取得正確的預期序號（使用回填邏輯）
+                    let reportId = $(this).val();  // 取得報告 ID
 
-                    // }
-                    // let fe = '';
-                    // if ($(this).find(':selected').data('fe') != null) fe = $(this).find(':selected').data('fe');
-                    // let authorize_id = $(this).find(':selected').text() + '-Y' + fe + e_date_y + e_date_m + e_date_d + '-' + auth_count;
-                    // $('#inputAuthNum').val(authorize_id);
-
-                    let num = $(this).find(':selected').text();
-                    let url = "{{ route('getReportByNum') }}";
                     $.ajax({
-                        url: url,
+                        url: "{{ route('getNextSerialNumber') }}",
                         type: 'GET',
-                        data: {
-                            num: num,
-                            _token: '{{ csrf_token() }}'
-                        },
+                        data: { report_id: reportId },
                         dataType: 'json',
-                        success: function(data) {
-                            let e_date = data.report_data.reports_expiration_date_end.split('-');
-                            let e_date_y = e_date[0] - 1911;
-                            let e_date_m = padZero(e_date[1], 2);
-                            let e_date_d = padZero(e_date[2], 2);
-                            let auth_count = 0;
-                            if (data.report_data.reports_authorize_count_current < data.report_data.reports_authorize_count_before) {
-                                auth_count = padZero((data.report_data.reports_authorize_count_before + 1), 3);
+                        success: function(res) {
+                            if (res.status == 'success') {
+                                $('#inputAuthNum').val(res.full_serial_number);
                             } else {
-                                auth_count = padZero((data.report_data.reports_authorize_count_current + 1), 3);
+                                $('#inputAuthNum').val('(查詢序號失敗)');
                             }
-                            let fe = '';
-                            if (data.report_data.reports_f_e != null) fe = data.report_data.reports_f_e;
-                            let authorize_id = data.report_data.reports_num + '-Y' + fe + e_date_y + e_date_m + e_date_d + '-' + auth_count;
-                            $('#inputAuthNum').val(authorize_id);
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
-                        },
-                        complete: function(XMLHttpRequest, textStatus) {
-                        },
-                    })
+                            $('#inputAuthNum').val('(查詢序號失敗)');
+                        }
+                    });
                 }
             });
 
@@ -1042,6 +1009,9 @@
             reports_data = jsonObj.reports_ids;
             check_reports_data = Array.from(reports_data);
 
+            // 【修正】保存原授權書的實際序號（用於編輯模式）
+            let actualSerials = jsonObj.export_authorize_auth_num_id || [];
+
             $('#inp_com').val(jsonObj.export_authorize_com);
             $('#car_brand').val(jsonObj.export_authorize_brand).trigger('change');
             setTimeout(() => {
@@ -1060,12 +1030,12 @@
                     data_ids: reports_data,
                     _token: '{{ csrf_token() }}'
                 },
-                success: function(res) {
+                success: async function(res) {
                     if (res.status == 'success') {
-                        // console.log(res.reports);
-                        // console.log(res.regulations);
                         $('#authorize-data-temp-table tbody').empty();
-                        $.each(res.reports, function(index, report) {
+
+                        // 【修正】使用 for...of 以支援 async/await
+                        for (const report of res.reports) {
                             let regs_txt_temp = '';
 
                             $.each(res.regulations[report.id], function(i, val) {
@@ -1076,30 +1046,52 @@
                                     regs_txt_temp += ',' + val.regulations_num + ' ' + val
                                         .regulations_name;
                                 }
-
                             });
 
-                            let e_date = report.reports_expiration_date_end.split('-');
-                            let e_date_y = e_date[0] - 1911;
-                            let e_date_m = padZero(e_date[1], 2);
-                            let e_date_d = padZero(e_date[2], 2);
-                            if (report.reports_authorize_count_current < report
-                                .reports_authorize_count_before) {
-                                auth_count = padZero((report.reports_authorize_count_before + 1),
-                                    3);
-                            } else {
-                                if (mode == 'edit') {
-                                    auth_count = padZero((report.reports_authorize_count_current),
-                                        3);
-                                } else {
-                                    auth_count = padZero((report.reports_authorize_count_current +
-                                        1), 3);
-                                }
-                            }
+                            let auth_num_temp = '';
                             let fe0 = '';
                             if (report.reports_f_e != null) fe0 = report.reports_f_e;
-                            let auth_num_temp = report.reports_num + '-Y' + fe0 +
-                                e_date_y + e_date_m + e_date_d + '-' + auth_count;
+
+                            // 【修正】序號決定邏輯
+                            if (mode == 'edit') {
+                                // 編輯模式：從實際序號陣列中找到對應該報告的序號
+                                let matchedSerial = actualSerials.find(s => s.includes(report.reports_num));
+                                if (matchedSerial) {
+                                    auth_num_temp = matchedSerial;  // 直接使用實際序號
+                                } else {
+                                    // 編輯時新增的報告，呼叫 API 取得預期序號
+                                    try {
+                                        let apiRes = await $.ajax({
+                                            url: "{{ route('getNextSerialNumber') }}",
+                                            type: 'GET',
+                                            data: { report_id: report.id }
+                                        });
+                                        auth_num_temp = apiRes.full_serial_number;
+                                    } catch (e) {
+                                        let e_date = report.reports_expiration_date_end.split('-');
+                                        let e_date_y = e_date[0] - 1911;
+                                        let e_date_m = padZero(e_date[1], 2);
+                                        let e_date_d = padZero(e_date[2], 2);
+                                        auth_num_temp = report.reports_num + '-Y' + fe0 + e_date_y + e_date_m + e_date_d + '-(查詢失敗)';
+                                    }
+                                }
+                            } else {
+                                // 新建/複製模式：呼叫 API 取得預期序號
+                                try {
+                                    let apiRes = await $.ajax({
+                                        url: "{{ route('getNextSerialNumber') }}",
+                                        type: 'GET',
+                                        data: { report_id: report.id }
+                                    });
+                                    auth_num_temp = apiRes.full_serial_number;
+                                } catch (e) {
+                                    let e_date = report.reports_expiration_date_end.split('-');
+                                    let e_date_y = e_date[0] - 1911;
+                                    let e_date_m = padZero(e_date[1], 2);
+                                    let e_date_d = padZero(e_date[2], 2);
+                                    auth_num_temp = report.reports_num + '-Y' + fe0 + e_date_y + e_date_m + e_date_d + '-(查詢失敗)';
+                                }
+                            }
 
                             $('#authorize-data-temp-table tbody').append('<tr id="' + report.id +
                                 '">' +
@@ -1109,7 +1101,7 @@
                                 '<td><a herf="javascript:void(0)" class="btn btn-danger" onclick="deleteTempAuth(\'' +
                                     report.id + '\')" >刪除</a></td>' +
                                 '</tr>');
-                        });
+                        }
 
                         // swal 提醒 unUseReports無法使用
                         if (res.unUseReports.length > 0) {

@@ -14,6 +14,7 @@ use App\Models\Admin\DetectionReport;
 use App\Models\Admin\ExportAuthorizeRecords;
 use App\Models\Admin\Regulations;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Flash;
 use Response;
 use Yajra\DataTables\Facades\DataTables;
@@ -259,16 +260,21 @@ class ExportAuthorizeRecordsController extends AppBaseController
             return redirect(route('admin.exportAuthorizeRecords.index'));
         }
 
-        AgreeAuthorizeRecords::where('export_id', $id)->delete();
-        // CumulativeAuthorizedUsageRecords::where('export_id', $id)->delete();
-        CumulativeAuthorizedUsageRecords::where('export_id', $id)->update(['authorization_serial_number' => 0, 'quantity' => 0]);
+        // 使用事務+悲觀鎖防止並發問題
+        DB::transaction(function () use ($id, $exportAuthorizeRecords) {
+            AgreeAuthorizeRecords::where('export_id', $id)->delete();
+            // CumulativeAuthorizedUsageRecords::where('export_id', $id)->delete();
+            CumulativeAuthorizedUsageRecords::where('export_id', $id)->update(['authorization_serial_number' => 0, 'quantity' => 0]);
 
-        $reports_data = DetectionReport::whereIn('id', $exportAuthorizeRecords->reports_ids)->get();
-        foreach ($reports_data as $info) {
-            $dr = DetectionReport::find($info->id);
-            $dr->reports_authorize_count_current -= 1;
-            $dr->save();
-        }
+            // 加鎖讀取檢測報告，防止與開立/編輯/展延操作衝突
+            $reports_data = DetectionReport::whereIn('id', $exportAuthorizeRecords->reports_ids)
+                ->lockForUpdate()
+                ->get();
+            foreach ($reports_data as $info) {
+                $info->reports_authorize_count_current -= 1;
+                $info->save();
+            }
+        });
 
         $exportAuthorizeRecords->delete($id);
 

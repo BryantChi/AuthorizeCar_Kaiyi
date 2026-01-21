@@ -25,6 +25,7 @@ use Dompdf\Options;
 use Illuminate\Support\Facades\File;
 use Ilovepdf\Ilovepdf;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\DB;
 
 class WordServices
 {
@@ -378,114 +379,165 @@ class WordServices
         $export_authorize_reports_nums = array();
         $export_authorize_path = array();
 
-        if ($mode == 'edit') {
-            $export_id = $auth_export_id;
-            $exports = ExportAuthorizeRecords::find($export_id);
-            AgreeAuthorizeRecords::where('export_id', $export_id)->delete();
-            if ($exports->export_authorize_num != $auth_input[4]) {
-                CumulativeAuthorizedUsageRecords::where('export_id', $export_id)->update(['quantity' => 0, 'authorize_num' => $exports->export_authorize_num . ' => ' . $auth_input[4]]);
-            } else {
-                CumulativeAuthorizedUsageRecords::where('export_id', $export_id)->update(['quantity' => 0]);
-            }
+        // ===== 階段一：資料庫操作（使用事務+悲觀鎖防止並發問題）=====
+        $dbResult = DB::transaction(function () use (
+            $data_id, $auth_input, $mode, $auth_export_id,
+            $date_y, $date_m, $date_d, $authorize_date,
+            &$tb_values, &$export_authorize_auth_num_id, &$export_authorize_reports_nums
+        ) {
+            // 記錄原有報告的序號對應（用於編輯模式保留原序號）
+            $originalSerials = [];
 
-            $reports_data = DetectionReport::whereIn('id', $exports->reports_ids)->get();
-            foreach ($reports_data as $info) {
-                $dr = DetectionReport::find($info->id);
-                $dr->reports_authorize_count_current -= 1;
-                $dr->save();
-            }
-        } else {
-            $exportAuthRecord = [
-                'reports_ids' => json_encode($data_id),
-                'export_authorize_num' => $auth_input[4],
-                'export_authorize_com' => $auth_input[0],
-                'export_authorize_brand' => $auth_input[1],
-                'export_authorize_model' => $auth_input[2],
-                'export_authorize_type_year' => $auth_input[6],
-                'export_authorize_vin' => $auth_input[3],
-                'export_authorize_date' => $date_y . '/' .$date_m . '/' .$date_d,
-                'export_authorize_auth_num_id' => json_encode($export_authorize_auth_num_id), // 授權序號
-                'export_authorize_reports_nums' => json_encode($export_authorize_reports_nums),
-                'export_authorize_path' => json_encode($export_authorize_path),
-                'export_authorize_note' => $auth_input[7],
-            ];
-            $exportInsert = ExportAuthorizeRecords::create($exportAuthRecord);
-            $export_id = $exportInsert->id;
-        }
+            if ($mode == 'edit') {
+                $export_id = $auth_export_id;
+                $exports = ExportAuthorizeRecords::find($export_id);
 
-        $data_id_string = implode(',', $data_id);
-        $detection_reports = DetectionReport::whereIn('id', $data_id)->orderByRaw("FIELD(id, $data_id_string)")->get();
-        foreach ($detection_reports as $index => $value) {
-            if ($value->reports_authorize_count_current < $value->reports_authorize_count_before) {
-                $value->reports_authorize_count_current = ($value->reports_authorize_count_before + 1);
-            } else {
-                $value->reports_authorize_count_current += 1;
-            }
-            $reports_regulations = '';
-            foreach ($value->reports_regulations as $i => $info) {
-                $regulation = Regulations::where('regulations_num', $info)->first();
-                if ($i == 0) {
-                    $reports_regulations .= $regulation->regulations_num . ' ' . $regulation->regulations_name;
-                } else {
-                    $reports_regulations .= ', ' . $regulation->regulations_num . ' ' . $regulation->regulations_name;
+                // 【保留原序號】在釋放之前，先記錄原有報告的序號
+                $originalCumulativeRecords = CumulativeAuthorizedUsageRecords::where('export_id', $export_id)
+                    ->where('quantity', '>', 0)
+                    ->get();
+                foreach ($originalCumulativeRecords as $record) {
+                    $originalSerials[$record->reports_id] = $record->authorization_serial_number;
                 }
+
+                AgreeAuthorizeRecords::where('export_id', $export_id)->delete();
+                if ($exports->export_authorize_num != $auth_input[4]) {
+                    CumulativeAuthorizedUsageRecords::where('export_id', $export_id)->update(['quantity' => 0, 'authorize_num' => $exports->export_authorize_num . ' => ' . $auth_input[4]]);
+                } else {
+                    CumulativeAuthorizedUsageRecords::where('export_id', $export_id)->update(['quantity' => 0]);
+                }
+
+                // 加鎖讀取原有報告，防止並發修改
+                $reports_data = DetectionReport::whereIn('id', $exports->reports_ids)
+                    ->lockForUpdate()
+                    ->get();
+                foreach ($reports_data as $info) {
+                    $info->reports_authorize_count_current -= 1;
+                    $info->save();
+                }
+            } else {
+                $exportAuthRecord = [
+                    'reports_ids' => json_encode($data_id),
+                    'export_authorize_num' => $auth_input[4],
+                    'export_authorize_com' => $auth_input[0],
+                    'export_authorize_brand' => $auth_input[1],
+                    'export_authorize_model' => $auth_input[2],
+                    'export_authorize_type_year' => $auth_input[6],
+                    'export_authorize_vin' => $auth_input[3],
+                    'export_authorize_date' => $date_y . '/' .$date_m . '/' .$date_d,
+                    'export_authorize_auth_num_id' => json_encode([]), // 授權序號（稍後更新）
+                    'export_authorize_reports_nums' => json_encode([]),
+                    'export_authorize_path' => json_encode([]),
+                    'export_authorize_note' => $auth_input[7],
+                ];
+                $exportInsert = ExportAuthorizeRecords::create($exportAuthRecord);
+                $export_id = $exportInsert->id;
             }
-            $expiration_date = Carbon::parse($value->reports_expiration_date_end);
-            $expiration_date_y = ((int)$expiration_date->year) - 1911;
-            $expiration_date_m = str_pad($expiration_date->month, 2, "0", STR_PAD_LEFT);
-            $expiration_date_d = str_pad($expiration_date->day, 2, "0", STR_PAD_LEFT);
-            $fe = '';
-            if ($value->reports_f_e != null) $fe = $value->reports_f_e;
-            $authorize_sid = $value->reports_num . '-Y' . $fe . $expiration_date_y . $expiration_date_m . $expiration_date_d . '-' . str_pad($value->reports_authorize_count_current, 3, "0", STR_PAD_LEFT);
-            array_push($tb_values, [
-                'reports_regulations' => $reports_regulations,
-                'reports_num' => $value->reports_num,
-                'reports_authorize_sid' => $authorize_sid,
-            ]);
-            array_push($export_authorize_auth_num_id, $authorize_sid);
-            array_push($export_authorize_reports_nums, $value->reports_num);
 
-            $value->save();
+            $data_id_string = implode(',', $data_id);
+            // 加鎖讀取檢測報告，防止並發修改導致序號重複
+            $detection_reports = DetectionReport::whereIn('id', $data_id)
+                ->lockForUpdate()
+                ->orderByRaw("FIELD(id, $data_id_string)")
+                ->get();
 
-            // 同意授權使用證明書記錄 逐個新增紀錄
-            $agreeAuthRecord = [
-                'export_id' => $export_id,
-                'reports_id' => $value->id,
-                'authorize_num' => $auth_input[4],
-                'reports_num' => $value->reports_num,
-                'authorize_date' => $date_m . '/' . $date_d,
-                'authorize_year' => $authorize_date->year,
-                'auth_type_year' => $auth_input[6],
-                'car_brand_id' => $auth_input[1],
-                'car_model_id' => $auth_input[2],
-                'reports_vin' => $auth_input[3],
-                'reports_regulations' => json_encode($value->reports_regulations),
-                'licensee' => $auth_input[0],
-                'Invoice_title' => '',
-                'auth_note' => $auth_input[7],
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ];
-            AgreeAuthorizeRecords::insert($agreeAuthRecord);
+            foreach ($detection_reports as $index => $value) {
+                // ===== 序號決定邏輯 =====
+                if ($mode == 'edit' && isset($originalSerials[$value->id])) {
+                    // 【保留原序號】編輯模式下，原有報告使用原序號
+                    $nextSerial = $originalSerials[$value->id];
+                } else {
+                    // 回填邏輯：找最小可用序號（新建、複製、或編輯時新增的報告）
+                    $usedSerials = CumulativeAuthorizedUsageRecords::where('reports_id', $value->id)
+                        ->where('quantity', '>', 0)
+                        ->pluck('authorization_serial_number')
+                        ->toArray();
 
-            $caur = [
-                'export_id' => $export_id,
-                'authorization_serial_number' => $value->reports_authorize_count_current,
-                'reports_id' => $value->id,
-                'authorize_num' => $auth_input[4],
-                'reports_num' => $value->reports_num,
-                'applicant' => $value->reports_reporter,
-                'reports_vin' => $auth_input[3],
-                'quantity' => 1,
-                'authorization_date' => $date_y . '/' . $date_m . '/' . $date_d,
-                'auth_type_year' => $auth_input[6],
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ];
-            CumulativeAuthorizedUsageRecords::insert($caur);
+                    $nextSerial = 1;
+                    while (in_array($nextSerial, $usedSerials)) {
+                        $nextSerial++;
+                    }
+                }
+                // ===== 序號決定邏輯結束 =====
 
-        }
+                // 遞增 count（用於 300 次上限判斷，與序號分離）
+                if ($value->reports_authorize_count_current < $value->reports_authorize_count_before) {
+                    $value->reports_authorize_count_current = ($value->reports_authorize_count_before + 1);
+                } else {
+                    $value->reports_authorize_count_current += 1;
+                }
+                $reports_regulations = '';
+                foreach ($value->reports_regulations as $i => $info) {
+                    $regulation = Regulations::where('regulations_num', $info)->first();
+                    if ($i == 0) {
+                        $reports_regulations .= $regulation->regulations_num . ' ' . $regulation->regulations_name;
+                    } else {
+                        $reports_regulations .= ', ' . $regulation->regulations_num . ' ' . $regulation->regulations_name;
+                    }
+                }
+                $expiration_date = Carbon::parse($value->reports_expiration_date_end);
+                $expiration_date_y = ((int)$expiration_date->year) - 1911;
+                $expiration_date_m = str_pad($expiration_date->month, 2, "0", STR_PAD_LEFT);
+                $expiration_date_d = str_pad($expiration_date->day, 2, "0", STR_PAD_LEFT);
+                $fe = '';
+                if ($value->reports_f_e != null) $fe = $value->reports_f_e;
+                // 使用回填的 $nextSerial 作為序號末3碼（而非 count）
+                $authorize_sid = $value->reports_num . '-Y' . $fe . $expiration_date_y . $expiration_date_m . $expiration_date_d . '-' . str_pad($nextSerial, 3, "0", STR_PAD_LEFT);
+                array_push($tb_values, [
+                    'reports_regulations' => $reports_regulations,
+                    'reports_num' => $value->reports_num,
+                    'reports_authorize_sid' => $authorize_sid,
+                ]);
+                array_push($export_authorize_auth_num_id, $authorize_sid);
+                array_push($export_authorize_reports_nums, $value->reports_num);
 
+                $value->save();
+
+                // 同意授權使用證明書記錄 逐個新增紀錄
+                $agreeAuthRecord = [
+                    'export_id' => $export_id,
+                    'reports_id' => $value->id,
+                    'authorize_num' => $auth_input[4],
+                    'reports_num' => $value->reports_num,
+                    'authorize_date' => $date_m . '/' . $date_d,
+                    'authorize_year' => $authorize_date->year,
+                    'auth_type_year' => $auth_input[6],
+                    'car_brand_id' => $auth_input[1],
+                    'car_model_id' => $auth_input[2],
+                    'reports_vin' => $auth_input[3],
+                    'reports_regulations' => json_encode($value->reports_regulations),
+                    'licensee' => $auth_input[0],
+                    'Invoice_title' => '',
+                    'auth_note' => $auth_input[7],
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ];
+                AgreeAuthorizeRecords::insert($agreeAuthRecord);
+
+                $caur = [
+                    'export_id' => $export_id,
+                    'authorization_serial_number' => $nextSerial,  // 使用回填的序號
+                    'reports_id' => $value->id,
+                    'authorize_num' => $auth_input[4],
+                    'reports_num' => $value->reports_num,
+                    'applicant' => $value->reports_reporter,
+                    'reports_vin' => $auth_input[3],
+                    'quantity' => 1,
+                    'authorization_date' => $date_y . '/' . $date_m . '/' . $date_d,
+                    'auth_type_year' => $auth_input[6],
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ];
+                CumulativeAuthorizedUsageRecords::insert($caur);
+            }
+
+            return ['export_id' => $export_id];
+        });
+        // ===== 階段一結束，鎖已釋放 =====
+
+        $export_id = $dbResult['export_id'];
+
+        // ===== 階段二：文件操作（不需要鎖，避免長時間持有鎖）=====
         // dd($tb_values);
 
         $brand = CarBrand::find($auth_input[1]);
@@ -718,32 +770,32 @@ class WordServices
 
         $pdfKey = [$key0, $key1, $key2];
 
-        $maxAttempts = 3; // 最大重試次數
-        $attempts = 0; // 目前的嘗試次數
+        // $maxAttempts = 3; // 最大重試次數
+        // $attempts = 0; // 目前的嘗試次數
 
-        while ($attempts < $maxAttempts) {
+        // while ($attempts < $maxAttempts) {
 
-            $ilovepdf = new Ilovepdf($pdfKey[$attempts]['publicKey'], $pdfKey[$attempts]['secretKey']);
-            try {
-                // 嘗試要執行的操作
-                // 例如：資料庫查詢、外部API調用等
-                $myTask = $ilovepdf->newTask('officepdf');
-                $file1 = $myTask->addFile($newWordFilePath);
-                $myTask->execute();
-                $myTask->download(public_path($folderPdfPath));
+        //     $ilovepdf = new Ilovepdf($pdfKey[$attempts]['publicKey'], $pdfKey[$attempts]['secretKey']);
+        //     try {
+        //         // 嘗試要執行的操作
+        //         // 例如：資料庫查詢、外部API調用等
+        //         $myTask = $ilovepdf->newTask('officepdf');
+        //         $file1 = $myTask->addFile($newWordFilePath);
+        //         $myTask->execute();
+        //         $myTask->download(public_path($folderPdfPath));
 
-                break; // 如果操作成功，跳出循環
-            } catch (\Exception $e) {
-                $attempts++; // 增加嘗試次數
-                if ($attempts == $maxAttempts) {
-                    // 如果達到最大嘗試次數，可以選擇拋出異常或者處理錯誤
-                    throw $e;
-                }
+        //         break; // 如果操作成功，跳出循環
+        //     } catch (\Exception $e) {
+        //         $attempts++; // 增加嘗試次數
+        //         if ($attempts == $maxAttempts) {
+        //             // 如果達到最大嘗試次數，可以選擇拋出異常或者處理錯誤
+        //             throw $e;
+        //         }
 
-                // 可選：在重試之前暫停一段時間
-                sleep(1); // 休息1秒
-            }
-        }
+        //         // 可選：在重試之前暫停一段時間
+        //         sleep(1); // 休息1秒
+        //     }
+        // }
 
         // return json_encode([
         //     'status' => 'success',
