@@ -112,7 +112,8 @@ Route::get('/fix-serial-numbers', function () {
     $dryRun = request()->get('dry_run', false);
 
     \Artisan::call('fix:serial-numbers', [
-        '--dry-run' => $dryRun
+        '--dry-run' => $dryRun,
+        '--force' => true
     ]);
 
     $output = \Artisan::output();
