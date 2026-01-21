@@ -119,4 +119,4 @@ Route::get('/fix-serial-numbers', function () {
 
     return response('<pre>' . htmlspecialchars($output) . '</pre>')
         ->header('Content-Type', 'text/html; charset=utf-8');
-});
+})->middleware('auth');
